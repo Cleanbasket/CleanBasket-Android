@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- related to main activity -->
+    <color name="background_stacked_color">#FFFFFF</color>
+
+    <!-- related to order fragment -->
+    <color name="gridview_background">#FFFFFF</color>
+    <color name="listview_background">#FFFFFF</color>
+    <color name="header_text">#6CC4B9</color>
+
+    <!-- related to order fragment -->
+</resources>
