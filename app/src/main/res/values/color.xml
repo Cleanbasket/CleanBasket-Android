@@ -6,7 +6,11 @@
     <!-- related to order fragment -->
     <color name="gridview_background">#FFFFFF</color>
     <color name="listview_background">#FFFFFF</color>
-    <color name="header_text">#6CC4B9</color>
+    <color name="header_text">#6DC2B6</color>
+    <color name="textview_order_button">#FFFFFF</color>
+    <color name="order_button_background">#6DC2B6</color>
 
-    <!-- related to order fragment -->
+    <!-- related to item list fragment -->
+    <color name="listview_item_background">#FFFFFF</color>
+
 </resources>

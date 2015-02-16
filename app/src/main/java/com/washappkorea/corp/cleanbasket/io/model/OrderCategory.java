@@ -1,7 +1,9 @@
 package com.washappkorea.corp.cleanbasket.io.model;
 
 
-public class OrderCategory {
+import io.realm.RealmObject;
+
+public class OrderCategory extends RealmObject {
     public int id;
     public String name;
     public String img;

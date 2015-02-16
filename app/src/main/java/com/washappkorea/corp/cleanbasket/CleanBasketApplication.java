@@ -5,10 +5,6 @@ import android.app.Application;
 
 import com.google.gson.Gson;
 
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-
 public class CleanBasketApplication extends Application {
     public static CleanBasketApplication mInstance = null;
 
@@ -17,10 +13,6 @@ public class CleanBasketApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-        CookieHandler.setDefault(cookieManager);
 
         mInstance = this;
     }

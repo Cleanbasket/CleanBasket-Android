@@ -3,29 +3,89 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_order_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlarmFragment">
+    tools:context=".OrderFragment">
 
-    <SearchView
-        android:id="@+id/searchview_item"
+    <RelativeLayout
+        android:id="@+id/layout_header_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/transparent" />
+        android:orientation="horizontal">
 
-    <com.washappkorea.corp.cleanbasket.widget.OrderItemsView
+        <RelativeLayout
+            android:id="@+id/layout_status_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageview_basket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/status_view_margin"
+                android:src="@drawable/ic_basket" />
+
+            <TextView
+                android:id="@+id/textview_item_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imageview_basket"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/status_view_margin" />
+
+            <TextView
+                android:id="@+id/textview_item_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/textview_item_number"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/status_view_margin" />
+        </RelativeLayout>
+
+        <SearchView
+            android:id="@+id/searchview_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/layout_status_view"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:baselineAligned="true" />
+    </RelativeLayout>
+
+    <com.washappkorea.corp.cleanbasket.ui.widget.OrderItemsView
         android:id="@+id/gridview_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/searchview_item"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_order"
+        android:layout_below="@+id/layout_header_view"
         android:background="@color/gridview_background" />
 
-    <Button
+    <RelativeLayout
         android:id="@+id/button_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/button_order" />
+        android:layout_alignParentBottom="true">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/imageview_button_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_basket" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imageview_button_order"
+                android:layout_centerVertical="true"
+                android:text="@string/button_order" />
+        </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>
