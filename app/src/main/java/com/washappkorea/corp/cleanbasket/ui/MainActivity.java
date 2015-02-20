@@ -1,5 +1,6 @@
 package com.washappkorea.corp.cleanbasket.ui;
 
+
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -13,7 +14,6 @@ import java.util.concurrent.Executors;
 
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
-
 
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();

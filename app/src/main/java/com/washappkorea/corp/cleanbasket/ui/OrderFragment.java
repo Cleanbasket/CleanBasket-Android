@@ -22,7 +22,6 @@ import com.washappkorea.corp.cleanbasket.ui.widget.OrderItemsView;
 
 import java.util.ArrayList;
 
-
 public class OrderFragment extends Fragment implements View.OnClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = OrderFragment.class.getSimpleName();
 
@@ -59,6 +58,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
         mSearchView.setOnClickListener(this);
         mSearchView.setOnQueryTextListener(this);
+        mOrderButton.setOnClickListener(this);
 
         mOrderItemAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -68,8 +68,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                 updateOrderInfo();
             }
         });
-
-        mOrderButton.setOnClickListener(this);
 
         // OrderCategory는 서버에 요청해서 받아옵니다
         ArrayList<OrderCategory> orderCategoryList = new ArrayList<OrderCategory>();

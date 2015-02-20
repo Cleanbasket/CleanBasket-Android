@@ -4,9 +4,7 @@ package com.washappkorea.corp.cleanbasket.io.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import io.realm.RealmObject;
-
-public class OrderItem extends RealmObject implements Parcelable {
+public class OrderItem implements Parcelable {
     public int item_code;
     public String name;
     public String descr;

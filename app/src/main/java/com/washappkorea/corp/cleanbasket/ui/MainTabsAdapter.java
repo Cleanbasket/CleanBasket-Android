@@ -1,5 +1,6 @@
 package com.washappkorea.corp.cleanbasket.ui;
 
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +11,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import java.util.ArrayList;
-
 
 public class MainTabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
     private static final String TAG = MainTabsAdapter.class.getSimpleName();

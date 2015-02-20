@@ -11,7 +11,14 @@
     <string name="label_total">총계</string>
     <string name="button_order">주문하기</string>
 
-    <!-- related to order item list -->
+    <!-- related to time info -->
+    <string name="time_picker_inform">시간을 선택해주세요</string>
+    <string name="time_separate">:</string>
+    <string name="time_tilde"> ~ </string>
+    <string name="time_exact">00</string>
+    <string name="time_half">30</string>
+
+    <!-- general -->
     <string name="label_confirm">확인</string>
     <string name="label_cancel">취소</string>
 
