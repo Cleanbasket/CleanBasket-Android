@@ -1,7 +1,7 @@
 package com.washappkorea.corp.cleanbasket.util;
 
 
-public class Constants {
+public final class Constants {
     public static final int SESSION_EXPIRED = 0;
     public static final int SUCCESS = 1;
     public static final int ERROR = 2;
@@ -24,4 +24,12 @@ public class Constants {
 
     public static final int DUPLICATION = 207;
     public static final int INVALID = 208;
+
+    /* Related to Service */
+    public static final int SUCCESS_RESULT = 0;
+    public static final int FAILURE_RESULT = 1;
+    public static final String PACKAGE_NAME = "com.washappkorea.corp.cleanbasket";
+    public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
+    public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
+    public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 }

@@ -4,8 +4,6 @@ package com.washappkorea.corp.cleanbasket.ui;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +15,7 @@ import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.OrderService;
 import com.washappkorea.corp.cleanbasket.io.model.OrderCategory;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
+import com.washappkorea.corp.cleanbasket.ui.dialog.ItemListDialog;
 import com.washappkorea.corp.cleanbasket.ui.widget.OrderItemAdapter;
 import com.washappkorea.corp.cleanbasket.ui.widget.OrderItemsView;
 
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 
 public class OrderFragment extends Fragment implements View.OnClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = OrderFragment.class.getSimpleName();
+    private static final String ITEM_LIST_DIALOG_TAG = "ITEM_LIST_DIALOG";
 
     private OrderItemsView mOrderItemsView;
     private OrderItemAdapter mOrderItemAdapter;
@@ -120,13 +120,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         };
     }
 
-    private void switchFragment(Fragment fragment) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(R.id.layout_order_fragment, fragment);
-        transaction.commit();
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -135,14 +128,20 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                 break;
 
             case R.id.button_order:
-                Bundle args = new Bundle();
-                args.putParcelableArrayList("data", mOrderItemAdapter.getSelectedItems());
-                ItemListFragment itemListFragment = new ItemListFragment();
-                itemListFragment.setArguments(args);
-                switchFragment(itemListFragment);
+                popItemListDialog(mOrderItemAdapter.getSelectedItems());
                 break;
         }
     }
+
+    private void popItemListDialog(ArrayList<OrderItem> orderItems) {
+        ItemListDialog itemListDialog =
+                ItemListDialog.newInstance(orderItems);
+
+        itemListDialog.show(
+                getActivity().getSupportFragmentManager(),
+                ITEM_LIST_DIALOG_TAG);
+    }
+
 
     @Override
     public boolean onQueryTextSubmit(String query) {

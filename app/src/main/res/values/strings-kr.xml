@@ -13,14 +13,29 @@
 
     <!-- related to time info -->
     <string name="time_picker_inform">시간을 선택해주세요</string>
+    <string name="time_picker_no_available">선택 가능한 시간이 없습니다</string>
     <string name="time_separate">:</string>
     <string name="time_tilde"> ~ </string>
     <string name="time_exact">00</string>
     <string name="time_half">30</string>
+    <string name="time_today">오늘</string>
+    <string name="time_tomorrow">내일</string>
+
+    <!-- related to address info -->
+    <string name="address_district">동 주소를 입력해주세요</string>
+    <string name="address_detail">상세 주소를 입력해주세요</string>
+    <string name="contact">연락처를 입력해주세요</string>
 
     <!-- general -->
     <string name="label_confirm">확인</string>
     <string name="label_cancel">취소</string>
+
+    <!-- address -->
+    <string name="service_not_available">서비스가 유효하지 않습니다</string>
+    <string name="invalid_lat_long_used">잘못된 위도, 경도</string>
+    <string name="no_address_found">주소를 찾을 수 없습니다</string>
+    <string name="address_found">주소를 찾았습니다</string>
+    <string name="no_geocoder_available">Geocoder를 찾을 수 없습니다</string>
 
     <!-- related to order item -->
     <string name="y_shirt">와이셔츠</string>
