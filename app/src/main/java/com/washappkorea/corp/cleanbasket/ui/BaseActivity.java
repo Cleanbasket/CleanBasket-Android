@@ -10,6 +10,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
     public static Bundle intentToFragmentArguments(Intent intent) {
         Bundle arguments = new Bundle();
+
         if (intent == null) {
             return arguments;
         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CleanBasket</string>
+    <string name="app_name">크린바스켓</string>
 
     <!-- related to order fragment -->
     <string name="check_sex">성별을 입력해주시면 세탁물을 빠르게 선택할 수 있게 도와드립니다</string>
@@ -20,15 +20,28 @@
     <string name="time_half">30</string>
     <string name="time_today">오늘</string>
     <string name="time_tomorrow">내일</string>
+    <string name="time_other_day">다른 날</string>
+    <string name="date_pickup">수거일 선택</string>
+    <string name="date_dropoff">배달일 선택</string>
+
+    <!-- related to order info fragment -->
+    <string name="time_dropoff_inform">수거 시간을 먼저 선택해주세요</string>
+    <string name="time_dropoff_inform_after">배달 시간을 선택해주세요</string>
+    <string name="time_parse">HH시 mm분</string>
+    <string name="date_parse">MM월 dd일(EEE)</string>
 
     <!-- related to address info -->
     <string name="address_district">동 주소를 입력해주세요</string>
     <string name="address_detail">상세 주소를 입력해주세요</string>
+    <string name="address_search_inform">동을 입력해주세요. (예. 역삼동)</string>
+    <string name="address_select">주소 선택</string>
     <string name="contact">연락처를 입력해주세요</string>
+    <string name="search_no_text">검색어를 입력하세요</string>
 
     <!-- general -->
     <string name="label_confirm">확인</string>
     <string name="label_cancel">취소</string>
+    <string name="toast_error">에러가 발생했습니다</string>
 
     <!-- address -->
     <string name="service_not_available">서비스가 유효하지 않습니다</string>
