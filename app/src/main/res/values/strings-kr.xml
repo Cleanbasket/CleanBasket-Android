@@ -11,6 +11,17 @@
     <string name="label_total">총계</string>
     <string name="button_order">주문하기</string>
 
+    <!-- related to order info fragment -->
+    <string name="payment_method">현장 결제 수단 선택</string>
+    <string name="payment_card">카드 결제</string>
+    <string name="payment_cash">현금 결제</string>
+    <string name="pick_up_cost">수거배송비</string>
+    <string name="mileage">마일리지</string>
+    <string name="mileage_available">사용 가능 마일리지</string>
+    <string name="coupon">쿠폰</string>
+    <string name="special">특별 할인</string>
+    <string name="button_label_use">사용</string>
+
     <!-- related to time info -->
     <string name="time_picker_inform">시간을 선택해주세요</string>
     <string name="time_picker_no_available">선택 가능한 시간이 없습니다</string>
@@ -40,8 +51,10 @@
 
     <!-- general -->
     <string name="label_confirm">확인</string>
+    <string name="label_modify">수정</string>
     <string name="label_cancel">취소</string>
     <string name="toast_error">에러가 발생했습니다</string>
+    <string name="network_error">네트워크 연결 상태를 확인해주세요</string>
 
     <!-- address -->
     <string name="service_not_available">서비스가 유효하지 않습니다</string>

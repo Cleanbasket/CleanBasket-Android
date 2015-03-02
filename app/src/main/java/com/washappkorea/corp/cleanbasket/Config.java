@@ -5,5 +5,10 @@ public class Config {
     public final static String DAUM_MAP_API = "2d7bf0d4ff008afd21fa87672de24ea6e1c9ede7";
     public final static String DAUM_MAP_LOCAL_API = "75fd758f8d2afe314b00006129092860400a529c";
 
-    public final static String SERVER_ADDRESS = "http://192.168.219.120:8080/";
+    public final static String SERVER_ADDRESS = "http://192.168.219.102:8080/wash";
+
+    public static final String PACKAGE_NAME = "com.washappkorea.corp.cleanbasket";
+    public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
+    public static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
+    public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 }

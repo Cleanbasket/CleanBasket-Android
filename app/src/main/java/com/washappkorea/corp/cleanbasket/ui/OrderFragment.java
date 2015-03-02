@@ -12,7 +12,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.washappkorea.corp.cleanbasket.R;
-import com.washappkorea.corp.cleanbasket.io.OrderService;
 import com.washappkorea.corp.cleanbasket.io.model.OrderCategory;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
 import com.washappkorea.corp.cleanbasket.ui.dialog.ItemListDialog;
@@ -23,13 +22,12 @@ import java.util.ArrayList;
 
 public class OrderFragment extends Fragment implements View.OnClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = OrderFragment.class.getSimpleName();
-    private static final String ITEM_LIST_DIALOG_TAG = "ITEM_LIST_DIALOG";
+    public static final String ITEM_LIST_DIALOG_TAG = "ITEM_LIST_DIALOG";
 
     private OrderItemsView mOrderItemsView;
     private OrderItemAdapter mOrderItemAdapter;
     private SearchView mSearchView;
     private RelativeLayout mOrderButton;
-    private OrderService mOrderService;
 
     private TextView mTextViewItemNumber;
     private TextView mTextViewItemTotal;
@@ -60,7 +58,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         mSearchView.setOnQueryTextListener(this);
         mOrderButton.setOnClickListener(this);
 
-        mOrderItemAdapter.registerDataSetObserver(new DataSetObserver() {
+        getOrderItemAdapter().registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
@@ -109,13 +107,13 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
             mTextViewItemNumber.setText(
                     getResources().getString(R.string.label_item) +
                             " " +
-                            mOrderItemAdapter.getItemNumber() +
+                            getOrderItemAdapter().getItemNumber() +
                             getResources().getString(R.string.item_unit));
 
             mTextViewItemTotal.setText(
                     getResources().getString(R.string.label_total) +
                             " " +
-                            mOrderItemAdapter.getItemTotal() +
+                            getOrderItemAdapter().getItemTotal() +
                             getResources().getString(R.string.monetary_unit));
         };
     }
@@ -128,7 +126,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                 break;
 
             case R.id.button_order:
-                popItemListDialog(mOrderItemAdapter.getSelectedItems());
+                popItemListDialog(getOrderItemAdapter().getSelectedItems());
                 break;
         }
     }
@@ -142,7 +140,6 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                 ITEM_LIST_DIALOG_TAG);
     }
 
-
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -150,16 +147,12 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mOrderItemAdapter.getFilter().filter(newText);
+        getOrderItemAdapter().getFilter().filter(newText);
 
         return true;
     }
 
-    private OrderService getOrderService() {
-        if (mOrderService == null) {
-            mOrderService = ((MainActivity) getActivity()).getRestAdapter().create(OrderService.class);
-        }
-
-        return mOrderService;
+    public OrderItemAdapter getOrderItemAdapter() {
+        return mOrderItemAdapter;
     }
 }

@@ -6,7 +6,7 @@ import android.app.Application;
 import com.google.gson.Gson;
 
 public class CleanBasketApplication extends Application {
-    public static CleanBasketApplication mInstance = null;
+    public static CleanBasketApplication mInstance;
 
     public Gson mGson;
 
@@ -15,6 +15,10 @@ public class CleanBasketApplication extends Application {
         mInstance = this;
 
         super.onCreate();
+    }
+
+    public static synchronized CleanBasketApplication getInstance() {
+        return mInstance;
     }
 
     public Gson getGson() {
