@@ -12,7 +12,7 @@ public class OrderItem implements Parcelable {
     public int price;
     public int count;
     public String img;
-    public float discountRate;
+    public double discountRate;
 
     public OrderItem(int item_code, String name, int price, int category, String img) {
         this.item_code = item_code;
@@ -47,7 +47,7 @@ public class OrderItem implements Parcelable {
         dest.writeInt(price);
         dest.writeInt(count);
         dest.writeString(img);
-        dest.writeFloat(discountRate);
+        dest.writeDouble(discountRate);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

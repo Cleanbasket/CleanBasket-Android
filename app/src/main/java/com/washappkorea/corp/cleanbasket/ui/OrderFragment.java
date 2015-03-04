@@ -11,12 +11,22 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
+import com.washappkorea.corp.cleanbasket.io.RequestQueue;
+import com.washappkorea.corp.cleanbasket.io.listener.NetworkErrorListener;
+import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.model.OrderCategory;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
+import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
 import com.washappkorea.corp.cleanbasket.ui.dialog.ItemListDialog;
 import com.washappkorea.corp.cleanbasket.ui.widget.OrderItemAdapter;
 import com.washappkorea.corp.cleanbasket.ui.widget.OrderItemsView;
+import com.washappkorea.corp.cleanbasket.util.AddressManager;
+import com.washappkorea.corp.cleanbasket.util.Constants;
 
 import java.util.ArrayList;
 
@@ -67,39 +77,71 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
             }
         });
 
-        // OrderCategory는 서버에 요청해서 받아옵니다
-        ArrayList<OrderCategory> orderCategoryList = new ArrayList<OrderCategory>();
-        orderCategoryList.add(new OrderCategory(0, "offers"));
-        orderCategoryList.add(new OrderCategory(1, "business"));
-        orderCategoryList.add(new OrderCategory(2, "top"));
-        orderCategoryList.add(new OrderCategory(3, "bottom"));
-        orderCategoryList.add(new OrderCategory(4, "overcoat"));
-        orderCategoryList.add(new OrderCategory(5, "etc"));
-        mOrderItemAdapter.setOrderCategoryList(orderCategoryList);
+        getCategory();
+    }
 
-        // 아이템들은 서버에 요청해서 받아옵니다
-        mOrderItemAdapter.add(new OrderItem(1, "t_shirt", 2000, 0, "ic_item_t_shirt"));
-        mOrderItemAdapter.add(new OrderItem(2, "y_shirt", 2000, 0, "ic_item_y_shirt"));
-        mOrderItemAdapter.add(new OrderItem(3, "trousers", 3000, 0, "ic_item_trousers"));
-        mOrderItemAdapter.add(new OrderItem(4, "coat", 8000, 0, "ic_item_coat"));
-        mOrderItemAdapter.add(new OrderItem(5, "jacket", 4000, 0, "ic_item_jacket"));
-        mOrderItemAdapter.add(new OrderItem(1, "t_shirt", 2000, 1, "ic_item_t_shirt"));
-        mOrderItemAdapter.add(new OrderItem(2, "y_shirt", 2000, 2, "ic_item_y_shirt"));
-        mOrderItemAdapter.add(new OrderItem(3, "trousers", 3000, 3, "ic_item_trousers"));
-        mOrderItemAdapter.add(new OrderItem(4, "coat", 8000, 4, "ic_item_coat"));
-        mOrderItemAdapter.add(new OrderItem(5, "jacket", 4000, 4, "ic_item_jacket"));
+    private void getCategory() {
+        GetRequest getRequest = new GetRequest(getActivity());
+        getRequest.setUrl(AddressManager.GET_CATEGORY_ITEM);
+        getRequest.setListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                getOrderItem();
 
-//        getOrderService().getItemCodes(new Callback<ArrayList<OrderItem>>() {
-//            @Override
-//            public void success(ArrayList<OrderItem> orderItems, Response response) {
-//                mOrderItemsView.insertOrderItem(orderItems);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//
-//            }
-//        });
+                JsonData jsonData = null;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+                }
+                catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.SUCCESS:
+                        ArrayList<OrderCategory> orderCategories = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, new TypeToken<ArrayList<OrderCategory>>(){}.getType());
+                        insertCategory(orderCategories);
+                        break;
+                }
+            }
+        }, new NetworkErrorListener(getActivity()));
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());
+    }
+
+    private void getOrderItem() {
+        GetRequest getRequest = new GetRequest(getActivity());
+        getRequest.setUrl(AddressManager.GET_ORDER_ITEM);
+        getRequest.setListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonData jsonData = null;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+                }
+                catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.SUCCESS:
+                        ArrayList<OrderItem> orderItems = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, new TypeToken<ArrayList<OrderItem>>(){}.getType());
+                        insertOrderItem(orderItems);
+                        break;
+                }
+            }
+        }, new NetworkErrorListener(getActivity()));
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());
+    }
+
+    private void insertCategory(ArrayList<OrderCategory> orderCategories) {
+        if (mOrderItemAdapter != null)
+            mOrderItemAdapter.setOrderCategoryList(orderCategories);
+    }
+
+    private void insertOrderItem(ArrayList<OrderItem> orderItems) {
+        if (mOrderItemAdapter != null)
+            mOrderItemAdapter.addAll(orderItems);
     }
 
     private void updateOrderInfo() {

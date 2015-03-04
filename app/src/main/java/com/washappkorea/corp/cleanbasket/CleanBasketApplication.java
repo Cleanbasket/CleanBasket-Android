@@ -2,10 +2,12 @@ package com.washappkorea.corp.cleanbasket;
 
 
 import android.app.Application;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 public class CleanBasketApplication extends Application {
+    private static final String TAG = CleanBasketApplication.class.getSimpleName();
     public static CleanBasketApplication mInstance;
 
     public Gson mGson;
@@ -27,5 +29,29 @@ public class CleanBasketApplication extends Application {
         }
 
         return mGson;
+    }
+
+    /* 이름으로 문자열을 가져옵니다 */
+    public String getStringByString(String name) {
+        int resourceId = this.getResources().getIdentifier(name, "string", this.getPackageName());
+
+        String result = "";
+
+        try {
+            result = this.getString(resourceId);
+        } catch (Exception e) {
+            return this.getString(R.string.default_name);
+        }
+
+        return result;
+    }
+
+    /* 이름으로 아이콘을 가져옵니다 */
+    public int getDrawableByString(String name) {
+        return this.getResources().getIdentifier("ic_item_" + name, "drawable", this.getPackageName());
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
