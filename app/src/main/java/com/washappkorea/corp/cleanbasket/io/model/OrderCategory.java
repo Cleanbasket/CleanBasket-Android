@@ -1,13 +1,17 @@
 package com.washappkorea.corp.cleanbasket.io.model;
 
 
-public class OrderCategory {
-    public int id;
-    public String name;
-    public String img;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
+import com.j256.ormlite.table.DatabaseTable;
 
-    public OrderCategory(int id, String name) {
-        this.id = id;
-        this.name = name;
+@DatabaseTable
+public class OrderCategory extends BaseDaoEnabled<OrderCategory, Integer> {
+    @DatabaseField(id = true) public int id;
+    @DatabaseField public String name;
+    @DatabaseField public String img;
+
+    public OrderCategory() {
+
     }
 }

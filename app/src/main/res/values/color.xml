@@ -6,7 +6,8 @@
     <!-- related to order fragment -->
     <color name="gridview_background">#FFFFFF</color>
     <color name="listview_background">#FFFFFF</color>
-    <color name="orderinfo_background">#FFFFFF</color>
+    <color name="order_info_background">#FFFFFF</color>
+    <color name="order_state_background">#FFFFFF</color>
     <color name="header_text">#6DC2B6</color>
     <color name="textview_order_button">#FFFFFF</color>
     <color name="order_button_background">#6DC2B6</color>

@@ -4,15 +4,24 @@ package com.washappkorea.corp.cleanbasket.io.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class OrderItem implements Parcelable {
-    public int item_code;
-    public String name;
-    public String descr;
-    public int category;
-    public int price;
-    public int count;
-    public String img;
-    public double discountRate;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable
+public class OrderItem extends BaseDaoEnabled<OrderItem, Integer> implements Parcelable {
+    @DatabaseField(id = true) public int item_code;
+    @DatabaseField public String name;
+    @DatabaseField public String descr;
+    @DatabaseField public int category;
+    @DatabaseField public int price;
+    @DatabaseField public int count;
+    @DatabaseField public String img;
+    @DatabaseField public double discountRate;
+
+    public OrderItem() {
+
+    }
 
     public OrderItem(int item_code, String name, int price, int category, String img) {
         this.item_code = item_code;
