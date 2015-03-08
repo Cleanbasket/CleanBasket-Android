@@ -60,6 +60,17 @@
         </activity>
 
         <activity
+            android:name="com.washappkorea.corp.cleanbasket.ui.PhoneActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.washappkorea.corp.cleanbasket.ui.PhoneActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="com.washappkorea.corp.cleanbasket.ui.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
@@ -76,6 +87,39 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="com.washappkorea.corp.cleanbasket.ui.MapActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.washappkorea.corp.cleanbasket.ui.NoticeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.washappkorea.corp.cleanbasket.ui.NoticeActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.washappkorea.corp.cleanbasket.ui.SettingActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.washappkorea.corp.cleanbasket.ui.SettingActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.washappkorea.corp.cleanbasket.ui.WebViewActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.washappkorea.corp.cleanbasket.ui.WebViewActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

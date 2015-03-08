@@ -41,6 +41,9 @@ import com.washappkorea.corp.cleanbasket.util.Constants;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.concurrent.Callable;
 
 public class OrderFragment extends Fragment implements View.OnClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = OrderFragment.class.getSimpleName();
@@ -117,14 +120,28 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
                         try {
                             itemInfo = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, new TypeToken<ItemInfo>(){}.getType());
-                            ArrayList<OrderCategory> categories = itemInfo.categories;
-                            ArrayList<OrderItem> orderItems = itemInfo.orderItems;
+                            final ArrayList<OrderCategory> categories = itemInfo.categories;
+                            final ArrayList<OrderItem> orderItems = itemInfo.orderItems;
 
-                            for (OrderCategory oc : categories)
-                                getDBHelper().getOrderCategoryDao().createOrUpdate(oc);
+                            getDBHelper().getOrderCategoryDao().callBatchTasks(new Callable<Void>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    for (OrderCategory oc : categories)
+                                        getDBHelper().getOrderCategoryDao().createOrUpdate(oc);
 
-                            for (OrderItem oi : orderItems)
-                                getDBHelper().getOrderItemDao().createOrUpdate(oi);
+                                    return null;
+                                }
+                            });
+
+                            getDBHelper().getOrderItemDao().callBatchTasks(new Callable<Void>() {
+                                @Override
+                                public Void call() throws Exception {
+                                    for (OrderItem oi : orderItems)
+                                        getDBHelper().getOrderItemDao().createOrUpdate(oi);
+
+                                    return null;
+                                }
+                            });
 
                             insertCategory(categories);
                             insertOrderItem(orderItems);
@@ -154,6 +171,16 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
     }
 
     private void insertOrderItem(ArrayList<OrderItem> orderItems) {
+        if (orderItems.size() == 0)
+            return;
+
+        Collections.sort(orderItems, new Comparator<OrderItem>() {
+            @Override
+            public int compare(OrderItem lhs, OrderItem rhs) {
+                return lhs.category - rhs.category;
+            }
+        });
+
         if (mOrderItemAdapter != null) {
             mOrderItemAdapter.addAll(orderItems);
             mOrderItemAdapter.setFixedOrderItem(orderItems);

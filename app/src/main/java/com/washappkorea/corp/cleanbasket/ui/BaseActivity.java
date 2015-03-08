@@ -1,12 +1,15 @@
 package com.washappkorea.corp.cleanbasket.ui;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.washappkorea.corp.cleanbasket.db.DBHelper;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends FragmentActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
@@ -44,5 +47,10 @@ public abstract class BaseActivity extends FragmentActivity {
             OpenHelperManager.releaseHelper();
             dbHelper = null;
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

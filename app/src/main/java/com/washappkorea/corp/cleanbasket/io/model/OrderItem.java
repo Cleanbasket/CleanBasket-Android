@@ -11,9 +11,9 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class OrderItem extends BaseDaoEnabled<OrderItem, Integer> implements Parcelable {
     @DatabaseField(id = true) public int item_code;
+    @DatabaseField public int category;
     @DatabaseField public String name;
     @DatabaseField public String descr;
-    @DatabaseField public int category;
     @DatabaseField public int price;
     @DatabaseField public int count;
     @DatabaseField public String img;

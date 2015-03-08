@@ -1,20 +1,22 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <item name="android:actionBarStyle">@style/ActionBarStyle.Veil</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Veil</item>
-        <item name="android:actionBarTabBarStyle">@style/ActionBarTabBarStyle.Veil</item>
+        <item name="android:actionBarStyle">@style/ActionBarStyle.CleanBasket</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.CleanBasket</item>
+        <item name="android:actionBarTabBarStyle">@style/ActionBarTabBarStyle.CleanBasket</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="ActionBarStyle.Veil" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+    <style name="ActionBarStyle.CleanBasket" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
         <item name="android:backgroundStacked">@color/background_stacked_color</item>
+        <item name="android:height">96dp</item>
     </style>
 
-    <style name="ActionBarTabStyle.Veil" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+    <style name="ActionBarTabStyle.CleanBasket" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator</item>
+        <item name="android:height">96dp</item>
     </style>
 
-    <style name="ActionBarTabBarStyle.Veil" parent="@android:style/Widget.Holo.Light.ActionBar.TabBar">
+    <style name="ActionBarTabBarStyle.CleanBasket" parent="@android:style/Widget.Holo.Light.ActionBar.TabBar">
         <item name="android:showDividers">none</item>
     </style>
 </resources>

@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 public class CleanBasketApplication extends Application {
     private static final String TAG = CleanBasketApplication.class.getSimpleName();
     public static CleanBasketApplication mInstance;
@@ -17,6 +19,12 @@ public class CleanBasketApplication extends Application {
         mInstance = this;
 
         super.onCreate();
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/NanumBarunGothic.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
     }
 
     public static synchronized CleanBasketApplication getInstance() {

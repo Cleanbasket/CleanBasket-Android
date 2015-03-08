@@ -18,13 +18,15 @@ import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.RequestQueue;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
-import com.washappkorea.corp.cleanbasket.io.request.StringRequest;
+import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
-public class MainActivity extends BaseActivity implements Response.Listener<String>, Response.ErrorListener{
+public class MainActivity extends BaseActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ViewPager mViewPager;
@@ -54,14 +56,25 @@ public class MainActivity extends BaseActivity implements Response.Listener<Stri
         bar.setDisplayShowTitleEnabled(false);
 
         mTabsAdapter = new MainTabsAdapter(this, mViewPager);
-        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.ic_order), OrderFragment.class, null);
-        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.ic_orderlist), OrderStateFragment.class, null);
-        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.ic_info), UserFragment.class, null);
-        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.ic_alarm), AlarmFragment.class, null);
+        mTabsAdapter.addTab(
+                bar.newTab()
+//                        .setIcon(R.drawable.ic_order)
+                        .setText(R.string.menu_label_order), OrderFragment.class, null);
+        mTabsAdapter.addTab(
+                bar.newTab()
+//                        .setContentDescription(R.string.menu_label_delivery)
+                        .setText(R.string.menu_label_delivery), OrderStatusFragment.class, null);
+        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.ic_setting).setContentDescription(R.string.menu_label_information), UserFragment.class, null);
+        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.ic_alarm).setContentDescription(R.string.menu_label_notification), NotificationFragment.class, null);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         gcm = GoogleCloudMessaging.getInstance(this);
         regId = getRegistrationId(this);
@@ -131,6 +144,8 @@ public class MainActivity extends BaseActivity implements Response.Listener<Stri
                     msg = "Error : " + ex.getMessage();
                 }
 
+                Log.i(TAG, msg);
+
                 return msg;
             }
 
@@ -142,11 +157,11 @@ public class MainActivity extends BaseActivity implements Response.Listener<Stri
     }
 
     private void sendRegistrationIdToBackend(final String regId) {
-        StringRequest stringRequest = new StringRequest(this);
-        stringRequest.setParams("regid", regId);
-        stringRequest.setUrl(AddressManager.REGID);
-        stringRequest.setListener(this, this);
-        RequestQueue.getInstance(this).addToRequestQueue(stringRequest.doRequest());
+        PostRequest postRequest = new PostRequest(this);
+        postRequest.setParams("regid", regId);
+        postRequest.setUrl(AddressManager.REGID);
+        postRequest.setListener(this, this);
+        RequestQueue.getInstance(this).addToRequestQueue(postRequest.doRequest());
     }
 
     private void storeRegistrationId(Context context, String regId) {
@@ -160,18 +175,21 @@ public class MainActivity extends BaseActivity implements Response.Listener<Stri
     }
 
     @Override
-    public void onResponse(String response) {
-        JsonData jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+    public void onResponse(JSONObject response) {
+        JsonData jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
         switch (jsonData.constant) {
             case Constants.ERROR:
+                Log.i(TAG, "Reg Id Error");
                 break;
             case Constants.SUCCESS:
-                storeRegistrationId(getBaseContext(), regId);
+                triggerStoreRegId();
                 Log.i(TAG, "Reg Id 등록");
                 break;
         }
+    }
 
-        storeRegistrationId(getBaseContext(), regId);
+    private void triggerStoreRegId() {
+        storeRegistrationId(this, regId);
     }
 
     @Override
