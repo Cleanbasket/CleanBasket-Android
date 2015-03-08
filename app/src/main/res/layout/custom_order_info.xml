@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/layout_address_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edittext_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/imageview_current_location"
+            android:layout_centerVertical="true" />
+
+        <ImageView
+            android:id="@+id/imageview_current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_sale" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/edittext_detail_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_address_input"
+        android:hint="@string/address_detail" />
+
+    <EditText
+        android:id="@+id/edittext_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edittext_detail_address"
+        android:hint="@string/contact" />
+
+    <LinearLayout
+        android:id="@+id/layout_pickup_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/edittext_contact">
+
+        <ImageView
+            android:id="@+id/imageview_pickup_datetime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/icon_default_margin"
+            android:src="@drawable/ic_date" />
+
+        <LinearLayout
+            android:id="@+id/layout_select_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/imageview_datetime_today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/icon_default_margin"
+                android:layout_gravity="center_vertical"
+                android:text="@string/time_today" />
+
+            <Button
+                android:id="@+id/imageview_datetime_tomorrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/icon_default_margin"
+                android:layout_gravity="center_vertical"
+                android:text="@string/time_tomorrow" />
+
+            <Button
+                android:id="@+id/imageview_datetime_etc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/icon_default_margin"
+                android:layout_gravity="center_vertical"
+                android:text="@string/time_other_day" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textview_selected_pickup_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/textview_selected_pickup_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_dropoff_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/layout_pickup_container">
+
+        <ImageView
+            android:id="@+id/imageview_dropoff_datetime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/icon_default_margin"
+            android:src="@drawable/ic_date" />
+
+        <TextView
+            android:id="@+id/textview_selected_dropoff_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/time_dropoff_inform" />
+
+        <TextView
+            android:id="@+id/textview_selected_dropoff_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radiogroup_payment_method"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_dropoff_container"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_method" />
+
+        <RadioButton
+            android:id="@+id/radiobutton_payment_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/payment_card" />
+
+        <RadioButton
+            android:id="@+id/radiobutton_payment_cash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_cash" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/button_gross_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radiogroup_payment_method"
+        android:layout_centerHorizontal="true"
+        android:text="@string/label_total" />
+</RelativeLayout>

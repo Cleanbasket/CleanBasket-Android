@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">크린바스켓</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_password_repeat">Repeat Password</string>
+    <string name="prompt_phone">Phone</string>
+    <string name="prompt_authorization_code">인증 번호</string>
+    <string name="action_sign_in">로그인</string>
+    <string name="action_sign_in_email">이메일로 로그인</string>
+    <string name="action_sign_in_short">로그인</string>
+    <string name="action_sign_up">가입</string>
+    <string name="all_agree">전체 동의</string>
+    <string name="info_service">서비스약관</string>
+    <string name="info_protection">개인정보취급방침</string>
+
+    <!-- Strings related to menu -->
+    <string name="menu_label_order">주문하기</string>
+    <string name="menu_label_delivery">주문현황</string>
+    <string name="menu_label_information">내 정보</string>
+    <string name="menu_label_notification">알림</string>
+
+    <!-- Strings related to register -->
+    <string name="error_invalid_email">이메일이 올바르지 않습니다</string>
+    <string name="error_invalid_password">비밀번호가 너무 짧습니다</string>
+    <string name="error_incorrect_password">비밀번호가 틀립니다</string>
+    <string name="error_incorrect_repeat">비밀번호가 다릅니다</string>
+    <string name="error_field_required">반드시 채워야 합니다</string>
+
+    <string name="email_error">존재하지 않는 이메일입니다.</string>
+    <string name="password_error">비밀번호가 일치하지 않습니다</string>
+    <string name="disable_error">승인되지 않은 사용자입니다</string>
+    <string name="account_duplication">이미 가입되어 있습니다</string>
+    <string name="sign_up_success">가입에 성공했습니다</string>
+    <string name="register_inform">지금 가입하시면 마일리지 적립과 쿠폰 사용 혜택을 누리실 수 있습니다!</string>
+
+    <string name="authorization_request">요청</string>
+
+    <!-- related to order fragment -->
+    <string name="check_sex">성별을 입력해주시면 세탁물을 빠르게 선택할 수 있게 도와드립니다</string>
+    <string name="check_environment">해당 항목을 체크해주시면 세탁물을 빠르게 선택할 수 있게 도와드립니다</string>
+    <string name="monetary_unit">원</string>
+    <string name="item_unit">개</string>
+    <string name="point_unit">원</string>
+    <string name="label_item">품목</string>
+    <string name="label_pre_total">계</string>
+    <string name="label_total">총계</string>
+    <string name="button_order">주문하기</string>
+
+    <!-- related to order info fragment -->
+    <string name="payment_method">현장 결제 수단 선택</string>
+    <string name="payment_card">카드 결제</string>
+    <string name="payment_cash">현금 결제</string>
+    <string name="pick_up_cost">수거배송비</string>
+    <string name="mileage">마일리지</string>
+    <string name="mileage_available">사용 가능 마일리지</string>
+    <string name="coupon">쿠폰</string>
+    <string name="coupon_invalidate">무기한</string>
+    <string name="special">특별 할인</string>
+    <string name="button_label_use">사용</string>
+    <string name="mileage_short">가능한 마일리지보다 작게 입력해주세요</string>
+
+    <!-- related to time info -->
+    <string name="time_picker_inform">시간을 선택해주세요</string>
+    <string name="time_picker_no_available">선택 가능한 시간이 없습니다</string>
+    <string name="time_separate">:</string>
+    <string name="time_tilde"> ~ </string>
+    <string name="time_exact">00</string>
+    <string name="time_half">30</string>
+    <string name="time_today">오늘</string>
+    <string name="time_tomorrow">내일</string>
+    <string name="time_other_day">다른 날</string>
+    <string name="date_pickup">수거일 선택</string>
+    <string name="date_dropoff">배달일 선택</string>
+
+    <!-- related to order info fragment -->
+    <string name="time_dropoff_inform">수거 시간을 먼저 선택해주세요</string>
+    <string name="time_dropoff_inform_after">배달 시간을 선택해주세요</string>
+    <string name="time_parse">HH시 mm분</string>
+    <string name="date_parse">MM월 dd일(EEE)</string>
+    <string name="datetime_parse">yy.MM.dd(EEE)</string>
+
+    <!-- related to address info -->
+    <string name="address_district">동 주소를 입력해주세요</string>
+    <string name="address_detail">상세 주소를 입력해주세요</string>
+    <string name="address_search_inform">동을 입력해주세요. (예. 역삼동)</string>
+    <string name="address_select">주소 선택</string>
+    <string name="contact">연락처를 입력해주세요</string>
+    <string name="search_no_text">검색어를 입력하세요</string>
+
+    <!-- general -->
+    <string name="label_confirm">확인</string>
+    <string name="label_modify">수정</string>
+    <string name="label_order_modify">주문 수정</string>
+    <string name="label_back">뒤로 가기</string>
+    <string name="label_cancel">취소</string>
+    <string name="label_not_use">사용 안 함</string>
+    <string name="toast_error">에러가 발생했습니다</string>
+    <string name="network_error">네트워크 연결 상태를 확인해주세요</string>
+    <string name="session_invalid">세션이 만료되었습니다</string>
+
+    <!-- app info -->
+    <string name="update_alert_title">업데이트 필요</string>
+    <string name="update_alert_message">업데이트가 필요합니다</string>
+    <string name="update_alert_accept">업데이트</string>
+    <string name="update_alert_exit">나중에 하기</string>
+
+    <!-- user info -->
+    <string name="coupon_info">쿠폰 보기</string>
+    <string name="notification">공지사항</string>
+    <string name="setting">설정</string>
+    <string name="service_info">서비스 정보</string>
+
+    <!-- address -->
+    <string name="service_not_available">서비스가 유효하지 않습니다</string>
+    <string name="invalid_lat_long_used">잘못된 위도, 경도</string>
+    <string name="no_address_found">주소를 찾을 수 없습니다</string>
+    <string name="address_found">주소를 찾았습니다</string>
+    <string name="no_geocoder_available">Geocoder를 찾을 수 없습니다</string>
+
+    <!-- related to order status -->
+    <string name="pd_name_default">크린바스켓 PD</string>
+    <string name="pick_up_label">수거</string>
+    <string name="laundry_label">세탁</string>
+    <string name="drop_off_label">배달</string>
+    <string name="finish_label">완료</string>
+    <string name="pick_up_time_label">수거 시간</string>
+    <string name="drop_off_time_label">배달 시간</string>
+    <string name="feedback_label">평가하기</string>
+    <string name="pick_up_wait">수거 대기</string>
+    <string name="pick_up_man_selected">수거 예정</string>
+    <string name="pick_up_finish">세탁 중</string>
+    <string name="deliverer_selected">배달 예정</string>
+    <string name="deliverer_finish">배달 완료</string>
+
+    <!-- related to order modify -->
+    <string name="order_modify">주문 변경 / 취소</string>
+    <string name="order_cancel_confirm">주문을 취소하시겠습니까?</string>
+
+    <!-- related to order item -->
+    <string name="default_name">아이템</string>
+    <string name="y_shirt">와이셔츠</string>
+    <string name="suit">정장 한 벌</string>
+    <string name="suit_jacket">정장 상의</string>
+    <string name="suit_pants">정장 하의</string>
+    <string name="trousers">바지</string>
+    <string name="skirt">스커트</string>
+    <string name="blouse">블라우스</string>
+    <string name="one_piece">원피스</string>
+    <string name="coat">코트</string>
+    <string name="jumper">점퍼</string>
+    <string name="jacket">자켓</string>
+    <string name="sweater">스웨터</string>
+    <string name="school_uniform">교복</string>
+    <string name="t_shirt">티셔츠</string>
+    <string name="leather_jumper_long">가죽점퍼(Long)</string>
+    <string name="leather_jumper_short">가죽점퍼(Short)</string>
+    <string name="outdoor">아웃도어</string>
+    <string name="golfwear">골프웨어</string>
+    <string name="cardigan">가디건</string>
+    <string name="vest">조끼</string>
+    <string name="korean_clothes">한복</string>
+    <string name="tie">넥타이</string>
+    <string name="scarf">스카프</string>
+    <string name="muffler">목도리</string>
+    <string name="silk">실크</string>
+    <string name="hemp">마</string>
+    <string name="wool">울</string>
+    <string name="cashmere">캐시미어</string>
+    <string name="bedclothes_single">이불(싱글)</string>
+    <string name="bedclothes_double">이불(더블)</string>
+    <string name="bedclothes_queen">이불(퀸)</string>
+    <string name="bedclothes_cover">이불 커버</string>
+    <string name="mustang">인조무스탕</string>
+
+    <!-- related to order category -->
+    <string name="offers">추천</string>
+    <string name="business">비즈니스</string>
+    <string name="top">상의</string>
+    <string name="bottom">하의</string>
+    <string name="outer">아우터</string>
+    <string name="bedclothes">이불</string>
+    <string name="etc">기타</string>
+    <string name="add">추가비용</string>
+</resources>

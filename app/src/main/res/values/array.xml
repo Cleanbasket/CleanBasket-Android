@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="order_modify_menu">
+        <item>품목 변경</item>
+        <item>수거배달 시간 변경</item>
+        <item>쿠폰 / 마일리지 변경</item>
+        <item>주문 취소</item>
+    </string-array>
+</resources>

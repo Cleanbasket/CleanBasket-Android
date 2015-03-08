@@ -1,0 +1,72 @@
+#
+# generated on 2015/03/07 11:41:41
+#
+# --table-start--
+dataClass=com.washappkorea.corp.cleanbasket.io.model.AppInfo
+tableName=appinfo
+# --table-fields-start--
+# --field-start--
+fieldName=aiid
+id=true
+# --field-end--
+# --field-start--
+fieldName=order_item_ver
+# --field-end--
+# --field-start--
+fieldName=android_app_ver
+# --field-end--
+# --field-start--
+fieldName=ios_app_ver
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.washappkorea.corp.cleanbasket.io.model.OrderCategory
+tableName=ordercategory
+# --table-fields-start--
+# --field-start--
+fieldName=id
+id=true
+# --field-end--
+# --field-start--
+fieldName=name
+# --field-end--
+# --field-start--
+fieldName=img
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.washappkorea.corp.cleanbasket.io.model.OrderItem
+tableName=orderitem
+# --table-fields-start--
+# --field-start--
+fieldName=item_code
+id=true
+# --field-end--
+# --field-start--
+fieldName=category
+# --field-end--
+# --field-start--
+fieldName=name
+# --field-end--
+# --field-start--
+fieldName=descr
+# --field-end--
+# --field-start--
+fieldName=price
+# --field-end--
+# --field-start--
+fieldName=count
+# --field-end--
+# --field-start--
+fieldName=img
+# --field-end--
+# --field-start--
+fieldName=discountRate
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
