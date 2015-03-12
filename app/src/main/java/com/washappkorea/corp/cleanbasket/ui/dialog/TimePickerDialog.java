@@ -123,6 +123,8 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
 
         mButtonAccept.setOnClickListener(this);
         mButtonCancel.setOnClickListener(this);
+
+        
     }
 
     @Override

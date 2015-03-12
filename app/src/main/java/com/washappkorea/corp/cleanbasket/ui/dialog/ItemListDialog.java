@@ -11,13 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
+import com.washappkorea.corp.cleanbasket.ui.MainActivity;
 import com.washappkorea.corp.cleanbasket.ui.OrderFragment;
 import com.washappkorea.corp.cleanbasket.ui.OrderInfoFragment;
 import com.washappkorea.corp.cleanbasket.ui.OrderStatusFragment;
@@ -29,7 +29,7 @@ import java.util.List;
 public class ItemListDialog extends DialogFragment implements View.OnClickListener {
     private static final String TAG = ItemListDialog.class.getSimpleName();
 
-    private ListView mOrderItemListView;
+    private GridView mOrderItemGridView;
     private TextView mNumberTextView;
     private TextView mTotalTextView;
     private Button mAcceptButton;
@@ -62,7 +62,7 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
 
         View rootView = inflater.inflate(R.layout.dialog_item_list, container, false);
 
-        mOrderItemListView = (ListView) rootView.findViewById(R.id.listview_item_list);
+        mOrderItemGridView = (GridView) rootView.findViewById(R.id.gridview_item_list);
         mNumberTextView = (TextView) rootView.findViewById(R.id.textview_item_number_list);
         mTotalTextView = (TextView) rootView.findViewById(R.id.textview_item_total_list);
         mAcceptButton = (Button) rootView.findViewById(R.id.button_accept_list);
@@ -79,7 +79,8 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
 
         if(orderItems != null) {
             ItemListAdapter mItemListAdapter = new ItemListAdapter(getActivity(), 0, orderItems);
-            mOrderItemListView.setAdapter(mItemListAdapter);
+            mOrderItemGridView.setNumColumns(2);
+            mOrderItemGridView.setAdapter(mItemListAdapter);
 
             mNumberTextView.setText(
                     mItemListAdapter.getItemNumber() +
@@ -91,7 +92,7 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
                     getString(R.string.monetary_unit));
         }
 
-        if (getTag().equals(OrderFragment.ITEM_LIST_DIALOG_TAG)) {
+        if (getTag().equals(OrderFragment.ITEM_LIST_DIALOG_TAG) || getTag().equals(OrderFragment.MODIFY_ITEM_LIST_DIALOG_TAG)) {
             mAcceptBigButton.setVisibility(View.GONE);
             mModifyButton.setVisibility(View.GONE);
         }
@@ -118,11 +119,21 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
             case R.id.button_accept_list_big:
                 dismiss();
 
-                if (getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG) == null)
-                    addFragment(R.id.layout_order_fragment, new OrderInfoFragment());
+                if (getTag().equals(OrderFragment.MODIFY_ITEM_LIST_DIALOG_TAG)) {
+                    if (getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY) == null)
+                        addFragment(R.id.layout_order_state_fragment, new OrderInfoFragment());
+                    else {
+                        ((OrderInfoFragment) getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY)).setCalculationInfo();
+                        showFragment(getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY));
+                    }
+                }
                 else {
-                    ((OrderInfoFragment) getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG)).setCalculationInfo();
-                    showFragment(getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG));
+                    if (getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG) == null)
+                        addFragment(R.id.layout_order_fragment, new OrderInfoFragment());
+                    else {
+                        ((OrderInfoFragment) getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG)).setCalculationInfo();
+                        showFragment(getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG));
+                    }
                 }
                 break;
 
@@ -143,6 +154,7 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
     private void addFragment(int containerViewId, Fragment fragment) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.add(containerViewId, fragment, OrderInfoFragment.TAG);
+        ft.addToBackStack(MainActivity.NEW_INFO_FRAGMENT);
         ft.commit();
     }
 
@@ -150,12 +162,14 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.hide(hideFragment);
         ft.show(showFragment);
+        ft.addToBackStack(MainActivity.CHANGE_TO_ORDER_FRAGMENT);
         ft.commit();
     }
 
     private void showFragment(Fragment fragment) {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.show(fragment);
+        ft.addToBackStack(MainActivity.CHANGE_TO_INFO_FRAGMENT);
         ft.commit();
     }
 
@@ -181,7 +195,6 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
             if (convertView == null) {
                 convertView = mLayoutInflater.inflate(R.layout.item_orderitem_list, parent, false);
                 holder = new OrderItemListViewHolder();
-                holder.orderImageView = (ImageView) convertView.findViewById(R.id.imageview_orderitem_list);
                 holder.textViewOrderItem = (TextView) convertView.findViewById(R.id.textview_orderitem_list);
                 holder.textViewOrderItemPrice = (TextView) convertView.findViewById(R.id.textview_orderitem_price_list);
                 holder.textViewOrderItemCount = (TextView) convertView.findViewById(R.id.textview_orderitem_count_list);
@@ -190,7 +203,6 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
             } else
                 holder = (OrderItemListViewHolder) convertView.getTag();
 
-            holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
             holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
             holder.textViewOrderItemPrice.setText(String.valueOf(getItem(position).price) + getContext().getString(R.string.monetary_unit));
             holder.textViewOrderItemCount.setText(getItem(position).count + getString(R.string.item_unit));
@@ -200,7 +212,6 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
         }
 
         protected class OrderItemListViewHolder {
-            public ImageView orderImageView;
             public TextView textViewOrderItem;
             public TextView textViewOrderItemPrice;
             public TextView textViewOrderItemCount;

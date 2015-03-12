@@ -5,4 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".SettingActivity">
 
+    <Switch
+        android:id="@+id/switch_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/event_notification"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:checked="true" />
 </RelativeLayout>

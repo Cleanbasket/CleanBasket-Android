@@ -29,6 +29,7 @@ import java.util.List;
 
 public class CalculationDialog extends DialogFragment implements View.OnClickListener {
     private static final String TAG = CalculationDialog.class.getSimpleName();
+    public static final String MODIFY_TAG = "MODIFY_" + CalculationDialog.class.getSimpleName();
 
     private ListView mCalculationListView;
     private Button mAcceptButton;
@@ -38,8 +39,6 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
     private Order mOrder;
 
     private CalculationInfoAdapter mCalculationInfoAdapter;
-
-    private ArrayList<CalculationInfo> coupons;
 
     public static CalculationDialog newInstance(Order order) {
         CalculationDialog cd = new CalculationDialog();
@@ -82,6 +81,8 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
         calculationInfos.add(new CalculationInfo("ic_sale", getOrderItemCount() + getString(R.string.item_unit), getOrderPreTotal(), CalculationInfo.PRE_TOTAL));
         if (mOrder.dropoff_price > 0)
             calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.pick_up_cost), mOrder.dropoff_price, CalculationInfo.COST));
+        if (mOrder.sale > 0)
+            calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.sale_label), mOrder.sale, CalculationInfo.SALE));
         if (mOrder.mileage > 0)
             calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.mileage), mOrder.mileage, CalculationInfo.MILEAGE));
         if (getCouponTotal() > 0)
@@ -98,9 +99,17 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_accpet_calculation_list:
+                if (getTag().equals(MODIFY_TAG)) {
+                    updateOrder(mOrder);
+                }
+
                 dismiss();
                 break;
         }
+    }
+
+    private void updateOrder(Order mOrder) {
+
     }
 
     private int getOrderItemCount() {
@@ -130,12 +139,12 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
     }
 
     private int getCouponTotal() {
-        if (mOrder.coupons == null)
+        if (mOrder.coupon == null)
             return 0;
 
         int total = 0;
 
-        for (Coupon coupon : mOrder.coupons) {
+        for (Coupon coupon : mOrder.coupon) {
             total = total + coupon.value;
         }
 

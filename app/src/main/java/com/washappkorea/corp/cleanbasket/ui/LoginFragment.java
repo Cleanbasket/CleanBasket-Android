@@ -23,6 +23,8 @@ public class LoginFragment extends Fragment {
                 break;
             case 2:
                 break;
+            case 3:
+                break;
         }
 
         return rootView;

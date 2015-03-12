@@ -17,7 +17,7 @@ public class OrderItem extends BaseDaoEnabled<OrderItem, Integer> implements Par
     @DatabaseField public int price;
     @DatabaseField public int count;
     @DatabaseField public String img;
-    @DatabaseField public double discountRate;
+    @DatabaseField public double discount_rate;
 
     public OrderItem() {
 
@@ -39,7 +39,7 @@ public class OrderItem extends BaseDaoEnabled<OrderItem, Integer> implements Par
         this.price = source.readInt();
         this.count = source.readInt();
         this.img = source.readString();
-        this.discountRate = source.readFloat();
+        this.discount_rate = source.readFloat();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class OrderItem extends BaseDaoEnabled<OrderItem, Integer> implements Par
         dest.writeInt(price);
         dest.writeInt(count);
         dest.writeString(img);
-        dest.writeDouble(discountRate);
+        dest.writeDouble(discount_rate);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

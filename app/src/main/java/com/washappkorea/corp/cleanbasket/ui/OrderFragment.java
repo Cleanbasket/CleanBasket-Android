@@ -30,9 +30,11 @@ import com.washappkorea.corp.cleanbasket.io.listener.NetworkErrorListener;
 import com.washappkorea.corp.cleanbasket.io.model.AppInfo;
 import com.washappkorea.corp.cleanbasket.io.model.ItemInfo;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
+import com.washappkorea.corp.cleanbasket.io.model.Order;
 import com.washappkorea.corp.cleanbasket.io.model.OrderCategory;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
 import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
+import com.washappkorea.corp.cleanbasket.ui.dialog.CalculationDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.ItemListDialog;
 import com.washappkorea.corp.cleanbasket.ui.widget.OrderItemAdapter;
 import com.washappkorea.corp.cleanbasket.ui.widget.OrderItemsView;
@@ -43,12 +45,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 public class OrderFragment extends Fragment implements View.OnClickListener, SearchView.OnQueryTextListener {
-    private static final String TAG = OrderFragment.class.getSimpleName();
+    public static final String TAG = OrderFragment.class.getSimpleName();
     public static final String ITEM_LIST_DIALOG_TAG = "ITEM_LIST_DIALOG";
+    public static final String MODIFY_ITEM_LIST_DIALOG_TAG = "MODIFY_ITEM_LIST_DIALOG";
 
+    private Boolean isModifyOrder = false;
+
+    private Order mOrder;
     private OrderItemsView mOrderItemsView;
     private OrderItemAdapter mOrderItemAdapter;
     private SearchView mSearchView;
@@ -56,6 +63,9 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
     private TextView mTextViewItemNumber;
     private TextView mTextViewItemTotal;
+    private TextView mTextViewOrderButton;
+
+    private ArrayList<OrderItem> mOrderItem;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +75,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         mOrderItemAdapter = new OrderItemAdapter(getActivity(), R.layout.item_orderitem);
         mSearchView = (SearchView) rootView.findViewById(R.id.searchview_item);
         mOrderButton = (RelativeLayout) rootView.findViewById(R.id.button_order);
+        mTextViewOrderButton = (TextView) rootView.findViewById(R.id.textview_order_button_label);
         mTextViewItemNumber = (TextView) rootView.findViewById(R.id.textview_item_number);
         mTextViewItemTotal = (TextView) rootView.findViewById(R.id.textview_item_total);
 
@@ -78,6 +89,9 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (isModifyOrder)
+            mTextViewOrderButton.setText(R.string.label_order_modify);
 
         mSearchView.setOnClickListener(this);
         mSearchView.setOnQueryTextListener(this);
@@ -95,6 +109,12 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         getOrderItemFromDB();
 
         getAppInfo();
+    }
+
+    public void setOrderInfo(Order order) {
+        isModifyOrder = true;
+        mOrder = order;
+        mOrderItem = order.item;
     }
 
     private void getOrderItem() {
@@ -174,12 +194,28 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         if (orderItems.size() == 0)
             return;
 
+        Log.i(TAG, "insertOrderItem");
+
         Collections.sort(orderItems, new Comparator<OrderItem>() {
             @Override
             public int compare(OrderItem lhs, OrderItem rhs) {
                 return lhs.category - rhs.category;
             }
         });
+
+        if (mOrderItem != null) {
+            HashMap<Integer, OrderItem> map = new HashMap<Integer, OrderItem>();
+
+            for (OrderItem orderItem : mOrderItem) {
+                map.put(orderItem.item_code, orderItem);
+            }
+
+            for (OrderItem oi : orderItems) {
+                if (map.containsKey(oi.item_code)) {
+                    oi.count = map.get(oi.item_code).count;
+                }
+            }
+        }
 
         if (mOrderItemAdapter != null) {
             mOrderItemAdapter.addAll(orderItems);
@@ -211,18 +247,32 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                 break;
 
             case R.id.button_order:
-                popItemListDialog(getOrderItemAdapter().getSelectedItems());
+                if (isModifyOrder)
+                    popCalculationDialog(CalculationDialog.MODIFY_TAG);
+                else
+                    popItemListDialog(getOrderItemAdapter().getSelectedItems(), ITEM_LIST_DIALOG_TAG);
                 break;
         }
     }
 
-    private void popItemListDialog(ArrayList<OrderItem> orderItems) {
+    private void popItemListDialog(ArrayList<OrderItem> orderItems, String tag) {
         ItemListDialog itemListDialog =
                 ItemListDialog.newInstance(orderItems);
 
         itemListDialog.show(
                 getActivity().getSupportFragmentManager(),
-                ITEM_LIST_DIALOG_TAG);
+                tag);
+    }
+
+    private void popCalculationDialog(String tag) {
+        mOrder.item = getOrderItemAdapter().getSelectedItems();
+
+        CalculationDialog calculationDialog =
+                CalculationDialog.newInstance(mOrder);
+
+        calculationDialog.show(
+                getActivity().getSupportFragmentManager(),
+                tag);
     }
 
     @Override
@@ -267,8 +317,8 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
                         getDBHelper().getAppInfoDao().createOrUpdate(appInfo);
 
-                    Log.i(TAG, "Downloaded app info successfully");
-                    break;
+                        Log.i(TAG, "Downloaded app info successfully");
+                        break;
                 }
             }
         }, new Response.ErrorListener() {

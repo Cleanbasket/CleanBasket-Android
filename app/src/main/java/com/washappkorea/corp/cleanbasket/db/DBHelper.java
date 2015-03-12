@@ -9,7 +9,9 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.washappkorea.corp.cleanbasket.io.model.Address;
 import com.washappkorea.corp.cleanbasket.io.model.AppInfo;
+import com.washappkorea.corp.cleanbasket.io.model.Notification;
 import com.washappkorea.corp.cleanbasket.io.model.OrderCategory;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
 
@@ -24,6 +26,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<AppInfo, Integer> appInfoDao = null;
     private RuntimeExceptionDao<OrderItem, Integer> orderItemDao = null;
     private RuntimeExceptionDao<OrderCategory, Integer> orderCategoryDao = null;
+    private RuntimeExceptionDao<Address, Integer> addressDao = null;
+    private RuntimeExceptionDao<Notification, Integer> notificationDao = null;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -35,6 +39,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, AppInfo.class);
             TableUtils.createTable(connectionSource, OrderCategory.class);
             TableUtils.createTable(connectionSource, OrderItem.class);
+            TableUtils.createTable(connectionSource, Address.class);
+            TableUtils.createTable(connectionSource, Notification.class);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (SQLException e) {
             Log.e("Err", e.toString());
@@ -60,6 +66,20 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             orderItemDao = getRuntimeExceptionDao(OrderItem.class);
 
         return orderItemDao;
+    }
+
+    public RuntimeExceptionDao<Address, Integer> getAddressDao() {
+        if (addressDao == null)
+            addressDao = getRuntimeExceptionDao(Address.class);
+
+        return addressDao;
+    }
+
+    public RuntimeExceptionDao<Notification, Integer> getNotificationDao() {
+        if (notificationDao == null)
+            notificationDao = getRuntimeExceptionDao(Notification.class);
+
+        return notificationDao;
     }
 
     @Override

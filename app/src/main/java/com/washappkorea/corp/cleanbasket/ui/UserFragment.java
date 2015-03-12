@@ -14,16 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.gson.JsonSyntaxException;
 import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.RequestQueue;
-import com.washappkorea.corp.cleanbasket.io.listener.NetworkErrorListener;
+import com.washappkorea.corp.cleanbasket.io.model.AuthUser;
 import com.washappkorea.corp.cleanbasket.io.model.Coupon;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
@@ -34,17 +36,48 @@ import com.washappkorea.corp.cleanbasket.util.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserFragment extends Fragment implements ListView.OnItemClickListener {
+public class UserFragment extends Fragment implements ListView.OnItemClickListener, View.OnClickListener {
     private static final String TAG = UserFragment.class.getSimpleName();
 
     public static final String COUPON_VIEW_DIALOG_TAG = "COUPON_VIEW_DIALOG";
+    public static final Integer SETTING = 0;
+
+    public static final int BRONZE = 0;
+    public static final int SILVER = 1;
+    public static final int GOLD = 2;
+    public static final int LOVE = 3;
+
+    private View mRegisterView;
+    private View mUserInfoView;
+
+    private ImageView mImageViewUserClass;
+    private TextView mUserName;
+    private TextView mUserClass;
+    private TextView mUserClassInfo;
+    private TextView mUserClassMileage;
+    private Button mButtonClassInfo;
 
     private View mProgressView;
     private ListView mListView;
 
+    private Button mButtonRegister;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
+
+        mRegisterView = inflater.inflate(R.layout.custom_user_register, null);
+
+        mButtonRegister = (Button) mRegisterView.findViewById(R.id.button_register);
+
+        mUserInfoView = inflater.inflate(R.layout.custom_user_info, null);
+
+        mImageViewUserClass = (ImageView) mRegisterView.findViewById(R.id.imageview_user_class);
+        mUserName = (TextView) mRegisterView.findViewById(R.id.textview_user_name);
+        mUserClass = (TextView) mRegisterView.findViewById(R.id.textview_user_class);
+        mUserClassInfo = (TextView) mRegisterView.findViewById(R.id.textview_user_class_info);
+        mUserClassMileage = (TextView) mRegisterView.findViewById(R.id.textview_user_class_mileage);
+        mButtonClassInfo = (Button) mRegisterView.findViewById(R.id.button_view_class_info);
 
         mProgressView = rootView.findViewById(R.id.loading_progress);
         mListView = (ListView) rootView.findViewById(R.id.listview_menu);
@@ -66,13 +99,13 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         mListView.setAdapter(menuAdapter);
         mListView.setOnItemClickListener(this);
 
-//        getUserInfo();
+        getUserInfo();
     }
 
     private void getUserInfo() {
         showProgress(true);
         GetRequest getRequest = new GetRequest(getActivity());
-        getRequest.setUrl(AddressManager.GET_MEMBER_INFO);
+        getRequest.setUrl(AddressManager.GET_AUTH_MEMBER_INFO);
         getRequest.setListener(new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -87,15 +120,77 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                 switch (jsonData.constant) {
                     case Constants.SUCCESS:
                         showProgress(false);
+
+                        if (jsonData.data != null)
+                            showRegisterHeader();
+                        else {
+                            AuthUser authUser = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, AuthUser.class);
+                            showUserInfoHeader(authUser);
+                        }
                         break;
                 }
             }
-        }, new NetworkErrorListener(getActivity()));
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                showProgress(false);
+
+            }
+        });
         RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());
     }
 
-    private void insertUserInfo(ArrayList<MenuItem> menuItems) {
+    private void showUserInfoHeader(AuthUser authUser) {
+        mImageViewUserClass.setImageResource(R.drawable.ic_sale);
+        mUserName.setText(authUser.email);
+        mUserClass.setText(getClassName(authUser.user_class));
+        mUserClassInfo.setText(getClassDetail(authUser.user_class));
+        mUserClassMileage.setText(getString(R.string.mileage_available) + authUser.mileage + getString(R.string.mileage_available));
+        mButtonClassInfo.setOnClickListener(this);
 
+        mListView.addHeaderView(mUserInfoView);
+    }
+
+    private String getClassName(Integer user_class) {
+        switch (user_class) {
+            case BRONZE:
+                return getString(R.string.bronze_basket);
+            case SILVER:
+                return getString(R.string.silver_basket);
+            case GOLD:
+                return getString(R.string.gold_basket);
+            case LOVE:
+                return getString(R.string.love_basket);
+        }
+
+        return getString(R.string.bronze_basket);
+    }
+
+    private String getClassDetail(Integer user_class) {
+        switch (user_class) {
+            case BRONZE:
+                return getString(R.string.bronze_info);
+            case SILVER:
+                return getString(R.string.silver_info);
+            case GOLD:
+                return getString(R.string.bronze_info);
+            case LOVE:
+                return getString(R.string.love_info);
+        }
+
+        return getString(R.string.bronze_basket);
+    }
+
+    private void showRegisterHeader() {
+        mListView.addHeaderView(mRegisterView);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_view_class_info:
+                break;
+        }
     }
 
     @Override
@@ -103,7 +198,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         Intent intent = new Intent();
 
         switch (position) {
-            case 0:
+            case 1:
                 CouponDialog cd = CouponDialog.newInstance(new CouponDialog.OnCouponSetListener() {
                     @Override
                     public void onCouponSet(CouponDialog dialog, Coupon coupon) {
@@ -114,12 +209,17 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                 cd.show(getActivity().getSupportFragmentManager(), COUPON_VIEW_DIALOG_TAG);
                 break;
 
-            case 1:
+            case 2:
                 intent.setAction("com.washappkorea.corp.cleanbasket.ui.NoticeActivity");
                 startActivity(intent);
                 break;
 
             case 3:
+                intent.setAction("com.washappkorea.corp.cleanbasket.ui.SettingActivity");
+                startActivityForResult(intent, SETTING);
+                break;
+
+            case 4:
                 intent.setAction("com.washappkorea.corp.cleanbasket.ui.WebViewActivity");
                 intent.putExtra("type", WebViewActivity.SERVICE_INFO);
                 startActivity(intent);
@@ -127,8 +227,17 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         }
     }
 
-    private void startActivity(String intentInfo) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) {
+            case SettingActivity.LOG_OUT:
+                getActivity().finish();
 
+                Intent intent = new Intent();
+                intent.setAction("com.washappkorea.corp.cleanbasket.ui.LoginActivity");
+                startActivity(intent);
+                break;
+        }
     }
 
     protected class MenuItem {

@@ -4,12 +4,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_item_menu"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="?android:listPreferredItemHeight">
 
     <TextView
         android:id="@+id/textview_notice_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp" />
 
     <TextView
         android:id="@+id/textview_notice_datetime"

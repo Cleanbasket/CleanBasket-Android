@@ -7,16 +7,20 @@
     </style>
 
     <style name="ActionBarStyle.CleanBasket" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyle.CleanBasket</item>
+        <item name="android:background">@color/point_color</item>
         <item name="android:backgroundStacked">@color/background_stacked_color</item>
-        <item name="android:height">96dp</item>
     </style>
 
     <style name="ActionBarTabStyle.CleanBasket" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator</item>
-        <item name="android:height">96dp</item>
     </style>
 
     <style name="ActionBarTabBarStyle.CleanBasket" parent="@android:style/Widget.Holo.Light.ActionBar.TabBar">
         <item name="android:showDividers">none</item>
+    </style>
+
+    <style name="ActionBar.TitleTextStyle.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 </resources>

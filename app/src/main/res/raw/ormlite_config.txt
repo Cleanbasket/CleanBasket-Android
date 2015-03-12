@@ -1,5 +1,5 @@
 #
-# generated on 2015/03/07 11:41:41
+# generated on 2015/03/09 12:35:03
 #
 # --table-start--
 dataClass=com.washappkorea.corp.cleanbasket.io.model.AppInfo
@@ -65,7 +65,7 @@ fieldName=count
 fieldName=img
 # --field-end--
 # --field-start--
-fieldName=discountRate
+fieldName=discount_rate
 # --field-end--
 # --table-fields-end--
 # --table-end--

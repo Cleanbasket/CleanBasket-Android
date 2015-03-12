@@ -113,6 +113,12 @@ public class DateTimeFactory {
         return transFormat.format(date);
     }
 
+    public String getStringDateTime(Date date) {
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:00");
+
+        return transFormat.format(date);
+    }
+
     public String getStringTime(Context context, Date date) {
         SimpleDateFormat transFormat = new SimpleDateFormat(context.getString(R.string.time_parse));
 

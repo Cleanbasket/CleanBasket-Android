@@ -11,10 +11,13 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.washappkorea.corp.cleanbasket.R;
+import com.washappkorea.corp.cleanbasket.ui.SettingActivity;
 import com.washappkorea.corp.cleanbasket.ui.SplashActivity;
 
 
 public class GCMIntentService extends IntentService {
+    private static final String TAG = GCMIntentService.class.getSimpleName();
+
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
     private String message;
@@ -25,17 +28,19 @@ public class GCMIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences pref = getSharedPreferences("eventalarm", MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences(SettingActivity.NOTIFICATION, MODE_PRIVATE);
 
-        Log.i("afsd", "fads");
-        if(!pref.getBoolean("setting", true))
+        if(!pref.getBoolean("notification_switch_event", true))
+            return;
+        if(!pref.getBoolean("notification_switch_order", true))
             return;
 
         Bundle extras = intent.getExtras();
 
+        Log.i(TAG, extras.toString());
+
         if (extras.containsKey("message")) {
             String mp_message = intent.getExtras().getString("message");
-            //mp_message now contains the notification's text
 
             sendNotification(mp_message);
 

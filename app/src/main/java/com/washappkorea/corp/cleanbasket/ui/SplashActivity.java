@@ -1,6 +1,7 @@
 package com.washappkorea.corp.cleanbasket.ui;
 
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,12 @@ public class SplashActivity extends BaseActivity implements Response.Listener<St
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        final ActionBar bar = getActionBar();
+        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setDisplayShowHomeEnabled(false);
+        bar.setDisplayShowTitleEnabled(false);
     }
 
     @Override
@@ -47,7 +54,6 @@ public class SplashActivity extends BaseActivity implements Response.Listener<St
         }
         catch (JsonSyntaxException e) {
             redirectToLoginActivity();
-            super.finish();
 
             return;
         }
@@ -55,12 +61,10 @@ public class SplashActivity extends BaseActivity implements Response.Listener<St
         switch (jsonData.constant) {
             case Constants.SESSION_VALID:
                 redirectToMainActivity();
-                super.finish();
                 break;
 
             case Constants.SESSION_EXPIRED:
                 redirectToLoginActivity();
-                super.finish();
                 break;
         }
     }
@@ -68,16 +72,19 @@ public class SplashActivity extends BaseActivity implements Response.Listener<St
     @Override
     public void onErrorResponse(VolleyError volleyError) {
         redirectToLoginActivity();
-        super.finish();
     }
 
     private void redirectToLoginActivity() {
+        super.finish();
+
         Intent intent = new Intent();
         intent.setAction("com.washappkorea.corp.cleanbasket.ui.LoginActivity");
         startActivity(intent);
     }
 
     private void redirectToMainActivity() {
+        super.finish();
+
         Intent intent = new Intent();
         intent.setAction("com.washappkorea.corp.cleanbasket.ui.MainActivity");
         startActivity(intent);

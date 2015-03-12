@@ -12,6 +12,7 @@
     <string name="action_sign_in_email">이메일로 로그인</string>
     <string name="action_sign_in_short">로그인</string>
     <string name="action_sign_up">가입</string>
+    <string name="find_password">비밀번호 찾기</string>
     <string name="all_agree">전체 동의</string>
     <string name="info_service">서비스약관</string>
     <string name="info_protection">개인정보취급방침</string>
@@ -26,8 +27,8 @@
     <string name="error_invalid_email">이메일이 올바르지 않습니다</string>
     <string name="error_invalid_password">비밀번호가 너무 짧습니다</string>
     <string name="error_incorrect_password">비밀번호가 틀립니다</string>
-    <string name="error_incorrect_repeat">비밀번호가 다릅니다</string>
     <string name="error_field_required">반드시 채워야 합니다</string>
+    <string name="error_incorrect_repeat">비밀번호가 다릅니다</string>
 
     <string name="email_error">존재하지 않는 이메일입니다.</string>
     <string name="password_error">비밀번호가 일치하지 않습니다</string>
@@ -43,17 +44,24 @@
     <string name="check_environment">해당 항목을 체크해주시면 세탁물을 빠르게 선택할 수 있게 도와드립니다</string>
     <string name="monetary_unit">원</string>
     <string name="item_unit">개</string>
-    <string name="point_unit">원</string>
+    <string name="point_unit">점</string>
     <string name="label_item">품목</string>
     <string name="label_pre_total">계</string>
     <string name="label_total">총계</string>
     <string name="button_order">주문하기</string>
+
+    <!-- reladted to form fill -->
+    <string name="address_empty">주소를 입력해주셔야 합니다</string>
+    <string name="address_detail_empty">상세 주소를 입력해주셔야 합니다</string>
+    <string name="phone_empty">핸드폰 번호를 입력해주셔야 합니다</string>
+    <string name="datetime_empty">날짜를 입력해주셔야 합니다</string>
 
     <!-- related to order info fragment -->
     <string name="payment_method">현장 결제 수단 선택</string>
     <string name="payment_card">카드 결제</string>
     <string name="payment_cash">현금 결제</string>
     <string name="pick_up_cost">수거배송비</string>
+    <string name="sale_label">특별 할인</string>
     <string name="mileage">마일리지</string>
     <string name="mileage_available">사용 가능 마일리지</string>
     <string name="coupon">쿠폰</string>
@@ -61,6 +69,10 @@
     <string name="special">특별 할인</string>
     <string name="button_label_use">사용</string>
     <string name="mileage_short">가능한 마일리지보다 작게 입력해주세요</string>
+    <string name="area_unavailable_error">죄송합니다. 서비스 가능 지역이 아닙니다</string>
+    <string name="date_unavailable_error">죄송합니다. 해당 지역에서 해당 수거배달일에 서비스가 휴무입니다</string>
+    <string name="general_error">에러가 발생했습니다</string>
+    <string name="order_success">주문이 성공했습니다</string>
 
     <!-- related to time info -->
     <string name="time_picker_inform">시간을 선택해주세요</string>
@@ -81,6 +93,7 @@
     <string name="time_parse">HH시 mm분</string>
     <string name="date_parse">MM월 dd일(EEE)</string>
     <string name="datetime_parse">yy.MM.dd(EEE)</string>
+    <string name="coupon_not_available">10,000원 이상 주문 시 쿠폰을 사용하실 수 있습니다</string>
 
     <!-- related to address info -->
     <string name="address_district">동 주소를 입력해주세요</string>
@@ -88,6 +101,7 @@
     <string name="address_search_inform">동을 입력해주세요. (예. 역삼동)</string>
     <string name="address_select">주소 선택</string>
     <string name="contact">연락처를 입력해주세요</string>
+    <string name="memo_hint">추가 요청 사항을 입력해주세요</string>
     <string name="search_no_text">검색어를 입력하세요</string>
 
     <!-- general -->
@@ -100,6 +114,7 @@
     <string name="toast_error">에러가 발생했습니다</string>
     <string name="network_error">네트워크 연결 상태를 확인해주세요</string>
     <string name="session_invalid">세션이 만료되었습니다</string>
+    <string name="app_exit">\'뒤로\' 버튼을 한번 더 누르시면 앱을 종료합니다</string>
 
     <!-- app info -->
     <string name="update_alert_title">업데이트 필요</string>
@@ -120,6 +135,15 @@
     <string name="address_found">주소를 찾았습니다</string>
     <string name="no_geocoder_available">Geocoder를 찾을 수 없습니다</string>
 
+    <!-- setting -->
+    <string name="set_notification">알람</string>
+    <string name="event_notification">이벤트 알람</string>
+    <string name="order_notification">주문 알람</string>
+    <string name="current_version">현재 버전</string>
+    <string name="latest_version">최신 버전</string>
+    <string name="update">업데이트</string>
+    <string name="logout">로그아웃</string>
+
     <!-- related to order status -->
     <string name="pd_name_default">크린바스켓 PD</string>
     <string name="pick_up_label">수거</string>
@@ -138,6 +162,14 @@
     <!-- related to order modify -->
     <string name="order_modify">주문 변경 / 취소</string>
     <string name="order_cancel_confirm">주문을 취소하시겠습니까?</string>
+
+    <!-- related to notification -->
+    <string name="today">오늘</string>
+    <string name="pick_up_notification">시에 수거가 있습니다</string>
+    <string name="drop_off_notification">시에 배달이 있습니다</string>
+    <string name="pd_message">PD로부터 쪽지가 도착했습니다</string>
+    <string name="recommendation_coupon">님이 첫 주문을 하여 2,000원 쿠폰이 지급되었습니다</string>
+    <string name="issue_coupon">원 쿠폰이 지급되었습니다</string>
 
     <!-- related to order item -->
     <string name="default_name">아이템</string>
@@ -184,4 +216,41 @@
     <string name="bedclothes">이불</string>
     <string name="etc">기타</string>
     <string name="add">추가비용</string>
+
+    <string name="pref_change_password">비밀번호 변경</string>
+    <string name="current_password">현재 비밀번호</string>
+    <string name="new_password">새 비밀번호</string>
+    <string name="new_password_repeat">다시 입력</string>
+    <string name="success_password_change">비밀번호 변경 성공</string>
+    <string name="error_password_change">비밀번호 변경 실패</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">알람</string>
+    <string name="pref_header_version">버전 정보</string>
+
+    <!-- -->
+    <string name="map_search_title">주소 검색</string>
+    <string name="setting_title">설정</string>
+    <string name="feedback_title">평가하기</string>
+    <string name="notice_title">공지사항</string>
+
+    <!-- Related to Class -->
+    <string name="bronze_basket">브론즈바스켓</string>
+    <string name="silver_basket">실버바스켓</string>
+    <string name="gold_basket">골드바스켓</string>
+    <string name="love_basket">러브바스켓</string>
+    <string name="bronze_info">적립률 2%</string>
+    <string name="silver_info">적립률 3%</string>
+    <string name="gold_info">적립률 4%</string>
+    <string name="love_info">적립률 5%</string>
+
+    <!-- Related to Feedback -->
+    <string name="thanks_message">크린바스켓을 이용해주셔서 감사합니다</string>
+    <string name="laundry_quality">크린바스켓에 만족하셨나요?</string>
+    <string name="free_feedback">자유롭게 서비스에 대한 의견을 남겨주세요</string>
+    <string name="late_feedback">시간이 늦었습니다</string>
+    <string name="laundry_feedback">세탁 상태에 불만족해요</string>
+    <string name="kindness_feedback">PD가 불친절합니다</string>
+    <string name="feedback_success">평가가 완료되었습니다</string>
+    <string name="feedback_failure">평가에 실패했습니다</string>
 </resources>

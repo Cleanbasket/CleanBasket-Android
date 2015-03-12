@@ -85,4 +85,8 @@ public class SessionManager {
         SharedPreferences prefs = mContext.getSharedPreferences("session", mContext.MODE_PRIVATE);
         return prefs.getString(sessionId, "");
     }
+
+    public void clearSessionId() {
+        storeSessionIdPreference(SPRING_SECURITY, "");
+    }
 }

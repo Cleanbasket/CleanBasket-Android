@@ -76,7 +76,7 @@ public class MainTabsAdapter extends FragmentPagerAdapter implements ActionBar.T
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-
+        mViewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override

@@ -26,12 +26,15 @@ public class WebViewActivity extends BaseActivity {
 
         switch (type) {
             case TERM_OF_USE:
+                getActionBar().setTitle(R.string.info_service);
                 webView.loadUrl(Config.SERVER_ADDRESS + "term-of-use");
                 break;
             case PRIVACY:
+                getActionBar().setTitle(R.string.info_protection);
                 webView.loadUrl(Config.SERVER_ADDRESS + "privacy");
                 break;
             case SERVICE_INFO:
+                getActionBar().setTitle(R.string.service_info);
                 webView.loadUrl(Config.SERVER_ADDRESS + "service-info");
                 break;
         }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/layout_address_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/edittext_address"
@@ -155,11 +155,19 @@
             android:text="@string/payment_cash" />
     </RadioGroup>
 
+    <EditText
+        android:id="@+id/edittext_memo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radiogroup_payment_method"
+        android:hint="@string/memo_hint"
+        android:maxEms="200" />
+
     <Button
         android:id="@+id/button_gross_total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/radiogroup_payment_method"
+        android:layout_below="@+id/edittext_memo"
         android:layout_centerHorizontal="true"
         android:text="@string/label_total" />
-</RelativeLayout>
+</LinearLayout>

@@ -39,6 +39,9 @@ public class MapActivity extends BaseActivity implements MapView.MapViewEventLis
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_map);
+
+        getActionBar().setTitle(R.string.map_search_title);
+
         mEditTextSearchAddress = (EditText) findViewById(R.id.edittext_address_search);
         mImageviewAddressSearch = (ImageView) findViewById(R.id.imageview_address_search);
         mTextViewCurrentAddress = (TextView) findViewById(R.id.textview_current_address);

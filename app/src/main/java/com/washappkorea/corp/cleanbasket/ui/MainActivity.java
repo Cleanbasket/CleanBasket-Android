@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
@@ -20,6 +21,7 @@ import com.washappkorea.corp.cleanbasket.io.RequestQueue;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
+import com.washappkorea.corp.cleanbasket.util.BackPressCloseHandler;
 import com.washappkorea.corp.cleanbasket.util.Constants;
 
 import org.json.JSONObject;
@@ -29,6 +31,12 @@ import java.io.IOException;
 public class MainActivity extends BaseActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    public static final String NEW_INFO_FRAGMENT = "NEW_INFO";
+    public static final String NEW_ORDER_FRAGMENT = "NEW_ORDER";
+    public static final String CHANGE_TO_INFO_FRAGMENT = "CHANGE_TO_INFO";
+    public static final String CHANGE_TO_ORDER_FRAGMENT = "CHANGE_TO_ORDER";
+    public static final String REMOVE_NEW_ORDER_FRAGMENT = "REMOVE_NEW_ORDER";
+
     private ViewPager mViewPager;
     private MainTabsAdapter mTabsAdapter;
 
@@ -36,6 +44,8 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
     public static final String GCM = "gcm";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
+
+    private BackPressCloseHandler backPressCloseHandler;
 
     private String SENDER_ID = "1008388733235";
     private GoogleCloudMessaging gcm;
@@ -48,33 +58,24 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         setContentView(R.layout.activity_main);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(4);
 
         final ActionBar bar = getActionBar();
+
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
         bar.setDisplayShowHomeEnabled(false);
         bar.setDisplayShowTitleEnabled(false);
 
         mTabsAdapter = new MainTabsAdapter(this, mViewPager);
-        mTabsAdapter.addTab(
-                bar.newTab()
-//                        .setIcon(R.drawable.ic_order)
-                        .setText(R.string.menu_label_order), OrderFragment.class, null);
-        mTabsAdapter.addTab(
-                bar.newTab()
-//                        .setContentDescription(R.string.menu_label_delivery)
-                        .setText(R.string.menu_label_delivery), OrderStatusFragment.class, null);
-        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.ic_setting).setContentDescription(R.string.menu_label_information), UserFragment.class, null);
-        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.ic_alarm).setContentDescription(R.string.menu_label_notification), NotificationFragment.class, null);
+        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.menu_01), OrderFragment.class, null);
+        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.menu_02), OrderStatusFragment.class, null);
+        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.menu_03), UserFragment.class, null);
+        mTabsAdapter.addTab(bar.newTab().setIcon(R.drawable.menu_04), NotificationFragment.class, null);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         gcm = GoogleCloudMessaging.getInstance(this);
         regId = getRegistrationId(this);
@@ -82,6 +83,8 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         if (regId.isEmpty()) {
             registerInBackground();
         }
+
+        backPressCloseHandler = new BackPressCloseHandler(this);
     }
 
     private String getRegistrationId(Context context) {
@@ -109,8 +112,8 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         return registrationId;
     }
 
-    private SharedPreferences getGCMPreferences() {
-        return getSharedPreferences(GCM, Context.MODE_PRIVATE);
+    public ViewPager getViewPager() {
+        return mViewPager;
     }
 
     private static int getAppVersion(Context context) {
@@ -174,6 +177,10 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         editor.commit();
     }
 
+    private SharedPreferences getGCMPreferences() {
+        return getSharedPreferences(GCM, Context.MODE_PRIVATE);
+    }
+
     @Override
     public void onResponse(JSONObject response) {
         JsonData jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
@@ -195,5 +202,38 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.i(TAG, "Reg Id 등록 실패 : " + error.toString());
+    }
+
+    @Override
+    public void onBackPressed() {
+        String transactionName = null;
+
+        try {
+            android.support.v4.app.FragmentManager.BackStackEntry bse = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
+            transactionName = bse.getName();
+        } catch (Exception e) {
+            backPressCloseHandler.onBackPressed();
+
+            return;
+        }
+
+        if (transactionName.equals(NEW_INFO_FRAGMENT) || transactionName.equals(CHANGE_TO_INFO_FRAGMENT)) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.hide(getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG));
+            ft.show(getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.pager+":0"));
+            ft.addToBackStack(CHANGE_TO_ORDER_FRAGMENT);
+            ft.commit();
+        }
+        else if (transactionName.equals(NEW_ORDER_FRAGMENT)) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.remove(getSupportFragmentManager().findFragmentByTag(OrderFragment.TAG));
+            ft.addToBackStack(REMOVE_NEW_ORDER_FRAGMENT);
+            ft.commit();
+        }
+        else {
+            backPressCloseHandler.onBackPressed();
+        }
+
+        Log.i(TAG, "Back Pressed");
     }
 }

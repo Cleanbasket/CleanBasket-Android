@@ -44,6 +44,11 @@ public class PostRequest {
         this.mErrListener = errListener;
     }
 
+    public void setParams(JSONObject jsonObject) {
+        mObj = jsonObject;
+        Log.i("PostRequest", mObj.toString());
+    }
+
     public void setParams(String key, String value) {
         try {
             mObj.put(key, value);

@@ -1,6 +1,7 @@
 package com.washappkorea.corp.cleanbasket.ui;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,35 +19,50 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.Config;
 import com.washappkorea.corp.cleanbasket.R;
+import com.washappkorea.corp.cleanbasket.io.RequestQueue;
+import com.washappkorea.corp.cleanbasket.io.model.Address;
 import com.washappkorea.corp.cleanbasket.io.model.Coupon;
+import com.washappkorea.corp.cleanbasket.io.model.JsonData;
+import com.washappkorea.corp.cleanbasket.io.model.Order;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
+import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.ui.dialog.CouponDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.DatePickerDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.ItemListDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.MileageDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.TimePickerDialog;
+import com.washappkorea.corp.cleanbasket.util.AddressManager;
+import com.washappkorea.corp.cleanbasket.util.Constants;
 import com.washappkorea.corp.cleanbasket.util.DateTimeFactory;
 
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapReverseGeoCoder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class OrderInfoFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, MileageDialog.OnDialogDismissListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MapReverseGeoCoder.ReverseGeoCodingResultListener {
+public class OrderInfoFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, MileageDialog.OnDialogDismissListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, Response.Listener<JSONObject>, Response.ErrorListener {
     public static final String TAG = OrderInfoFragment.class.getSimpleName();
+    public static final String TAG_MODIFY = OrderInfoFragment.class.getSimpleName() + "_MODIFY";
     private static final String TIME_PICKER_TAG = "TIME_PICKER";
     private static final String CALENDAR_PICKER_TAG = "CALENDAR_PICKER";
     public static final String ITEM_LIST_DIALOG_TAG_INFO = "ITEM_LIST_DIALOG_INFO";
@@ -70,11 +86,13 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     public static final int GET_ADDRESS = 0;
     public static final int ADDRESS_RESULT = 1;
 
+    public static final int PAYMENT_CARD = 0;
+    public static final int PAYMENT_CASH = 1;
+
     public static final int FREE_PICK_UP_PRICE = 20000;
+    public static final int MINIMUM_ORDER = 10000;
 
-    private OrderFragment mOrderFragment;
-
-    private RelativeLayout mHeader;
+    private LinearLayout mHeader;
 
     private LinearLayout mLayoutSelector;
     private TextView mTextViewSelectedPickUpDate;
@@ -84,21 +102,30 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     private EditText mEditTextAddress;
     private EditText mEditTextDetailAddress;
     private EditText mEditTextContact;
+    private EditText mEditTextMemo;
     private ImageView mImageViewCurrentLocation;
+    private RadioButton mButtonCard;
+    private RadioButton mButtonCash;
     private Button mButtonToday;
     private Button mButtonTomorrow;
     private Button mButtonEtc;
     private Button mButtonGrossTotal;
     private ListView mCalculationInfoListView;
 
+    private Button mButtonOrder;
+
     private CalculationInfoAdapter mCalculationInfoAdapter;
 
     private Boolean mAddressFlag;
 
+    private Order mOrder;
+    private Integer mPaymentMethod = 0;
+    private Coupon mCoupon;
+
     private int mTotal;
 
-    private Date mSelectedPickUpDate;
-    private Date mSelectedDropOffDate;
+    private Date mSelectedPickUpDate = null;
+    private Date mSelectedDropOffDate = null;
 
     protected Location mLastLocation;
     protected GoogleApiClient mGoogleApiClient;
@@ -107,7 +134,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_order_info, container, false);
 
-        mHeader = (RelativeLayout) inflater.inflate(R.layout.custom_order_info, null);
+        mHeader = (LinearLayout) inflater.inflate(R.layout.custom_order_info, null);
 
         mLayoutSelector = (LinearLayout) mHeader.findViewById(R.id.layout_select_date);
         mTextViewSelectedPickUpDate = (TextView) mHeader.findViewById(R.id.textview_selected_pickup_date);
@@ -117,14 +144,18 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mEditTextAddress = (EditText) mHeader.findViewById(R.id.edittext_address);
         mEditTextDetailAddress = (EditText) mHeader.findViewById(R.id.edittext_detail_address);
         mEditTextContact = (EditText) mHeader.findViewById(R.id.edittext_contact);
+        mEditTextMemo = (EditText) mHeader.findViewById(R.id.edittext_memo);
         mImageViewCurrentLocation = (ImageView) mHeader.findViewById(R.id.imageview_current_location);
+        mButtonCard = (RadioButton) mHeader.findViewById(R.id.radiobutton_payment_card);
+        mButtonCash = (RadioButton) mHeader.findViewById(R.id.radiobutton_payment_cash);
         mButtonToday = (Button) mHeader.findViewById(R.id.imageview_datetime_today);
         mButtonTomorrow = (Button) mHeader.findViewById(R.id.imageview_datetime_tomorrow);
         mButtonEtc = (Button) mHeader.findViewById(R.id.imageview_datetime_etc);
         mButtonGrossTotal = (Button) mHeader.findViewById(R.id.button_gross_total);
-        mButtonGrossTotal = (Button) mHeader.findViewById(R.id.button_gross_total);
 
         mCalculationInfoListView = (ListView) rootView.findViewById(R.id.listview_calculation);
+
+        mButtonOrder = (Button) rootView.findViewById(R.id.button_order_finish);
 
         mTextViewSelectedPickUpDate.setVisibility(View.INVISIBLE);
         mTextViewSelectedPickUpTime.setVisibility(View.INVISIBLE);
@@ -137,9 +168,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         super.onActivityCreated(savedInstanceState);
 
         mEditTextContact.setText(getPhoneNumber());
-
-//        mEditTextAddress.setOnFocusChangeListener(this);
-//        mEditTextDetailAddress.setOnFocusChangeListener(this);
 
         mImageViewCurrentLocation.setOnClickListener(this);
         mButtonToday.setOnClickListener(this);
@@ -164,12 +192,29 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mCalculationInfoAdapter = new CalculationInfoAdapter(getActivity(), R.id.layout_calculation_info, calculationInfos);
         mCalculationInfoListView.setAdapter(mCalculationInfoAdapter);
         mCalculationInfoListView.addHeaderView(mHeader);
+
+        mButtonCard.setOnClickListener(this);
+        mButtonCash.setOnClickListener(this);
+        mButtonOrder.setOnClickListener(this);
+
+        getAddressFromDB();
     }
 
-//    @Override
-//    public void onFocusChange(View v, boolean hasFocus) {
-//        mCalculationInfoListView.setSelection(0);
-//    }
+    private void getAddressFromDB() {
+        Address address = null;
+
+        try {
+            address = ((MainActivity) getActivity()).getDBHelper().getAddressDao().queryBuilder().orderBy(Address.ID, false).limit(1L).queryForFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (address != null) {
+            mAddressFlag = true;
+            mEditTextAddress.setText(address.address);
+            mEditTextDetailAddress.setText(address.address);
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -231,10 +276,147 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 break;
 
             case R.id.button_gross_total:
-                ArrayList<OrderItem> mOrderItems = ((OrderFragment) mOrderFragment).getOrderItemAdapter().getSelectedItems();
+                ArrayList<OrderItem> mOrderItems = getOrderFragment().getOrderItemAdapter().getSelectedItems();
                 popItemListDialog(mOrderItems);
+               break;
+
+            case R.id.button_order_finish:
+                if (checkFormFilled()) {
+                    popOrderConfirmDialog();
+                    insertToDataBase();
+                }
+                break;
+
+            case R.id.radiobutton_payment_card:
+                mPaymentMethod = 0;
+                break;
+
+            case R.id.radiobutton_payment_cash:
+                mPaymentMethod = 1;
                 break;
         }
+    }
+
+    private void insertToDataBase() {
+        ((MainActivity) getActivity()).getDBHelper().getAddressDao().createOrUpdate(
+                new Address(mEditTextAddress.getText().toString(), mEditTextDetailAddress.getText().toString()));
+    }
+
+    private boolean checkFormFilled() {
+        mEditTextAddress.setError(null);
+        mEditTextDetailAddress.setError(null);
+        mEditTextContact.setError(null);
+
+        if (mEditTextAddress.getText().toString().equals("")) {
+            mEditTextAddress.setError(getString(R.string.address_empty));
+            return false;
+        }
+
+        if (mEditTextDetailAddress.getText().toString().equals("")) {
+            mEditTextDetailAddress.setError(getString(R.string.address_detail_empty));
+            return false;
+        }
+
+        if (mEditTextContact.getText().toString().equals("")) {
+            mEditTextContact.setError(getString(R.string.phone_empty));
+            return false;
+        }
+
+        if (mSelectedPickUpDate == null || mSelectedDropOffDate == null) {
+            Toast.makeText(getActivity(), R.string.datetime_empty, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void makeOrderInfo() {
+        mOrder = new Order();
+        mOrder.coupon = new ArrayList<Coupon>();
+
+        mOrder.phone = mEditTextContact.getText().toString();
+        mOrder.address = mEditTextAddress.getText().toString();
+        mOrder.addr_building = mEditTextDetailAddress.getText().toString();
+        mOrder.memo = mEditTextMemo.getText().toString();
+        mOrder.price = mCalculationInfoAdapter.getPriceByType(CalculationInfo.TOTAL);
+        mOrder.dropoff_price = mCalculationInfoAdapter.getPriceByType(CalculationInfo.COST);
+        mOrder.pickup_date = DateTimeFactory.getInstance().getStringDateTime(mSelectedPickUpDate);
+        mOrder.dropoff_date = DateTimeFactory.getInstance().getStringDateTime(mSelectedDropOffDate);
+        mOrder.mileage = mCalculationInfoAdapter.getPriceByType(CalculationInfo.MILEAGE);
+        mOrder.sale = mCalculationInfoAdapter.getPriceByType(CalculationInfo.SALE);
+        mOrder.payment_method = mPaymentMethod;
+        if (mCoupon != null) {
+            mOrder.coupon.add(mCoupon);
+        }
+        mOrder.item = getOrderFragment().getOrderItemAdapter().getSelectedItems();
+    }
+
+    private void popOrderConfirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.button_order);
+        builder.setMessage(getOrderFragment().getOrderItemAdapter().getItemNumber() +
+                getString(R.string.item_unit) +
+                DateTimeFactory.getInstance().getNewLine() +
+                getOrderFragment().getOrderItemAdapter().getItemTotal() +
+                getString(R.string.monetary_unit));
+        builder.setPositiveButton(R.string.label_confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                makeOrderInfo();
+                transferOrder();
+            }
+        });
+        builder.setNegativeButton(R.string.label_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void transferOrder() {
+        PostRequest postRequest = new PostRequest(getActivity());
+        String body = CleanBasketApplication.getInstance().getGson().toJson(mOrder);
+
+        try {
+            JSONObject jsonObject = new JSONObject(body);
+            postRequest.setParams(jsonObject);
+        } catch (JSONException e) {
+
+        }
+
+        postRequest.setUrl(AddressManager.RATE_ORDER);
+        postRequest.setListener(this, this);
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest());
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        JsonData jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
+
+        switch (jsonData.constant) {
+            case Constants.AREA_UNAVAILABLE:
+                Toast.makeText(getActivity(), R.string.area_unavailable_error, Toast.LENGTH_SHORT).show();
+                break;
+            case Constants.DATE_UNAVAILABLE:
+                Toast.makeText(getActivity(), R.string.date_unavailable_error, Toast.LENGTH_SHORT).show();
+                break;
+            case Constants.ERROR:
+                Toast.makeText(getActivity(), R.string.general_error, Toast.LENGTH_SHORT).show();
+                break;
+            case Constants.SESSION_EXPIRED:
+                Toast.makeText(getActivity(), R.string.session_invalid,Toast.LENGTH_SHORT).show();
+                break;
+            case Constants.SUCCESS:
+                Toast.makeText(getActivity(), R.string.order_success, Toast.LENGTH_SHORT).show();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                ((MainActivity) getActivity()).getViewPager().setCurrentItem(1);
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError volleyError) {
+        Toast.makeText(getActivity(), R.string.general_error,Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -349,12 +531,24 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                     popTimePickerView(FASTEST_HOUR, FASTEST_MINUTE, PICK_UP_DATETIME);
                 break;
 
-            case PICK_UP_DATE:
-                // 초기 선택
-                mSelectedPickUpDate = date;
-                if (isToday(date))
-                    popUpPickUpTodayTime();
-                break;
+//            case PICK_UP_DATE:
+//                // 초기 선택
+//                if (isToday(date)) {
+//                    mSelectedPickUpDate = date;
+//                    popUpPickUpTodayTime();
+//                }
+//                else {
+//                    Calendar prevSelected = getCalendar();
+//                    prevSelected.setTime(mSelectedPickUpDate);
+//                    Calendar newSelected = getCalendar();
+//                    newSelected.setTime(date);
+//
+//                    newSelected.set(Calendar.HOUR_OF_DAY, prevSelected.get(Calendar.HOUR_OF_DAY));
+//                    newSelected.set(Calendar.MINUTE, prevSelected.get(Calendar.MINUTE));
+//
+//                    pickUpDateSelected(newSelected.getTime());
+//                }
+//                break;
 
             case DROP_OFF_DATE:
                 // 배달 날짜만 선택
@@ -512,7 +706,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 getCalendar().getTime(),
                 max.getTime(),
                 other.getTime(),
-                PICK_UP_DATE);
+                PICK_UP_DATETIME);
     }
 
     /**
@@ -550,7 +744,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     /* 스마트폰 번호를 가져옵니다 */
     private String getPhoneNumber() {
         TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(getActivity().TELEPHONY_SERVICE);
-        String mPhoneNumber = "";
+        String mPhoneNumber;
         mPhoneNumber = tMgr.getLine1Number();
 
         if (mPhoneNumber != null) {
@@ -570,6 +764,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
             case ADDRESS_RESULT:
                 String resultAddress = data.getExtras().getString("address");
                 mEditTextAddress.setText(resultAddress);
+                mEditTextAddress.setError(null);
 
                 if (mGoogleApiClient.isConnected())
                     mGoogleApiClient.disconnect();
@@ -646,11 +841,13 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mGoogleApiClient.connect();
     }
 
+    private OrderFragment getOrderFragment() {
+        return (OrderFragment) getActivity().getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":0");
+    }
+
     public void setCalculationInfo() {
-        // OrderFragment 정보 가져오기
-        mOrderFragment = (OrderFragment) getActivity().getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":0");
-        mTotal = mOrderFragment.getOrderItemAdapter().getItemTotal();
-        int totalItemNumber = mOrderFragment.getOrderItemAdapter().getItemNumber();
+        mTotal = getOrderFragment().getOrderItemAdapter().getItemTotal();
+        int totalItemNumber = getOrderFragment().getOrderItemAdapter().getItemNumber();
 
         mButtonGrossTotal.setOnClickListener(this);
         mButtonGrossTotal.setText(
@@ -729,6 +926,8 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 convertView.setTag(holder);
             } else
                 holder = (CalculationInfoHolder) convertView.getTag();
+
+            holder.textViewCalculationInfoDetail.setVisibility(View.GONE);
 
             switch (getItem(position).type) {
                 case CalculationInfo.COST:
@@ -827,14 +1026,29 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 calculationInfo.name = getString(R.string.coupon);
                 calculationInfo.price = 0;
             }
+            else if (MINIMUM_ORDER > getOrderFragment().getOrderItemAdapter().getItemTotal()) {
+                calculationInfo.name = getString(R.string.coupon);
+                calculationInfo.price = 0;
+
+                Toast.makeText(getActivity(), R.string.coupon_not_available, Toast.LENGTH_SHORT).show();
+            }
             else {
                 calculationInfo.name = coupon.name;
                 calculationInfo.price = coupon.value;
             }
 
+            mCoupon = coupon;
+
             mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL).price = mTotal + mCalculationInfoAdapter.getTotal();
 
             notifyDataSetChanged();
+        }
+
+        public int getPriceByType(int type) {
+            if (getCalculationInfoByType(type) != null)
+                return getCalculationInfoByType(type).price;
+
+            return 0;
         }
 
         private CalculationInfo getCalculationInfoByType(int type) {

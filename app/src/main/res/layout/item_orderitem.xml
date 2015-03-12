@@ -32,6 +32,13 @@
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textview_discount_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+
     <ImageView
         android:id="@+id/imageview_extractitem"
         android:layout_width="32dp"

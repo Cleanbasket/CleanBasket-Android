@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,8 @@ import com.washappkorea.corp.cleanbasket.util.DateTimeFactory;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class OrderStatusFragment extends Fragment {
     private static final String TAG = OrderStatusFragment.class.getSimpleName();
@@ -90,16 +93,13 @@ public class OrderStatusFragment extends Fragment {
             public void onGroupExpand(int groupPosition) {
                 if (previousChild == groupPosition) {
 
-                }
-                else if(previousChild >= 0) {
+                } else if (previousChild >= 0) {
                     mOrderStateListView.collapseGroup(previousChild);
                 }
 
                 previousChild = groupPosition;
             }
         });
-
-        getOrderStatus();
     }
 
     private void getOrderStatus() {
@@ -138,9 +138,23 @@ public class OrderStatusFragment extends Fragment {
 
     private void insertOrderStatus(ArrayList<Order> orders) {
         if(orders != null && orders.size() > 0) {
+            Collections.sort(orders, new Comparator<Order>() {
+                @Override
+                public int compare(Order lhs, Order rhs) {
+                    return rhs.oid - lhs.oid;
+                }
+            });
             OrderStateAdapter orderStatusAdapter = new OrderStateAdapter(orders, mLayoutInflater);
             mOrderStateListView.setAdapter(orderStatusAdapter);
+            mOrderStateListView.expandGroup(0);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getOrderStatus();
     }
 
     protected class OrderStateAdapter extends BaseExpandableListAdapter implements View.OnClickListener, ModifyDialog.OnMenuSelectedListener, Response.Listener<JSONObject> {
@@ -254,14 +268,14 @@ public class OrderStatusFragment extends Fragment {
                 case PICK_UP_MAN_SELECTED:
                     holder.buttonModifyOrder.setVisibility(View.VISIBLE);
                     if (getGroup(position).pickupInfo != null) {
-                        setPDFaceImage(holder.imageViewPdFace, getGroup(position).pickupInfo.name);
+                        setPDFaceImage(holder.imageViewPdFace, getGroup(position).pickupInfo.img);
                         holder.textViewPDName.setText(getGroup(position).pickupInfo.name + " " + getString(R.string.pd_name_default));
                     }
                     break;
 
                 case DELIVERY_MAN_SELECTED:
                     if (getGroup(position).dropoffInfo != null) {
-                            setPDFaceImage(holder.imageViewPdFace, getGroup(position).dropoffInfo.name);
+                            setPDFaceImage(holder.imageViewPdFace, getGroup(position).dropoffInfo.img);
                             holder.textViewPDName.setText(getGroup(position).dropoffInfo.name + " " + getString(R.string.pd_name_default));
                     }
                     break;
@@ -314,12 +328,12 @@ public class OrderStatusFragment extends Fragment {
         }
 
         private int getCouponTotal(Order order) {
-            if (order.coupons == null)
+            if (order.coupon == null)
                 return 0;
 
             int total = 0;
 
-            for (Coupon coupon : order.coupons) {
+            for (Coupon coupon : order.coupon) {
                 total = total + coupon.value;
             }
 
@@ -433,6 +447,13 @@ public class OrderStatusFragment extends Fragment {
         public void onMenuSelected(int mode, int oid) {
             switch (mode) {
                 case MODIFY_ITEM:
+                    OrderFragment f = new OrderFragment();
+                    f.setOrderInfo(findOrderById(oid));
+
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.add(R.id.layout_order_state_fragment, f, OrderFragment.TAG);
+                    ft.addToBackStack(MainActivity.NEW_ORDER_FRAGMENT);
+                    ft.commit();
                     break;
                 case MODIFY_COUPON_MILEAGE:
                     break;
@@ -442,6 +463,17 @@ public class OrderStatusFragment extends Fragment {
                     cancelOrder(oid);
                     break;
             }
+        }
+
+        private Order findOrderById(int oid) {
+            int position = 0;
+
+            for (int i = 0; i < orders.size(); i++) {
+                if (orders.get(i).oid == oid)
+                    position = i;
+            }
+
+            return orders.get(position);
         }
 
         private void removeByOrderId(int oid) {

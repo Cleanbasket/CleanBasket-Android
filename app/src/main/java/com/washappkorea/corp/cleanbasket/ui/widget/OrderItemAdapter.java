@@ -62,6 +62,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.linearLayoutOrderItem = (LinearLayout) convertView.findViewById(R.id.layout_orderitem);
             holder.orderImageView = (ImageView) convertView.findViewById(R.id.imageview_orderitem);
             holder.extractImageView = (ImageView) convertView.findViewById(R.id.imageview_extractitem);
+            holder.textViewDiscountInfo = (TextView) convertView.findViewById(R.id.textview_discount_info);
             holder.textViewOrderItem = (TextView) convertView.findViewById(R.id.textview_orderitem);
             holder.textViewOrderItemPrice = (TextView) convertView.findViewById(R.id.textview_orderitem_price);
             holder.badgeView = new BadgeView(getContext(), holder.orderImageView);
@@ -89,6 +90,8 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         holder.linearLayoutOrderItem.setTag(getItem(position));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
+        if (getItem(position).discount_rate > 0)
+            holder.textViewDiscountInfo.setText(getItem(position).discount_rate * 100 + "%");
         holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
         holder.textViewOrderItemPrice.setText(String.valueOf(getItem(position).price) + getContext().getString(R.string.monetary_unit));
 
@@ -99,6 +102,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         public LinearLayout linearLayoutOrderItem;
         public ImageView orderImageView;
         public ImageView extractImageView;
+        public TextView textViewDiscountInfo;
         public TextView textViewOrderItem;
         public TextView textViewOrderItemPrice;
         public BadgeView badgeView;
