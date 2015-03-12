@@ -1,0 +1,112 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FeedbackActivity">
+
+    <!-- Login progress -->
+    <ProgressBar android:id="@+id/feedback_progress" style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <ScrollView android:id="@+id/feedback_form" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageview_pd_face"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/textview_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/imageview_pd_face" />
+
+            <TextView
+                android:id="@+id/textview_thanks_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/textview_user_name"
+                android:text="@string/thanks_message" />
+
+            <TextView
+                android:id="@+id/textview_laundry_quality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/textview_thanks_message"
+                android:text="@string/laundry_quality" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textview_laundry_quality"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/textview_free_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/ratingBar"
+                android:text="@string/free_feedback" />
+
+            <EditText
+                android:id="@+id/edittext_free_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/textview_free_feedback"
+                android:singleLine="false"
+                android:maxLines="5" />
+
+            <RelativeLayout
+                android:id="@+id/layout_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/edittext_free_feedback">
+
+                <CheckBox
+                    android:id="@+id/checkbox_late_feedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/late_feedback" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_laundry_feedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/checkbox_late_feedback"
+                    android:text="@string/laundry_feedback" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_kindness_feedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/checkbox_laundry_feedback"
+                    android:text="@string/kindness_feedback" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/button_feedback_send"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_checkbox"
+                android:text="@string/label_confirm" />
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
