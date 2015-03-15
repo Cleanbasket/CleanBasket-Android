@@ -5,6 +5,7 @@ public class Feedback {
     public Integer uid = 0;
     public Integer oid = 0;
     public Integer rate = 0;
+    public String memo = "";
     public Integer time = 0;
     public Integer quality = 0;
     public Integer kindness = 0;

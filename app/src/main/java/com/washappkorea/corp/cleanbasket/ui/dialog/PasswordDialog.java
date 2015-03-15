@@ -9,11 +9,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.RequestFuture;
@@ -30,7 +32,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
-public class PasswordDialog extends android.app.DialogFragment {
+public class PasswordDialog extends android.app.DialogFragment implements EditText.OnEditorActionListener {
     private static final String TAG = PasswordDialog.class.getSimpleName();
 
     /**
@@ -67,6 +69,9 @@ public class PasswordDialog extends android.app.DialogFragment {
 
         mPasswordView = (EditText) rootView.findViewById(R.id.edittext_password);
         mPasswordRepeatView = (EditText) rootView.findViewById(R.id.edittext_password_repeat);
+        mPasswordView.setOnEditorActionListener(this);
+        mPasswordRepeatView.setOnEditorActionListener(this);
+
 
         Button mPasswordChangeButton = (Button) rootView.findViewById(R.id.password_change_button);
         mPasswordChangeButton.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +94,21 @@ public class PasswordDialog extends android.app.DialogFragment {
         int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
         int height = getDialog().getWindow().getAttributes().height;
         getDialog().getWindow().setLayout(width, height);
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        switch (actionId) {
+            case R.id.password:
+                mPasswordRepeatView.requestFocus();
+                return true;
+
+            case R.id.login:
+                attemptChange();
+                return true;
+        }
+
+        return false;
     }
 
     /**

@@ -17,5 +17,12 @@
 
     <!-- general -->
     <color name="point_color">#82d9cf</color>
+    <color name="dialog_color">#FFFFFF</color>
 
+    <!-- notification -->
+    <color name="notification_checked">#FFFFFF</color>
+    <color name="notification_unchecked">#DDDDDD</color>
+
+    <!-- notification -->
+    <color name="dialog_text">#FFFFFF</color>
 </resources>

@@ -37,6 +37,7 @@ import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
 import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.ui.dialog.CalculationDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.ItemListDialog;
+import com.washappkorea.corp.cleanbasket.ui.dialog.ModifyDateTimeDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.ModifyDialog;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
@@ -53,6 +54,7 @@ public class OrderStatusFragment extends Fragment {
     public static final String ITEM_LIST_DIALOG_TAG = "ITEM_LIST_STATUS_DIALOG";
     public static final String TOTAL_DIALOG_TAG = "TOTAL_DIALOG";
     public static final String MODIFY_DIALOG_TAG = "MODIFY_DIALOG";
+    public static final String MODIFY_DATETIME_DIALOG_TAG = "MODIFY_DATETIME_DIALOG";
 
     public static final int MODIFY_ITEM = 0;
     public static final int MODIFY_DATETIME = 1;
@@ -136,6 +138,10 @@ public class OrderStatusFragment extends Fragment {
         RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());
     }
 
+    /**
+     * 받아온 주문 정보를 리스트뷰에 넣습니다. 이때 알람을 띄울 수 있도록 DB에 저장합니다.
+     * @param orders
+     */
     private void insertOrderStatus(ArrayList<Order> orders) {
         if(orders != null && orders.size() > 0) {
             Collections.sort(orders, new Comparator<Order>() {
@@ -144,6 +150,7 @@ public class OrderStatusFragment extends Fragment {
                     return rhs.oid - lhs.oid;
                 }
             });
+
             OrderStateAdapter orderStatusAdapter = new OrderStateAdapter(orders, mLayoutInflater);
             mOrderStateListView.setAdapter(orderStatusAdapter);
             mOrderStateListView.expandGroup(0);
@@ -157,7 +164,7 @@ public class OrderStatusFragment extends Fragment {
         getOrderStatus();
     }
 
-    protected class OrderStateAdapter extends BaseExpandableListAdapter implements View.OnClickListener, ModifyDialog.OnMenuSelectedListener, Response.Listener<JSONObject> {
+    protected class OrderStateAdapter extends BaseExpandableListAdapter implements View.OnClickListener, ModifyDialog.OnMenuSelectedListener, Response.Listener<JSONObject>, ModifyDateTimeDialog.OnDialogDismissListener {
         private ArrayList<Order> orders;
         private LayoutInflater mLayoutInflater;
         private int objectOrderId;
@@ -426,6 +433,7 @@ public class OrderStatusFragment extends Fragment {
                             getActivity().getSupportFragmentManager(),
                             ITEM_LIST_DIALOG_TAG);
                     break;
+
                 case R.id.button_total:
                     CalculationDialog calculationDialog =
                             CalculationDialog.newInstance(order);
@@ -434,10 +442,12 @@ public class OrderStatusFragment extends Fragment {
                             getActivity().getSupportFragmentManager(),
                             TOTAL_DIALOG_TAG);
                     break;
+
                 case R.id.button_modify_order:
                     ModifyDialog md = ModifyDialog.newInstance(this, order.oid);
                     md.show(getActivity().getSupportFragmentManager(), MODIFY_DIALOG_TAG);
                     break;
+
                 case R.id.button_feedback:
                     break;
             }
@@ -455,12 +465,16 @@ public class OrderStatusFragment extends Fragment {
                     ft.addToBackStack(MainActivity.NEW_ORDER_FRAGMENT);
                     ft.commit();
                     break;
-                case MODIFY_COUPON_MILEAGE:
-                    break;
+
                 case MODIFY_DATETIME:
+                    ModifyDateTimeDialog modifyDateTimeDialog = ModifyDateTimeDialog.newInstance(this, oid);
+
+                    modifyDateTimeDialog.show(getActivity().getSupportFragmentManager(), MODIFY_DATETIME_DIALOG_TAG);
                     break;
+
                 case CANCEL_ORDER:
                     cancelOrder(oid);
+                    ((MainActivity) getActivity()).deleteAlarmFromDB(findOrderById(oid));
                     break;
             }
         }
@@ -476,6 +490,10 @@ public class OrderStatusFragment extends Fragment {
             return orders.get(position);
         }
 
+        /**
+         * 주문을 삭제합니다
+         * @param oid 삭제할 주문 번호
+         */
         private void removeByOrderId(int oid) {
             int position = 0;
 
@@ -510,11 +528,25 @@ public class OrderStatusFragment extends Fragment {
         public void onResponse(JSONObject response) {
             JsonData jsonData = getGson().fromJson(response.toString(), JsonData.class);
             switch (jsonData.constant) {
+                case Constants.IMPOSSIBLE:
+                    CleanBasketApplication.getInstance().showToast(getString(R.string.delete_impossible));
+                    break;
+
                 case Constants.SUCCESS:
-                    showProgress(false);
+                    CleanBasketApplication.getInstance().showToast(getString(R.string.order_delete_success));
+
+                    ((MainActivity) getActivity()).deleteAlarmFromDB(findOrderById(objectOrderId));
+                    ((MainActivity) getActivity()).cancelAlarm(findOrderById(objectOrderId));
+                    ((MainActivity) getActivity()).setAlarm();
                     removeByOrderId(objectOrderId);
+                    showProgress(false);
                     break;
             }
+        }
+
+        @Override
+        public void onDialogDismiss() {
+            getOrderStatus();
         }
     }
 

@@ -47,8 +47,6 @@ public class CouponDialog extends DialogFragment implements View.OnClickListener
 
     private CouponAdapter mCouponAdapter;
 
-    private ArrayList<Coupon> coupons;
-
     public interface OnCouponSetListener {
         void onCouponSet(CouponDialog dialog, Coupon coupon);
     }
@@ -62,6 +60,15 @@ public class CouponDialog extends DialogFragment implements View.OnClickListener
 
     public void initialize(OnCouponSetListener onCouponSetListener) {
         this.mOnCouponSetListener = onCouponSetListener;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
+        int height = getDialog().getWindow().getAttributes().height;
+        getDialog().getWindow().setLayout(width, height);
     }
 
     @Override

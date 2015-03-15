@@ -78,10 +78,11 @@ public class MileageDialog extends DialogFragment {
         mEditTextMileage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.use || id == EditorInfo.IME_NULL) {
+                if (id == R.id.use || id == EditorInfo.IME_ACTION_DONE) {
                     attemptUse();
                     return true;
                 }
+
                 return false;
             }
         });

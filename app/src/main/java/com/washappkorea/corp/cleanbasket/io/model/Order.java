@@ -23,4 +23,14 @@ public class Order implements Serializable {
     public Deliverer dropoffInfo;
 	public ArrayList<OrderItem> item;
 	public ArrayList<Coupon> coupon;
+
+    public Order() {
+
+    }
+
+    public Order(Integer oid, String pickup_date, String dropoff_date) {
+        this.oid = oid;
+        this.pickup_date = pickup_date;
+        this.dropoff_date = dropoff_date;
+    }
 }

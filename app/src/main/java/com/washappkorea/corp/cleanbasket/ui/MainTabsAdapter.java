@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.washappkorea.corp.cleanbasket.R;
+
 import java.util.ArrayList;
 
 public class MainTabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
@@ -67,6 +69,12 @@ public class MainTabsAdapter extends FragmentPagerAdapter implements ActionBar.T
     @Override
     public void onPageSelected(int position) {
         mActionBar.setSelectedNavigationItem(position);
+
+        try {
+            ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + String.valueOf(position)).onResume();
+        } catch (NullPointerException e) {
+
+        }
     }
 
     @Override

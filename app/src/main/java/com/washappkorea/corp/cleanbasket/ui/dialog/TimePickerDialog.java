@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.util.HapticFeedbackController;
 
@@ -132,6 +133,11 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         switch(v.getId()) {
             case R.id.button_accept_time_picker:
                 tryVibrate();
+
+                if (mSelectedHourOfDay < 0 || mSelectedMinute < 0) {
+                    CleanBasketApplication.getInstance().showToast(getString(R.string.incorrect_time));
+                    return;
+                }
 
                 if (mCallback != null) {
                     mCallback.onTimeSet(

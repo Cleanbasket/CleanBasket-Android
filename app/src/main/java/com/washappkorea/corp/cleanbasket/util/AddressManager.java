@@ -18,12 +18,14 @@ public class AddressManager {
     public final static String GET_COUPON = "member/coupon";
     public final static String GET_NOTICE = "notice";
     public final static String SET_ADDRESS = "member/address/update";
-    public final static String SET_PHONENUMBER = "member/phone/update";
-
+    public final static String SET_PHONE_NUMBER = "member/phone/update";
     public final static String ADD_ORDER = "member/order";
-	public final static String GET_ORDER = "member/order";
-	public final static String DEL_ORDER = "member/order/del";
-	public final static String RATE_ORDER = "member/order/rate";
+
+    public final static String GET_ORDER = "member/order";
+    public final static String GET_ORDER_ONE = "member/order/one";
+    public final static String DEL_ORDER = "member/order/del";
+    public final static String RATE_ORDER = "member/order/rate";
+    public final static String DATE_UPDATE_ORDER = "member/order/date";
 
     public final static String VERSION = "version";
 

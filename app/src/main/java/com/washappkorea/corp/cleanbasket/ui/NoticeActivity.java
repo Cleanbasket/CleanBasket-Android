@@ -25,6 +25,7 @@ import com.washappkorea.corp.cleanbasket.io.model.Notice;
 import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
+import com.washappkorea.corp.cleanbasket.util.DateTimeFactory;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,11 @@ public class NoticeActivity extends BaseActivity {
     private static final String TAG = NoticeActivity.class.getSimpleName();
 
     private ExpandableListView mExpandableListView;
+    private NoticeAdapter mNoticeAdapter;
+
     private View mProgressView;
+
+    private int previousChild = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +47,37 @@ public class NoticeActivity extends BaseActivity {
 
         mExpandableListView = (ExpandableListView) findViewById(R.id.listview_notice);
         mProgressView = findViewById(R.id.loading_progress);
+
+        mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (previousChild == groupPosition) {
+
+                } else if (previousChild >= 0) {
+                    mExpandableListView.collapseGroup(previousChild);
+                }
+
+                previousChild = groupPosition;
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         getLatestNotice();
+    }
+
+    private void openGroupByValue() {
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("value")) {
+            int value = getIntent().getExtras().getInt("value");
+
+            for (int i = 0; i < mNoticeAdapter.getGroupCount(); i++) {
+                int noid = ((Notice) mExpandableListView.getAdapter().getItem(i)).noid;
+                if (value == noid) mExpandableListView.expandGroup(i);
+            }
+        }
     }
 
     private void getLatestNotice() {
@@ -83,8 +113,13 @@ public class NoticeActivity extends BaseActivity {
     }
 
     private void insertNotice(ArrayList<Notice> notices) {
-        NoticeAdapter noticeAdapter = new NoticeAdapter(notices);
-        mExpandableListView.setAdapter(noticeAdapter);
+        mNoticeAdapter = new NoticeAdapter(notices);
+        mExpandableListView.setAdapter(mNoticeAdapter);
+
+        if (notices.size() > 0)
+            mExpandableListView.expandGroup(0);
+
+        openGroupByValue();
     }
 
     protected class NoticeAdapter extends BaseExpandableListAdapter {
@@ -145,7 +180,7 @@ public class NoticeActivity extends BaseActivity {
                 holder = (NoticeHolder) convertView.getTag();
 
             holder.textViewTitle.setText(getGroup(position).title);
-            holder.textViewDateTime.setText(getGroup(position).rdate);
+            holder.textViewDateTime.setText(DateTimeFactory.getInstance().getPrettyTime(getGroup(position).rdate));
 
             return convertView;
         }

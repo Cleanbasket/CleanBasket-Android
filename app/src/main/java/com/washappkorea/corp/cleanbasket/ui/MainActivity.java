@@ -2,11 +2,15 @@ package com.washappkorea.corp.cleanbasket.ui;
 
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -18,15 +22,21 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.RequestQueue;
+import com.washappkorea.corp.cleanbasket.io.model.Alarm;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
+import com.washappkorea.corp.cleanbasket.io.model.Order;
 import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.BackPressCloseHandler;
 import com.washappkorea.corp.cleanbasket.util.Constants;
+import com.washappkorea.corp.cleanbasket.util.DateTimeFactory;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends BaseActivity implements Response.Listener<JSONObject>, Response.ErrorListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -37,8 +47,16 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
     public static final String CHANGE_TO_ORDER_FRAGMENT = "CHANGE_TO_ORDER";
     public static final String REMOVE_NEW_ORDER_FRAGMENT = "REMOVE_NEW_ORDER";
 
+    public static final int PICK_UP_ALRAM_HOUR = -1;
+    public static final int DROP_OFF_ALRAM_HOUR = -3;
+
+    public static final int PICK_UP_ALARM = 0;
+    public static final int DROP_OFF_ALARM = 1;
+
     private ViewPager mViewPager;
     private MainTabsAdapter mTabsAdapter;
+
+    private Context mContext;
 
     // Related to GCM
     public static final String GCM = "gcm";
@@ -80,11 +98,12 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         gcm = GoogleCloudMessaging.getInstance(this);
         regId = getRegistrationId(this);
 
-        if (regId.isEmpty()) {
+        if (regId.isEmpty())
             registerInBackground();
-        }
 
         backPressCloseHandler = new BackPressCloseHandler(this);
+
+        mContext = this;
     }
 
     private String getRegistrationId(Context context) {
@@ -188,6 +207,7 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
             case Constants.ERROR:
                 Log.i(TAG, "Reg Id Error");
                 break;
+
             case Constants.SUCCESS:
                 triggerStoreRegId();
                 Log.i(TAG, "Reg Id 등록");
@@ -235,5 +255,116 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         }
 
         Log.i(TAG, "Back Pressed");
+    }
+
+    public void cancelAlarm(Order order) {
+        Integer pickUpRequestCode = Integer.parseInt(String.valueOf("2" + String.valueOf(order.oid)));
+        Integer dropOffRequestCode = Integer.parseInt(String.valueOf("3" + String.valueOf(order.oid)));
+
+        Intent intent = new Intent("com.google.android.c2dm.intent.RECEIVE");
+        PendingIntent pPickUpIntent = PendingIntent.getBroadcast(this, pickUpRequestCode, intent, 0);
+        PendingIntent pDropOffIntent = PendingIntent.getBroadcast(this, dropOffRequestCode, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pPickUpIntent);
+        alarmManager.cancel(pDropOffIntent);
+    }
+
+    public void setAlarm() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                ArrayList<Alarm> arrayList = (ArrayList<Alarm>) getDBHelper().getAlarmDao().queryForAll();
+
+                for (Alarm alarm : arrayList) {
+                    if (alarm.date > System.currentTimeMillis()) {
+                        Date date = new Date(alarm.date);
+
+                        Intent intent = new Intent("com.google.android.c2dm.intent.RECEIVE");
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(date);
+
+                        intent.putExtra("oid", String.valueOf(alarm.oid));
+
+                        int requestCode = 0;
+
+                        if (calendar.get(Calendar.MINUTE) == 0) {
+                            intent.putExtra("message", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) +
+                                    getString(R.string.hour_text));
+                        }
+                        else
+                            intent.putExtra("message", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) +
+                                    getString(R.string.hour_text) +
+                                    " " +
+                                    String.valueOf(calendar.get(Calendar.MINUTE)) +
+                                    getString(R.string.minute_text));
+
+                        if (alarm.type == PICK_UP_ALARM) {
+                            intent.putExtra("type", "2");
+                            requestCode = Integer.parseInt("2" + String.valueOf(alarm.oid));
+                            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + PICK_UP_ALARM);
+                        }
+                        else if (alarm.type == DROP_OFF_ALARM) {
+                            intent.putExtra("type", "3");
+                            requestCode = Integer.parseInt("3" + String.valueOf(alarm.oid));
+                            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + DROP_OFF_ALRAM_HOUR);
+                        }
+
+
+                        PendingIntent pIntent = PendingIntent.getBroadcast(mContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        // todo
+                        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            if (alarm.type == PICK_UP_ALARM)
+                                alarmManager.setExact(AlarmManager.RTC, System.currentTimeMillis() + 5000, pIntent);
+                            else if (alarm.type == DROP_OFF_ALARM)
+                                alarmManager.setExact(AlarmManager.RTC, System.currentTimeMillis() + 8000, pIntent);
+                        }
+                        else {
+                            if (alarm.type == PICK_UP_ALARM)
+                                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 5000, pIntent);
+                            else if (alarm.type == DROP_OFF_ALARM)
+                                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 8000, pIntent);
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }.execute(null, null, null);
+    }
+
+    public void insertAlarm(Order order) {
+        Alarm pickUpAlarm = new Alarm();
+        pickUpAlarm.oid = order.oid;
+        pickUpAlarm.type = MainActivity.PICK_UP_ALARM;
+        pickUpAlarm.date = DateTimeFactory.getInstance().getDate(order.pickup_date).getTime();
+
+        Alarm dropOffAlarm = new Alarm();
+        dropOffAlarm.oid = order.oid;
+        dropOffAlarm.type = MainActivity.DROP_OFF_ALARM;
+        dropOffAlarm.date = DateTimeFactory.getInstance().getDate(order.dropoff_date).getTime();
+
+        getDBHelper().getAlarmDao().createOrUpdate(pickUpAlarm);
+        getDBHelper().getAlarmDao().createOrUpdate(dropOffAlarm);
+    }
+
+    public void deleteAlarmFromDB(Order order) {
+        Alarm pickUpAlarm = new Alarm();
+        pickUpAlarm.oid = order.oid;
+        pickUpAlarm.type = MainActivity.PICK_UP_ALARM;
+        pickUpAlarm.date = DateTimeFactory.getInstance().getDate(order.pickup_date).getTime();
+
+        Alarm dropOffAlarm = new Alarm();
+        dropOffAlarm.oid = order.oid;
+        dropOffAlarm.type = MainActivity.DROP_OFF_ALARM;
+        dropOffAlarm.date = DateTimeFactory.getInstance().getDate(order.dropoff_date).getTime();
+
+        ArrayList<Alarm> alarms = (ArrayList<Alarm>) getDBHelper().getAlarmDao().queryForEq(Alarm.OrderID, order.oid);
+        for (Alarm alarm : alarms) {
+            getDBHelper().getAlarmDao().delete(alarm);
+        }
     }
 }

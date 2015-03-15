@@ -134,7 +134,6 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             @Override
             public void onErrorResponse(VolleyError error) {
                 showProgress(false);
-
             }
         });
         RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());

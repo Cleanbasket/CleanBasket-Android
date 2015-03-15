@@ -31,6 +31,27 @@ public class DateTimeFactory {
 
     }
 
+    public String getNow() {
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+
+        return transFormat.format(date);
+    }
+
+    public Date getDate(String date) {
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date to = null;
+
+        try {
+            to = transFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return to;
+    }
+
     /**
      * @brief 날짜와 시간 생성 함수
      * @details 서버에서 받아온 스트링 형식의 날짜, 시간 값을 가공해 String으로 리턴합니다.

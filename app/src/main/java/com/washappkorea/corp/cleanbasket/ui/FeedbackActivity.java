@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.Config;
 import com.washappkorea.corp.cleanbasket.R;
@@ -25,12 +28,15 @@ import com.washappkorea.corp.cleanbasket.io.RequestQueue;
 import com.washappkorea.corp.cleanbasket.io.model.Feedback;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.model.Order;
+import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
 import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class FeedbackActivity extends BaseActivity implements View.OnClickListener, Response.Listener<JSONObject>, RatingBar.OnRatingBarChangeListener {
     private static final String TAG = FeedbackActivity.class.getSimpleName();
@@ -80,16 +86,65 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         super.onStart();
 
         mRatingStar = -1;
+        int oid = getIntent().getIntExtra("oid", 0);
+        Log.i(TAG, oid +"");
+        getOrder(oid);
+    }
 
-        Bundle data = getIntent().getExtras();
-        if (data != null) {
-            mOrder = (Order) data.getSerializable("order");
+    private void getOrder(final int oid) {
+        showProgress(true);
+
+        GetRequest getRequest = new GetRequest(this);
+        getRequest.setUrl(AddressManager.GET_ORDER);
+        getRequest.setListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonData jsonData;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+                } catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.SUCCESS:
+                        showProgress(false);
+                        ArrayList<Order> orders = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, new TypeToken<ArrayList<Order>>(){}.getType());
+                        if (getOrderInfo(orders, oid) != null)
+                            insertOrderInfo(getOrderInfo(orders, oid));
+                        break;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getBaseContext(), getString(R.string.toast_error), Toast.LENGTH_SHORT);
+                showProgress(false);
+            }
+        });
+        RequestQueue.getInstance(this).addToRequestQueue(getRequest.doRequest());
+    }
+
+    private void insertOrderInfo(Order order) {
+        if (order != null) {
+            setPDFaceImage(mImageViewPdFace, order.dropoffInfo.img);
+            mTextViewUserName.setText(order.dropoffInfo.name);
         }
 
-        if (mOrder != null) {
-            setPDFaceImage(mImageViewPdFace, mOrder.dropoffInfo.img);
-            mTextViewUserName.setText(mOrder.dropoffInfo.name);
+        mOrder = order;
+    }
+
+
+    private Order getOrderInfo(ArrayList<Order> orders, int oid) {
+        Order order = null;
+
+        for (Order o : orders) {
+            if (o.oid == oid)
+                order = o;
         }
+
+        return order;
     }
 
     private void setPDFaceImage(ImageView imageView, String imageInfo) {
@@ -127,6 +182,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
 
         feedback.oid = mOrder.oid;
         feedback.rate = mRatingStar;
+        feedback.memo = mEditTextFree.getText().toString();
 
         if (mCheckBoxTime.isChecked())
             feedback.time = 0;

@@ -27,15 +27,15 @@
             <EditText android:id="@+id/password" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_password"
                 android:imeActionId="@+id/use"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified" android:inputType="textPassword"
+                android:imeActionLabel="@string/start"
+                android:imeOptions="actionDone" android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true" />
 
             <EditText android:id="@+id/password_repeat" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_password_repeat"
                 android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified" android:inputType="textPassword"
+                android:imeActionLabel="@string/start"
+                android:imeOptions="actionDone" android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true" />
 
             <CheckedTextView

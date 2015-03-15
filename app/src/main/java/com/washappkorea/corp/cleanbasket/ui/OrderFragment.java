@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -247,6 +248,11 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                 break;
 
             case R.id.button_order:
+                if (getOrderItemAdapter().getItemTotal() < OrderInfoFragment.MINIMUM_ORDER) {
+                    Toast.makeText(getActivity(), getString(R.string.minimum_total), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (isModifyOrder)
                     popCalculationDialog(CalculationDialog.MODIFY_TAG);
                 else

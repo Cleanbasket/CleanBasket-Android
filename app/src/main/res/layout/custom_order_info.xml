@@ -16,7 +16,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/imageview_current_location"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:maxLines="1"
+            android:imeActionId="@+id/address"
+            android:imeActionLabel="@string/start"
+            android:imeOptions="actionNext"
+            android:singleLine="true" />
 
         <ImageView
             android:id="@+id/imageview_current_location"
@@ -32,6 +37,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_address_input"
+        android:maxLines="1"
+        android:imeActionId="@+id/address_detail"
+        android:imeActionLabel="@string/start"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
         android:hint="@string/address_detail" />
 
     <EditText
@@ -39,6 +49,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edittext_detail_address"
+        android:maxLines="1"
+        android:imeActionId="@+id/contact"
+        android:imeActionLabel="@string/start"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
         android:hint="@string/contact" />
 
     <LinearLayout
@@ -160,6 +175,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/radiogroup_payment_method"
+        android:imeActionId="@+id/memo_hint"
+        android:imeActionLabel="@string/start"
+        android:imeOptions="actionDone"
         android:hint="@string/memo_hint"
         android:maxEms="200" />
 

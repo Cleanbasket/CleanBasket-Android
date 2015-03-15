@@ -1,18 +1,24 @@
 package com.washappkorea.corp.cleanbasket.ui;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,28 +66,29 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class OrderInfoFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, MileageDialog.OnDialogDismissListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, Response.Listener<JSONObject>, Response.ErrorListener {
+public class OrderInfoFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, MileageDialog.OnDialogDismissListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, Response.Listener<JSONObject>, Response.ErrorListener, EditText.OnEditorActionListener {
     public static final String TAG = OrderInfoFragment.class.getSimpleName();
     public static final String TAG_MODIFY = OrderInfoFragment.class.getSimpleName() + "_MODIFY";
-    private static final String TIME_PICKER_TAG = "TIME_PICKER";
-    private static final String CALENDAR_PICKER_TAG = "CALENDAR_PICKER";
+    public static final String TIME_PICKER_TAG = "TIME_PICKER";
+    public static final String CALENDAR_PICKER_TAG = "CALENDAR_PICKER";
     public static final String ITEM_LIST_DIALOG_TAG_INFO = "ITEM_LIST_DIALOG_INFO";
     public static final String MILEAGE_DIALOG_TAG = "MILEAGE_DIALOG";
     public static final String COUPON_DIALOG_TAG = "COUPON_USE_DIALOG";
 
-    private static final int FASTEST_HOUR = 10;
-    private static final int FASTEST_MINUTE = 0;
+    public static final int FASTEST_HOUR = 10;
+    public static final int FASTEST_MINUTE = 0;
 
-    private static final int MIN_PICK_UP_TIME = 2;
-    private static final int DEFAULT_OTHER_PICK_UP = 2;
-    private static final int MIN_DROP_OFF_DAY = 2;
-    private static final int DEFAULT_DROP_OFF_DAY = 3;
+    public static final int MIN_PICK_UP_TIME = 2;
+    public static final int DEFAULT_OTHER_PICK_UP = 2;
+    public static final int MIN_DROP_OFF_DAY = 2;
+    public static final int DEFAULT_DROP_OFF_DAY = 3;
 
-    private static final int WEEK = 7;
+    public static final int WEEK = 7;
     public static final int PICK_UP_DATETIME = 0;
     public static final int PICK_UP_DATE = 1;
-    public static final int DROP_OFF_DATE = 2;
-    public static final int DROP_OFF_TIME = 3;
+    public static final int PICK_UP_TIME = 2;
+    public static final int DROP_OFF_DATE = 3;
+    public static final int DROP_OFF_TIME = 4;
 
     public static final int GET_ADDRESS = 0;
     public static final int ADDRESS_RESULT = 1;
@@ -93,6 +100,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     public static final int MINIMUM_ORDER = 10000;
 
     private LinearLayout mHeader;
+    private View mProgressView;
 
     private LinearLayout mLayoutSelector;
     private TextView mTextViewSelectedPickUpDate;
@@ -153,7 +161,13 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mButtonEtc = (Button) mHeader.findViewById(R.id.imageview_datetime_etc);
         mButtonGrossTotal = (Button) mHeader.findViewById(R.id.button_gross_total);
 
+        mEditTextAddress.setOnEditorActionListener(this);
+        mEditTextDetailAddress.setOnEditorActionListener(this);
+        mEditTextContact.setOnEditorActionListener(this);
+        mEditTextMemo.setOnEditorActionListener(this);
+
         mCalculationInfoListView = (ListView) rootView.findViewById(R.id.listview_calculation);
+        mProgressView = rootView.findViewById(R.id.loading_progress);
 
         mButtonOrder = (Button) rootView.findViewById(R.id.button_order_finish);
 
@@ -161,6 +175,28 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mTextViewSelectedPickUpTime.setVisibility(View.INVISIBLE);
 
         return rootView;
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        switch (actionId) {
+            case R.id.address:
+                mEditTextDetailAddress.requestFocus();
+                return true;
+
+            case R.id.address_detail:
+                mEditTextContact.requestFocus();
+                return true;
+
+            case R.id.contact:
+                popUpPickUpOtherDateTime();
+                return true;
+
+            case R.id.memo_hint:
+                return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -212,7 +248,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         if (address != null) {
             mAddressFlag = true;
             mEditTextAddress.setText(address.address);
-            mEditTextDetailAddress.setText(address.address);
+            mEditTextDetailAddress.setText(address.address_detail);
         }
     }
 
@@ -221,7 +257,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.imageview_datetime_today:
                 // 오늘을 픽업 날짜로 선택합니다
-                popUpPickUpTodayTime();
+                popUpPickUpTodayTime(PICK_UP_DATETIME);
                 break;
 
             case R.id.imageview_datetime_tomorrow:
@@ -258,7 +294,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
             case R.id.textview_selected_pickup_time:
                 // 오늘을 선택하면 시간 선택에 제한을 둡니다
                 if (isToday(mSelectedPickUpDate))
-                    popUpPickUpTodayTime();
+                    popUpPickUpTodayTime(PICK_UP_TIME);
                 else
                     popTimePickerView(FASTEST_HOUR, FASTEST_MINUTE, PICK_UP_DATETIME);
                 break;
@@ -345,9 +381,11 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mOrder.mileage = mCalculationInfoAdapter.getPriceByType(CalculationInfo.MILEAGE);
         mOrder.sale = mCalculationInfoAdapter.getPriceByType(CalculationInfo.SALE);
         mOrder.payment_method = mPaymentMethod;
+
         if (mCoupon != null) {
             mOrder.coupon.add(mCoupon);
         }
+
         mOrder.item = getOrderFragment().getOrderItemAdapter().getSelectedItems();
     }
 
@@ -361,6 +399,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 getString(R.string.monetary_unit));
         builder.setPositiveButton(R.string.label_confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                showProgress(true);
                 makeOrderInfo();
                 transferOrder();
             }
@@ -382,40 +421,57 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
             JSONObject jsonObject = new JSONObject(body);
             postRequest.setParams(jsonObject);
         } catch (JSONException e) {
-
+            return;
         }
 
-        postRequest.setUrl(AddressManager.RATE_ORDER);
+        postRequest.setUrl(AddressManager.ADD_ORDER);
         postRequest.setListener(this, this);
         RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest());
     }
 
     @Override
     public void onResponse(JSONObject response) {
+        showProgress(false);
+
         JsonData jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
 
         switch (jsonData.constant) {
             case Constants.AREA_UNAVAILABLE:
                 Toast.makeText(getActivity(), R.string.area_unavailable_error, Toast.LENGTH_SHORT).show();
                 break;
+
             case Constants.DATE_UNAVAILABLE:
                 Toast.makeText(getActivity(), R.string.date_unavailable_error, Toast.LENGTH_SHORT).show();
                 break;
+
             case Constants.ERROR:
                 Toast.makeText(getActivity(), R.string.general_error, Toast.LENGTH_SHORT).show();
                 break;
+
             case Constants.SESSION_EXPIRED:
                 Toast.makeText(getActivity(), R.string.session_invalid,Toast.LENGTH_SHORT).show();
                 break;
+
             case Constants.SUCCESS:
                 Toast.makeText(getActivity(), R.string.order_success, Toast.LENGTH_SHORT).show();
-                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+
+                Order order = new Order(
+                        Integer.parseInt(jsonData.data),
+                        DateTimeFactory.getInstance().getStringDateTime(mSelectedPickUpDate),
+                        DateTimeFactory.getInstance().getStringDateTime(mSelectedDropOffDate)
+                );
+
+                ((MainActivity) getActivity()).insertAlarm(order);
+                ((MainActivity) getActivity()).setAlarm();
                 ((MainActivity) getActivity()).getViewPager().setCurrentItem(1);
+                getActivity().getSupportFragmentManager().popBackStack();
         }
     }
 
     @Override
     public void onErrorResponse(VolleyError volleyError) {
+        showProgress(false);
+
         Toast.makeText(getActivity(), R.string.general_error,Toast.LENGTH_SHORT).show();
     }
 
@@ -473,9 +529,11 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
      */
     @Override
     public void onTimeSet(TimePickerDialog timePickerDialog, int hour, int minute, int mode) {
+        Calendar pickUp = Calendar.getInstance();
+
         switch (mode) {
             case PICK_UP_DATETIME:
-                Calendar pickUp = Calendar.getInstance();
+                pickUp = Calendar.getInstance();
                 pickUp.setTime(mSelectedPickUpDate);
                 pickUp.set(Calendar.HOUR_OF_DAY, hour);
                 pickUp.set(Calendar.MINUTE, minute);
@@ -496,6 +554,18 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 /* 배달 시간을 선택할 수 있도록 합니다 */
                 mTextViewSelectedDropOffDate.setClickable(true);
                 mTextViewSelectedDropOffTime.setClickable(true);
+
+                CleanBasketApplication.getInstance().showToast(getString(R.string.pickup_date_change));
+                break;
+
+            case PICK_UP_TIME:
+                pickUp.setTime(mSelectedPickUpDate);
+                pickUp.set(Calendar.HOUR_OF_DAY, hour);
+                pickUp.set(Calendar.MINUTE, minute);
+                pickUpDateSelected(pickUp.getTime());
+                pickUpTimeSelected(pickUp.getTime());
+
+                mSelectedPickUpDate = pickUp.getTime();
                 break;
 
             case DROP_OFF_TIME:
@@ -526,7 +596,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 // 초기 선택
                 mSelectedPickUpDate = date;
                 if (isToday(date))
-                    popUpPickUpTodayTime();
+                    popUpPickUpTodayTime(PICK_UP_DATETIME);
                 else
                     popTimePickerView(FASTEST_HOUR, FASTEST_MINUTE, PICK_UP_DATETIME);
                 break;
@@ -653,13 +723,13 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     /**
      * 오늘을 수거 날짜로 골랐을 때 시간 선택
      */
-    private void popUpPickUpTodayTime() {
+    private void popUpPickUpTodayTime(int mode) {
         mSelectedPickUpDate = getCalendar().getTime();
 
         popTimePickerView(
                 getCalendar().get(Calendar.HOUR_OF_DAY) + MIN_PICK_UP_TIME,
                 getCalendar().get(Calendar.MINUTE),
-                PICK_UP_DATETIME);
+                mode);
     }
 
     /**
@@ -770,8 +840,23 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                     mGoogleApiClient.disconnect();
 
                 mAddressFlag = true;
+
+                mEditTextDetailAddress.requestFocus();
+                showSoftKeyboard(mEditTextDetailAddress);
                 break;
         }
+    }
+
+    private void showSoftKeyboard(EditText editText) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private void hideSoftKeyboard(EditText editText) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     /**
@@ -1064,5 +1149,41 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onDialogDismiss(DialogInterface dialoginterface) {
 
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    public void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mCalculationInfoListView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mCalculationInfoListView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mCalculationInfoListView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 }

@@ -66,25 +66,7 @@ public class RegisterActivity extends BaseActivity implements LoaderManager.Load
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordRepeatView = (EditText) findViewById(R.id.password_repeat);
-
-        mPasswordRepeatView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptSignUp();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        mPasswordRepeatView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-
-                return false;
-            }
-        });
+        mPasswordRepeatView.setOnEditorActionListener(this);
 
         Button mEmailSignUpButton = (Button) findViewById(R.id.email_register_button);
         mEmailSignUpButton.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +84,7 @@ public class RegisterActivity extends BaseActivity implements LoaderManager.Load
     public boolean onEditorAction(TextView v, int id, KeyEvent event) {
         switch (id) {
             case R.id.login:
-            case EditorInfo.IME_NULL:
+            case EditorInfo.IME_ACTION_DONE:
                 attemptSignUp();
         }
 
@@ -323,9 +305,11 @@ public class RegisterActivity extends BaseActivity implements LoaderManager.Load
                     mEmailView.setError(getString(R.string.account_duplication));
                     mEmailView.requestFocus();
                     break;
+
                 case Constants.ERROR:
                     CleanBasketApplication.getInstance().showToast(getString(R.string.toast_error));
                     break;
+
                 case Constants.SUCCESS:
                     CleanBasketApplication.getInstance().showToast(getString(R.string.toast_error));
 

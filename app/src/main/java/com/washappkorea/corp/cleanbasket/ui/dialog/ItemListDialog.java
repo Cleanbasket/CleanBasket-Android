@@ -38,6 +38,7 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
     private Button mCancelButton;
 
     private ArrayList<OrderItem> orderItems;
+    private ItemListAdapter mItemListAdapter;
 
     public static ItemListDialog newInstance(ArrayList<OrderItem> orderItems) {
         ItemListDialog ild = new ItemListDialog();
@@ -78,7 +79,7 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
         super.onActivityCreated(savedInstanceState);
 
         if(orderItems != null) {
-            ItemListAdapter mItemListAdapter = new ItemListAdapter(getActivity(), 0, orderItems);
+            mItemListAdapter = new ItemListAdapter(getActivity(), 0, orderItems);
             mOrderItemGridView.setNumColumns(2);
             mOrderItemGridView.setAdapter(mItemListAdapter);
 

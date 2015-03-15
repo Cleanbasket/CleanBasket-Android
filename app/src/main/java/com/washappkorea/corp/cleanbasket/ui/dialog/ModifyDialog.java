@@ -50,13 +50,16 @@ public class ModifyDialog extends DialogFragment {
                     case 0:
                         onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_ITEM, orderNumber);
                         break;
+
                     case 1:
                         onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_DATETIME, orderNumber);
                         break;
+
+//                    case 2:
+//                        onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_COUPON_MILEAGE, orderNumber);
+//                        break;
+
                     case 2:
-                        onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_COUPON_MILEAGE, orderNumber);
-                        break;
-                    case 3:
                         popOrderCancelConfirm();
                         break;
                 }

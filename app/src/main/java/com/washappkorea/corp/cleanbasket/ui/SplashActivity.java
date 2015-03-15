@@ -75,18 +75,18 @@ public class SplashActivity extends BaseActivity implements Response.Listener<St
     }
 
     private void redirectToLoginActivity() {
-        super.finish();
-
         Intent intent = new Intent();
         intent.setAction("com.washappkorea.corp.cleanbasket.ui.LoginActivity");
         startActivity(intent);
+
+        super.finish();
     }
 
     private void redirectToMainActivity() {
-        super.finish();
-
         Intent intent = new Intent();
         intent.setAction("com.washappkorea.corp.cleanbasket.ui.MainActivity");
         startActivity(intent);
+
+        super.finish();
     }
 }

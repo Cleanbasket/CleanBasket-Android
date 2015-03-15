@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,6 +56,18 @@ public class MapActivity extends BaseActivity implements MapView.MapViewEventLis
 
         mImageviewAddressSearch.setOnClickListener(this);
         mAcceptButton.setOnClickListener(this);
+
+        mEditTextSearchAddress.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.use || id == EditorInfo.IME_ACTION_SEARCH) {
+                    search();
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     /**
@@ -162,28 +176,32 @@ public class MapActivity extends BaseActivity implements MapView.MapViewEventLis
 
     }
 
+    private void search() {
+        mEditTextSearchAddress.clearFocus();
+        String query = mEditTextSearchAddress.getText().toString();
+
+        if (query == null || query.length() == 0) {
+            showToast(getString(R.string.search_no_text));
+            return;
+        }
+
+        hideSoftKeyboard();
+        MapPoint.GeoCoordinate geoCoordinate = mMapView.getMapCenterPoint().getMapPointGeoCoord();
+        double latitude = geoCoordinate.latitude;
+        double longitude = geoCoordinate.longitude;
+        int radius = 10000;
+        int page = 1;
+        String apikey = Config.DAUM_MAP_API;
+
+        Searcher searcher = new Searcher();
+        searcher.searchKeyword(getApplicationContext(), query, latitude, longitude, radius, page, apikey, this);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageview_address_search:
-                mEditTextSearchAddress.clearFocus();
-                String query = mEditTextSearchAddress.getText().toString();
-
-                if (query == null || query.length() == 0) {
-                    showToast(getString(R.string.search_no_text));
-                    return;
-                }
-
-                hideSoftKeyboard();
-                MapPoint.GeoCoordinate geoCoordinate = mMapView.getMapCenterPoint().getMapPointGeoCoord();
-                double latitude = geoCoordinate.latitude;
-                double longitude = geoCoordinate.longitude;
-                int radius = 10000;
-                int page = 1;
-                String apikey = Config.DAUM_MAP_API;
-
-                Searcher searcher = new Searcher();
-                searcher.searchKeyword(getApplicationContext(), query, latitude, longitude, radius, page, apikey, this);
+                search();
                 break;
 
             case R.id.button_accept_address:

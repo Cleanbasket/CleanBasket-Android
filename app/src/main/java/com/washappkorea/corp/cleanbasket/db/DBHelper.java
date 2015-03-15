@@ -10,7 +10,9 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.washappkorea.corp.cleanbasket.io.model.Address;
+import com.washappkorea.corp.cleanbasket.io.model.Alarm;
 import com.washappkorea.corp.cleanbasket.io.model.AppInfo;
+import com.washappkorea.corp.cleanbasket.io.model.Notice;
 import com.washappkorea.corp.cleanbasket.io.model.Notification;
 import com.washappkorea.corp.cleanbasket.io.model.OrderCategory;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
@@ -28,6 +30,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<OrderCategory, Integer> orderCategoryDao = null;
     private RuntimeExceptionDao<Address, Integer> addressDao = null;
     private RuntimeExceptionDao<Notification, Integer> notificationDao = null;
+    private RuntimeExceptionDao<Notice, Integer> noticeDao = null;
+    private RuntimeExceptionDao<Alarm, Integer> alarmDao = null;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,6 +45,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, OrderItem.class);
             TableUtils.createTable(connectionSource, Address.class);
             TableUtils.createTable(connectionSource, Notification.class);
+            TableUtils.createTable(connectionSource, Notice.class);
+            TableUtils.createTable(connectionSource, Alarm.class);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (SQLException e) {
             Log.e("Err", e.toString());
@@ -80,6 +86,20 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             notificationDao = getRuntimeExceptionDao(Notification.class);
 
         return notificationDao;
+    }
+
+    public RuntimeExceptionDao<Notice, Integer> getNoticeDao() {
+        if (noticeDao == null)
+            noticeDao = getRuntimeExceptionDao(Notice.class);
+
+        return noticeDao;
+    }
+
+    public RuntimeExceptionDao<Alarm, Integer> getAlarmDao() {
+        if (alarmDao == null)
+            alarmDao = getRuntimeExceptionDao(Alarm.class);
+
+        return alarmDao;
     }
 
     @Override

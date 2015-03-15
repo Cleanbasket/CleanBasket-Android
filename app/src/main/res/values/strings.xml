@@ -9,7 +9,7 @@
     <string name="prompt_phone">Phone</string>
     <string name="prompt_authorization_code">인증 번호</string>
     <string name="action_sign_in">로그인</string>
-    <string name="action_sign_in_email">이메일로 로그인</string>
+    <string name="action_sign_in_email">이메일 로그인</string>
     <string name="action_sign_in_short">로그인</string>
     <string name="action_sign_up">가입</string>
     <string name="find_password">비밀번호 찾기</string>
@@ -165,8 +165,8 @@
 
     <!-- related to notification -->
     <string name="today">오늘</string>
-    <string name="pick_up_notification">시에 수거가 있습니다</string>
-    <string name="drop_off_notification">시에 배달이 있습니다</string>
+    <string name="pick_up_notification">에 수거가 있습니다</string>
+    <string name="drop_off_notification">에 배달이 있습니다</string>
     <string name="pd_message">PD로부터 쪽지가 도착했습니다</string>
     <string name="recommendation_coupon">님이 첫 주문을 하여 2,000원 쿠폰이 지급되었습니다</string>
     <string name="issue_coupon">원 쿠폰이 지급되었습니다</string>
@@ -229,13 +229,33 @@
     <string name="pref_header_version">버전 정보</string>
 
     <!-- -->
+    <string name="start">실행</string>
     <string name="map_search_title">주소 검색</string>
     <string name="setting_title">설정</string>
     <string name="feedback_title">평가하기</string>
+    <string name="message_title">쪽지</string>
     <string name="notice_title">공지사항</string>
+    <string name="minimum_total">최소 주문 금액은 10,000원입니다</string>
+    <string name="delete_impossible">수거 완료된 주문은 취소할 수 없습니다</string>
+    <string name="incorrect_time">올바른 시간을 선택해주세요</string>
+    <string name="order_okay">괜찮습니다</string>
+    <string name="order_change">시간 변경</string>
+    <string name="find_password_inform">아이디(이메일)을 입력해주세요</string>
+    <string name="email_unknwon">가입되지 않은 이메일입니다</string>
+    <string name="find_password_success">해당 이메일로 임시 비밀번호가 발송되었습니다</string>
+    <string name="pickup_date_change">수거 날짜에 따라 배달 날짜가 선택되었습니다</string>
+    <string name="order_modify_success">주문 수정이 성공했습니다</string>
+    <string name="order_delete_success">주문 취소에 성공했습니다</string>
+    <string name="authorization_code_sent">인증 코드가 발송되었습니다</string>
+    <string name="authorization_code_wrong">인증 코드가 다릅니다</string>
+    <string name="authorization_member">축하합니다. 크린바스켓 회원이 되셨습니다</string>
+
+    <!-- -->
+    <string name="hour_text">시</string>
+    <string name="minute_text">분</string>
 
     <!-- Related to Class -->
-    <string name="bronze_basket">브론즈바스켓</string>
+    <string name="bronze_basket">크린바스켓</string>
     <string name="silver_basket">실버바스켓</string>
     <string name="gold_basket">골드바스켓</string>
     <string name="love_basket">러브바스켓</string>
@@ -248,6 +268,7 @@
     <string name="thanks_message">크린바스켓을 이용해주셔서 감사합니다</string>
     <string name="laundry_quality">크린바스켓에 만족하셨나요?</string>
     <string name="free_feedback">자유롭게 서비스에 대한 의견을 남겨주세요</string>
+    <string name="request_feedback">서비스에 대한 의견을 남겨주세요</string>
     <string name="late_feedback">시간이 늦었습니다</string>
     <string name="laundry_feedback">세탁 상태에 불만족해요</string>
     <string name="kindness_feedback">PD가 불친절합니다</string>

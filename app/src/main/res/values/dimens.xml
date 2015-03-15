@@ -5,6 +5,7 @@
     <dimen name="float_fragment_vertical_margin">30dp</dimen>
     <dimen name="float_fragment_horizontal_margin">30dp</dimen>
     <dimen name="icon_default_margin">10dp</dimen>
+    <dimen name="item_default_margin">20dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="status_view_margin">10dp</dimen>

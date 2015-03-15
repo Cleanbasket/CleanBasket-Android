@@ -6,19 +6,20 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -39,8 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class EmailDialog extends DialogFragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
+public class EmailDialog extends DialogFragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>, EditText.OnEditorActionListener {
     private static final String TAG = EmailDialog.class.getSimpleName();
+    private static final String FIND_PASSWORD_TAG = "FIND_PASSWORD";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -70,25 +72,24 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
 //            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 //        }
 
-        getDialog().setTitle(getString(R.string.action_sign_in_email));
+        getDialog().setTitle(Html.fromHtml("<font color='#FFFFFF'>" + getString(R.string.action_sign_in_email) + "</font>"));
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        int color = getResources().getColor(R.color.dialog_color);
+        int titleDividerId = getResources().getIdentifier("titleDivider", "id", "android");
+        View titleDivider = getDialog().getWindow().getDecorView().findViewById(titleDividerId);
+        titleDivider.setBackgroundColor(color);
 
         View rootView = inflater.inflate(R.layout.dialog_login, container, false);
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) rootView.findViewById(R.id.email);
-        populateAutoComplete();
-
         mPasswordView = (EditText) rootView.findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
+
+        mEmailView.setOnEditorActionListener(this);
+        mPasswordView.setOnEditorActionListener(this);
+
+        populateAutoComplete();
 
         Button emailSignInButton = (Button) rootView.findViewById(R.id.email_sign_in_button);
         emailSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -106,10 +107,33 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
             }
         });
 
+        TextView textViewFindPassword = (TextView) rootView.findViewById(R.id.textview_find_password);
+        textViewFindPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popFindPasswordDialog();
+            }
+        });
+
         mLoginFormView = rootView.findViewById(R.id.login_form);
         mProgressView = rootView.findViewById(R.id.login_progress);
 
         return rootView;
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        switch (actionId) {
+            case R.id.email:
+                mPasswordView.requestFocus();
+                return true;
+
+            case R.id.login:
+                attemptLogin();
+                return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -131,6 +155,11 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
         startActivity(intent);
 
         dismiss();
+    }
+
+    private void popFindPasswordDialog() {
+        FindPasswordDialog fpd = FindPasswordDialog.newInstance();
+        fpd.show(getFragmentManager(), FIND_PASSWORD_TAG);
     }
 
     /**
@@ -190,7 +219,7 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 4;
+        return password.length() > 5;
     }
 
     /**
@@ -272,7 +301,6 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
     }
-
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.

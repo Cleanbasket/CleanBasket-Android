@@ -18,6 +18,9 @@
             android:layout_toLeftOf="@+id/imageview_address_search"
             android:hint="@string/address_search_inform"
             android:maxLines="1"
+            android:imeActionId="@+id/use"
+            android:imeActionLabel="@string/start"
+            android:imeOptions="actionSearch"
             android:singleLine="true" />
 
         <ImageView
