@@ -63,6 +63,11 @@ public class CleanBasketApplication extends Application {
         return this.getResources().getIdentifier("ic_item_" + name, "drawable", this.getPackageName());
     }
 
+    /* 이름으로 아이콘을 가져옵니다 */
+    public int getDrawableByCategoryString(String name) {
+        return this.getResources().getIdentifier("ic_category_" + name, "drawable", this.getPackageName());
+    }
+
     public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -73,5 +78,10 @@ public class CleanBasketApplication extends Application {
         }
 
         return dbHelper;
+    }
+
+    public int getPx(int dimensionDp) {
+        float density = getResources().getDisplayMetrics().density;
+        return (int) (dimensionDp * density + 0.5f);
     }
 }

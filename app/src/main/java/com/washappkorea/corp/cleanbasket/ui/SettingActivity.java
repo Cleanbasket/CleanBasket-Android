@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -46,6 +47,8 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getListView().setBackgroundColor(Color.WHITE);
 
         getActionBar().setTitle(R.string.setting_title);
     }

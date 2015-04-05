@@ -4,17 +4,24 @@ package com.washappkorea.corp.cleanbasket.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telephony.SmsMessage;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,17 +36,25 @@ import com.washappkorea.corp.cleanbasket.io.model.AuthUser;
 import com.washappkorea.corp.cleanbasket.io.model.Coupon;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
+import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.ui.dialog.CouponDialog;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
+import com.washappkorea.corp.cleanbasket.util.UserEmailFetcher;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserFragment extends Fragment implements ListView.OnItemClickListener, View.OnClickListener {
     private static final String TAG = UserFragment.class.getSimpleName();
 
     public static final String COUPON_VIEW_DIALOG_TAG = "COUPON_VIEW_DIALOG";
+    public static final String ANDROID_AGENT = "ANDROID";
     public static final Integer SETTING = 0;
 
     public static final int BRONZE = 0;
@@ -47,9 +62,12 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
     public static final int GOLD = 2;
     public static final int LOVE = 3;
 
+    private LayoutInflater mInflater;
+
     private View mRegisterView;
     private View mUserInfoView;
 
+    // UserInfoView
     private ImageView mImageViewUserClass;
     private TextView mUserName;
     private TextView mUserClass;
@@ -57,27 +75,27 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
     private TextView mUserClassMileage;
     private Button mButtonClassInfo;
 
+    // RegisterView
+    private EditText mEditTextEmail;
+    private EditText mEditTextPhone;
+    private EditText mEditTextAuthorization;
+    private TextView mCheckedTextViewAll;
+    private TextView mCheckedTextViewService;
+    private TextView mCheckedTextViewProtection;
+    private CheckBox mCheckBoxAll;
+    private CheckBox mCheckBoxService;
+    private CheckBox mCheckBoxProtection;
+    private Button mButtonRequestCode;
+    private Button mButtonRegister;
+
     private View mProgressView;
     private ListView mListView;
-
-    private Button mButtonRegister;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
-        mRegisterView = inflater.inflate(R.layout.custom_user_register, null);
-
-        mButtonRegister = (Button) mRegisterView.findViewById(R.id.button_register);
-
-        mUserInfoView = inflater.inflate(R.layout.custom_user_info, null);
-
-        mImageViewUserClass = (ImageView) mRegisterView.findViewById(R.id.imageview_user_class);
-        mUserName = (TextView) mRegisterView.findViewById(R.id.textview_user_name);
-        mUserClass = (TextView) mRegisterView.findViewById(R.id.textview_user_class);
-        mUserClassInfo = (TextView) mRegisterView.findViewById(R.id.textview_user_class_info);
-        mUserClassMileage = (TextView) mRegisterView.findViewById(R.id.textview_user_class_mileage);
-        mButtonClassInfo = (Button) mRegisterView.findViewById(R.id.button_view_class_info);
+        mInflater = inflater;
 
         mProgressView = rootView.findViewById(R.id.loading_progress);
         mListView = (ListView) rootView.findViewById(R.id.listview_menu);
@@ -98,6 +116,11 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         MenuAdapter menuAdapter = new MenuAdapter(getActivity(), R.layout.item_menu, menuItems);
         mListView.setAdapter(menuAdapter);
         mListView.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         getUserInfo();
     }
@@ -121,7 +144,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                     case Constants.SUCCESS:
                         showProgress(false);
 
-                        if (jsonData.data != null)
+                        if (jsonData.data == null)
                             showRegisterHeader();
                         else {
                             AuthUser authUser = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, AuthUser.class);
@@ -140,14 +163,27 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
     }
 
     private void showUserInfoHeader(AuthUser authUser) {
-        mImageViewUserClass.setImageResource(R.drawable.ic_sale);
-        mUserName.setText(authUser.email);
-        mUserClass.setText(getClassName(authUser.user_class));
-        mUserClassInfo.setText(getClassDetail(authUser.user_class));
-        mUserClassMileage.setText(getString(R.string.mileage_available) + authUser.mileage + getString(R.string.mileage_available));
-        mButtonClassInfo.setOnClickListener(this);
+        // UserInfoView
+        if (mUserInfoView == null) {
+            mUserInfoView = mInflater.inflate(R.layout.custom_user_info, null);
+            mImageViewUserClass = (ImageView) mUserInfoView.findViewById(R.id.imageview_user_class);
+            mUserName = (TextView) mUserInfoView.findViewById(R.id.textview_user_name);
+            mUserClass = (TextView) mUserInfoView.findViewById(R.id.textview_user_class);
+            mUserClassInfo = (TextView) mUserInfoView.findViewById(R.id.textview_user_class_info);
+            mUserClassMileage = (TextView) mUserInfoView.findViewById(R.id.textview_user_class_mileage);
+            mButtonClassInfo = (Button) mUserInfoView.findViewById(R.id.button_view_class_info);
 
-        mListView.addHeaderView(mUserInfoView);
+            mImageViewUserClass.setImageResource(R.drawable.ic_sale);
+            mUserName.setText(authUser.email);
+            mUserClass.setText(getClassName(authUser.user_class));
+            mUserClassInfo.setText(getClassDetail(authUser.user_class));
+            mUserClassMileage.setText(getString(R.string.mileage_available) + " "  + authUser.mileage);
+            mButtonClassInfo.setOnClickListener(this);
+
+            if (mRegisterView != null)
+                mListView.removeHeaderView(mRegisterView);
+            mListView.addHeaderView(mUserInfoView);
+        }
     }
 
     private String getClassName(Integer user_class) {
@@ -181,15 +217,238 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
     }
 
     private void showRegisterHeader() {
-        mListView.addHeaderView(mRegisterView);
+        // RegisterView
+        if (mRegisterView == null) {
+            mRegisterView = mInflater.inflate(R.layout.custom_register, null);
+            mEditTextEmail = (EditText) mRegisterView.findViewById(R.id.edittext_email);
+            mEditTextPhone = (EditText) mRegisterView.findViewById(R.id.edittext_phone);
+            mEditTextAuthorization = (EditText) mRegisterView.findViewById(R.id.edittext_authorization);
+            mCheckedTextViewAll = (TextView) mRegisterView.findViewById(R.id.checkbox_agree_all);
+            mCheckedTextViewService = (TextView) mRegisterView.findViewById(R.id.checkedtextview_service);
+            mCheckedTextViewProtection = (TextView) mRegisterView.findViewById(R.id.checkedtextview_protection);
+            mButtonRequestCode = (Button) mRegisterView.findViewById(R.id.button_authorization);
+            mButtonRegister = (Button) mRegisterView.findViewById(R.id.register_button);
+            mCheckBoxAll = (CheckBox) mRegisterView.findViewById(R.id.checkbox_agree_all);
+            mCheckBoxService = (CheckBox) mRegisterView.findViewById(R.id.checkbox_service);
+            mCheckBoxProtection = (CheckBox) mRegisterView.findViewById(R.id.checkbox_protection);
+            mEditTextEmail.setText(UserEmailFetcher.getEmail(getActivity()));
+            mEditTextPhone.setText(getPhoneNumber());
+
+            mButtonRequestCode.setOnClickListener(this);
+            mButtonRegister.setOnClickListener(this);
+            mCheckedTextViewService.setOnClickListener(this);
+            mCheckedTextViewProtection.setOnClickListener(this);
+            mCheckBoxAll.setOnClickListener(this);
+
+            mListView.addHeaderView(mRegisterView);
+        }
     }
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
+
         switch (v.getId()) {
             case R.id.button_view_class_info:
                 break;
+
+            case R.id.button_authorization:
+                getActivity().registerReceiver(smsBroadCastReceiver, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
+                requestAuthorizationCode();
+                break;
+
+            case R.id.checkedtextview_service:
+                intent.setAction("com.washappkorea.corp.cleanbasket.ui.WebViewActivity");
+                intent.putExtra("type", WebViewActivity.TERM_OF_USE);
+                startActivity(intent);
+                break;
+
+            case R.id.checkedtextview_protection:
+                intent.setAction("com.washappkorea.corp.cleanbasket.ui.WebViewActivity");
+                intent.putExtra("type", WebViewActivity.PRIVACY);
+                startActivity(intent);
+                break;
+
+            case R.id.register_button:
+                checkAvailable();
+                break;
+
+            case R.id.checkbox_agree_all:
+                mCheckBoxService.setChecked(mCheckBoxAll.isChecked());
+                mCheckBoxProtection.setChecked(mCheckBoxAll.isChecked());
+                break;
         }
+    }
+
+    private void checkAvailable() {
+        // Reset errors.
+        mEditTextEmail.setError(null);
+        mEditTextPhone.setError(null);
+        mEditTextAuthorization.setError(null);
+
+        // Store values at the time of the login attempt.
+        String email = mEditTextEmail.getText().toString();
+        String phone = mEditTextPhone.getText().toString();
+        String code = mEditTextAuthorization.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid password, if the user entered one.
+        if (TextUtils.isEmpty(phone)) {
+            mEditTextPhone.setError(getString(R.string.error_field_required));
+            focusView = mEditTextPhone;
+            cancel = true;
+        }
+
+        // Check for a valid password, if the user entered one.
+        if (TextUtils.isEmpty(code)) {
+            mEditTextAuthorization.setError(getString(R.string.error_field_required));
+            focusView = mEditTextAuthorization;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            mEditTextEmail.setError(getString(R.string.error_field_required));
+            focusView = mEditTextEmail;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            mEditTextEmail.setError(getString(R.string.error_invalid_email));
+            focusView = mEditTextEmail;
+            cancel = true;
+        }
+
+        if (!mCheckBoxService.isChecked() || !mCheckBoxProtection.isChecked()) {
+            CleanBasketApplication.getInstance().showToast(getString(R.string.need_agree));
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            if (focusView != null)
+                focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+            startRegister();
+        }
+    }
+
+    private void startRegister() {
+        AuthUser authUser = new AuthUser();
+        authUser.email = mEditTextEmail.getText().toString();
+        authUser.phone = mEditTextPhone.getText().toString();
+        authUser.code = mEditTextAuthorization.getText().toString();
+        authUser.agent = ANDROID_AGENT;
+
+        String body = CleanBasketApplication.getInstance().getGson().toJson(authUser);
+
+        PostRequest postRequest = new PostRequest(getActivity());
+        postRequest.setUrl(AddressManager.AUTH_REGISTER);
+
+        JSONObject jsonObject = null;
+
+        try {
+            jsonObject = new JSONObject(body);
+            postRequest.setParams(jsonObject);
+        } catch (JSONException e) {
+            CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
+
+            return;
+        }
+
+        postRequest.setListener(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JsonData jsonData = null;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
+                } catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.AUTH_CODE_INVALID:
+                    case Constants.AUTH_CODE_TIME:
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.authorization_code_wrong));
+                        showProgress(false);
+                        break;
+
+                    case Constants.SUCCESS:
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.sign_up_success));
+                        showProgress(false);
+                        break;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                mButtonRequestCode.setEnabled(true);
+
+                try {
+                    getActivity().unregisterReceiver(smsBroadCastReceiver);
+                } catch (IllegalArgumentException e) {
+
+                }
+
+                CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
+                showProgress(false);
+            }
+        });
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest());
+    }
+
+    private boolean isEmailValid(String email) {
+        Pattern pattern = Pattern.compile("\\w+[@]\\w+\\.\\w+");
+        Matcher match = pattern.matcher(email);
+
+        return match.find();
+    }
+
+    private void requestAuthorizationCode() {
+        if (TextUtils.isEmpty(mEditTextPhone.getText().toString()))
+            return;
+
+        if (mEditTextPhone.getText().length() != 11)
+            return;
+
+        mButtonRequestCode.setEnabled(false);
+
+        PostRequest postRequest = new PostRequest(getActivity());
+        postRequest.setUrl(AddressManager.AUTH_CODE);
+        postRequest.setParams("phone", mEditTextPhone.getText().toString());
+        postRequest.setListener(new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JsonData jsonData = null;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
+                } catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.SUCCESS:
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.authorization_code_sent));
+
+                        mButtonRequestCode.setEnabled(true);
+                        break;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                mButtonRequestCode.setEnabled(true);
+
+                CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
+            }
+        });
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest());
     }
 
     @Override
@@ -283,6 +542,23 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         }
     }
 
+    /* 스마트폰 번호를 가져옵니다 */
+    private String getPhoneNumber() {
+        TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(getActivity().TELEPHONY_SERVICE);
+        String mPhoneNumber;
+        mPhoneNumber = tMgr.getLine1Number();
+
+        if (mPhoneNumber != null) {
+            mPhoneNumber = mPhoneNumber.replace("+82", "0");
+
+            if(mPhoneNumber.length() != 11) {
+                return "";
+            }
+        }
+
+        return mPhoneNumber;
+    }
+
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -294,14 +570,14 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mListView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mListView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mListView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+//            mListView.setVisibility(show ? View.GONE : View.VISIBLE);
+//            mListView.animate().setDuration(shortAnimTime).alpha(
+//                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    mListView.setVisibility(show ? View.GONE : View.VISIBLE);
+//                }
+//            });
 
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(
@@ -317,5 +593,45 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    private BroadcastReceiver smsBroadCastReceiver =
+            new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+                        StringBuilder sms = new StringBuilder();
+                        Bundle bundle = intent.getExtras();
+
+                        if (bundle != null) {
+                            Object[] pdusObj = (Object[]) bundle.get("pdus");
+
+                            if (pdusObj == null) return;
+
+                            SmsMessage[] messages = new SmsMessage[pdusObj.length];
+                            for (int i = 0; i < pdusObj.length; i++) {
+                                messages[i] = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
+                            }
+
+                            for (SmsMessage smsMessage : messages) {
+                                sms.append(smsMessage.getMessageBody());
+                            }
+
+                            mEditTextAuthorization.setText(getCode(sms.toString()));
+                        }
+                    }
+                }
+            };
+
+    private String getCode(String sms) {
+        Pattern pattern = Pattern.compile("\\d{4}");
+        Matcher match = pattern.matcher(sms);
+
+        String code = "";
+
+        if (match.find())
+            code = match.group();
+
+        return code;
     }
 }

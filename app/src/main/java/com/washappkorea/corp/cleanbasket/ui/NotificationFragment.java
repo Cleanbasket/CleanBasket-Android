@@ -124,17 +124,17 @@ public class NotificationFragment extends Fragment implements ListView.OnItemCli
     private int getDrawableByType(int type) {
         switch (type) {
             case Notification.EVENT_ALARM:
-                return R.drawable.calendar_bg_selector;
+                return R.drawable.ic_alarm_event;
             case Notification.MESSAGE_ALARM:
-                return R.drawable.calendar_bg_selector;
+                return R.drawable.ic_alarm_messege;
             case Notification.PICKUP_ALARM:
-                return R.drawable.calendar_bg_selector;
+                return R.drawable.ic_alarm_pickup;
             case Notification.DROPOFF_ALARM:
-                return R.drawable.calendar_bg_selector;
+                return R.drawable.ic_alarm_delivery;
             case Notification.COUPON_ALARM:
-                return R.drawable.calendar_bg_selector;
+                return R.drawable.ic_alarm_messege;
             default:
-                return R.drawable.calendar_bg_selector;
+                return R.drawable.ic_alarm_messege;
         }
     }
 

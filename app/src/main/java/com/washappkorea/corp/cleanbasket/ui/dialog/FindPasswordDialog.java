@@ -4,6 +4,7 @@ package com.washappkorea.corp.cleanbasket.ui.dialog;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -26,9 +28,13 @@ import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.RequestQueue;
 import com.washappkorea.corp.cleanbasket.io.listener.NetworkErrorListener;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
-import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
+import com.washappkorea.corp.cleanbasket.io.model.UserData;
+import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FindPasswordDialog extends DialogFragment {
     private static final String TAG = FindPasswordDialog.class.getSimpleName();
@@ -55,6 +61,7 @@ public class FindPasswordDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (getShowsDialog()) {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         }
 
         View rootView = inflater.inflate(R.layout.dialog_find_password, container, false);
@@ -97,7 +104,14 @@ public class FindPasswordDialog extends DialogFragment {
 
         int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
         int height = getDialog().getWindow().getAttributes().height;
+
+        WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
+        lp.dimAmount = 0.9f;
+
+        getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getDialog().getWindow().setLayout(width, height);
+        getDialog().getWindow().setAttributes(lp);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     /**
@@ -114,7 +128,7 @@ public class FindPasswordDialog extends DialogFragment {
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(mEditTextEmail.getText().toString())) {
-            mEditTextEmail.setError(getString(R.string.mileage_short));
+            mEditTextEmail.setError(getString(R.string.error_field_required));
             focusView = mEditTextEmail;
             cancel = true;
         }
@@ -172,27 +186,45 @@ public class FindPasswordDialog extends DialogFragment {
     }
 
     private void sendEmail() {
+        UserData userData = new UserData();
+        userData.email = mEditTextEmail.getText().toString();
+
+        String body = CleanBasketApplication.getInstance().getGson().toJson(userData);
+
         showProgress(true);
-        GetRequest getRequest = new GetRequest(getActivity());
-        getRequest.setUrl(AddressManager.FIND_PASSWORD);
-        getRequest.setListener(new Response.Listener<String>() {
+
+        PostRequest postRequest = new PostRequest(getActivity());
+        postRequest.setUrl(AddressManager.FIND_PASSWORD);
+
+        try {
+            JSONObject jsonObject = new JSONObject(body);
+            postRequest.setParams(jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        postRequest.setListener(new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(JSONObject response) {
                 JsonData jsonData = null;
 
                 try {
-                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
                 } catch (JsonSyntaxException e) {
                     return;
                 }
 
                 switch (jsonData.constant) {
+                    case Constants.ERROR:
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
+                        break;
+
                     case Constants.EMAIL_ERROR:
                         CleanBasketApplication.getInstance().showToast(getString(R.string.email_unknwon));
                         break;
 
                     case Constants.SUCCESS:
-                        CleanBasketApplication.getInstance().showToast(getString(R.string.success_password_change));
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.find_password_success));
                         hideSoftKeyBoard();
                         dismiss();
                         showProgress(false);
@@ -200,6 +232,6 @@ public class FindPasswordDialog extends DialogFragment {
                 }
             }
         }, new NetworkErrorListener(getActivity()));
-        RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest());
     }
 }

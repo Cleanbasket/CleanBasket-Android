@@ -260,7 +260,7 @@ public class GCMIntentService extends IntentService {
                                 .bigText(message))
                         .setContentText(message)
                 .addAction(R.drawable.ic_sale, getString(R.string.order_okay), null)
-                .addAction(R.drawable.ic_sale, getString(R.string.order_change), contentIntent);
+                .addAction(R.drawable.ic_order_pickuptime, getString(R.string.order_change), contentIntent);
 
         mBuilder.setAutoCancel(true);
         mBuilder.setContentIntent(contentIntent);

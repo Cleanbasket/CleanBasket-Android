@@ -4,14 +4,13 @@ package com.washappkorea.corp.cleanbasket.ui.dialog;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.TextUtils;
@@ -20,7 +19,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,14 +34,16 @@ import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.request.StringRequest;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
+import com.washappkorea.corp.cleanbasket.util.HashGenerator;
+import com.washappkorea.corp.cleanbasket.util.UserEmailFetcher;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class EmailDialog extends DialogFragment implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>, EditText.OnEditorActionListener {
+public class EmailDialog extends DialogFragment implements EditText.OnEditorActionListener {
     private static final String TAG = EmailDialog.class.getSimpleName();
+    private static final String REGISTER_TAG = "REGISTER";
     private static final String FIND_PASSWORD_TAG = "FIND_PASSWORD";
+    private static final String EMAIL = "EMAIL";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -75,6 +76,7 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
         getDialog().setTitle(Html.fromHtml("<font color='#FFFFFF'>" + getString(R.string.action_sign_in_email) + "</font>"));
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
+
         int color = getResources().getColor(R.color.dialog_color);
         int titleDividerId = getResources().getIdentifier("titleDivider", "id", "android");
         View titleDivider = getDialog().getWindow().getDecorView().findViewById(titleDividerId);
@@ -89,8 +91,6 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
         mEmailView.setOnEditorActionListener(this);
         mPasswordView.setOnEditorActionListener(this);
 
-        populateAutoComplete();
-
         Button emailSignInButton = (Button) rootView.findViewById(R.id.email_sign_in_button);
         emailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +103,7 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
         textViewSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                popRegisterActivity();
+                popRegisterDialog();
             }
         });
 
@@ -117,6 +117,14 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
 
         mLoginFormView = rootView.findViewById(R.id.login_form);
         mProgressView = rootView.findViewById(R.id.login_progress);
+
+        final SharedPreferences prefs = getEmailPreference();
+        String email = prefs.getString(EMAIL, "");
+
+        if (TextUtils.isEmpty(email))
+            mEmailView.setText(UserEmailFetcher.getEmail(getActivity()));
+        else
+            mEmailView.setText(email);
 
         return rootView;
     }
@@ -142,19 +150,19 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
 
         int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
         int height = getDialog().getWindow().getAttributes().height;
+
+        WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
+        lp.dimAmount = 0.9f;
+
+        getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getDialog().getWindow().setLayout(width, height);
+        getDialog().getWindow().setAttributes(lp);
     }
 
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
-    }
+    private void popRegisterDialog() {
+        RegisterDialog rd = RegisterDialog.newInstance();
 
-    private void popRegisterActivity() {
-        Intent intent = new Intent();
-        intent.setAction("com.washappkorea.corp.cleanbasket.ui.RegisterActivity");
-        startActivity(intent);
-
-        dismiss();
+        rd.show(getFragmentManager(), REGISTER_TAG);
     }
 
     private void popFindPasswordDialog() {
@@ -222,6 +230,13 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
         return password.length() > 5;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        showProgress(false);
+    }
+
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -258,59 +273,6 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
         }
     }
 
-    @Override
-    public android.support.v4.content.Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new android.support.v4.content.CursorLoader(getActivity(),
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor cursor) {
-        List<String> emails = new ArrayList<String>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-
-    }
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -321,7 +283,7 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
 
         UserLoginTask(String email, String password) {
             mEmail = email;
-            mPassword = password;
+            mPassword = HashGenerator.makeHash(password);
         }
 
         @Override
@@ -350,9 +312,9 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
             try {
                 jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
             } catch (JsonSyntaxException e) {
-                return -1;
+                return Constants.ERROR;
             } catch (NullPointerException e) {
-                return -1;
+                return Constants.ERROR;
             }
 
             return jsonData.constant;
@@ -385,11 +347,12 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
                     CleanBasketApplication.getInstance().showToast(getString(R.string.disable_error));
                     break;
                 case Constants.SUCCESS:
+                    storeEmail(getActivity(), mEmailView.getText().toString());
+                    dismiss();
+
                     Intent intent = new Intent();
                     intent.setAction("com.washappkorea.corp.cleanbasket.ui.MainActivity");
                     startActivity(intent);
-
-                    dismiss();
                     break;
             }
         }
@@ -399,5 +362,16 @@ public class EmailDialog extends DialogFragment implements android.support.v4.ap
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    private void storeEmail(Context context, String email) {
+        final SharedPreferences prefs = getEmailPreference();
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(EMAIL, email);
+        editor.commit();
+    }
+
+    private SharedPreferences getEmailPreference() {
+        return getActivity().getSharedPreferences(EMAIL, Context.MODE_PRIVATE);
     }
 }

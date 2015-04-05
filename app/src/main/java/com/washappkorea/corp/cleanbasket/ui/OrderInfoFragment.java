@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,9 +103,10 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     private LinearLayout mHeader;
     private View mProgressView;
 
-    private LinearLayout mLayoutSelector;
+    private RelativeLayout mLayoutSelector;
     private TextView mTextViewSelectedPickUpDate;
     private TextView mTextViewSelectedPickUpTime;
+    private TextView mTextViewDropOffTitle;
     private TextView mTextViewSelectedDropOffDate;
     private TextView mTextViewSelectedDropOffTime;
     private EditText mEditTextAddress;
@@ -144,9 +146,10 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
         mHeader = (LinearLayout) inflater.inflate(R.layout.custom_order_info, null);
 
-        mLayoutSelector = (LinearLayout) mHeader.findViewById(R.id.layout_select_date);
+        mLayoutSelector = (RelativeLayout) mHeader.findViewById(R.id.layout_select_date);
         mTextViewSelectedPickUpDate = (TextView) mHeader.findViewById(R.id.textview_selected_pickup_date);
         mTextViewSelectedPickUpTime = (TextView) mHeader.findViewById(R.id.textview_selected_pickup_time);
+        mTextViewDropOffTitle = (TextView) mHeader.findViewById(R.id.textview_drop_off_title);
         mTextViewSelectedDropOffDate = (TextView) mHeader.findViewById(R.id.textview_selected_dropoff_date);
         mTextViewSelectedDropOffTime = (TextView) mHeader.findViewById(R.id.textview_selected_dropoff_time);
         mEditTextAddress = (EditText) mHeader.findViewById(R.id.edittext_address);
@@ -173,6 +176,9 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
         mTextViewSelectedPickUpDate.setVisibility(View.INVISIBLE);
         mTextViewSelectedPickUpTime.setVisibility(View.INVISIBLE);
+
+        mTextViewSelectedDropOffDate.setVisibility(View.GONE);
+        mTextViewSelectedDropOffTime.setVisibility(View.GONE);
 
         return rootView;
     }
@@ -222,8 +228,8 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         buildGoogleApiClient();
 
         ArrayList<CalculationInfo> calculationInfos = new ArrayList<CalculationInfo>();
-        calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.mileage), 0, CalculationInfo.MILEAGE));
-        calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.coupon), 0, CalculationInfo.COUPON));
+        calculationInfos.add(new CalculationInfo("mileage", getString(R.string.mileage), 0, CalculationInfo.MILEAGE));
+        calculationInfos.add(new CalculationInfo("coupon", getString(R.string.coupon), 0, CalculationInfo.COUPON));
 
         mCalculationInfoAdapter = new CalculationInfoAdapter(getActivity(), R.id.layout_calculation_info, calculationInfos);
         mCalculationInfoListView.setAdapter(mCalculationInfoAdapter);
@@ -324,10 +330,12 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 break;
 
             case R.id.radiobutton_payment_card:
+                mButtonCash.setChecked(false);
                 mPaymentMethod = 0;
                 break;
 
             case R.id.radiobutton_payment_cash:
+                mButtonCard.setChecked(false);
                 mPaymentMethod = 1;
                 break;
         }
@@ -531,6 +539,10 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     public void onTimeSet(TimePickerDialog timePickerDialog, int hour, int minute, int mode) {
         Calendar pickUp = Calendar.getInstance();
 
+        mTextViewSelectedDropOffDate.setVisibility(View.VISIBLE);
+        mTextViewSelectedDropOffTime.setVisibility(View.VISIBLE);
+        mTextViewDropOffTitle.setVisibility(View.GONE);
+
         switch (mode) {
             case PICK_UP_DATETIME:
                 pickUp = Calendar.getInstance();
@@ -649,11 +661,17 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
      * @param date 최종 선택된 수거 시간
      */
     private void pickUpTimeSelected(Date date) {
+        Calendar c = getCalendar();
+        c.setTime(date);
+        c.add(Calendar.HOUR_OF_DAY, 1);
+
         mTextViewSelectedPickUpTime.setVisibility(View.VISIBLE);
         mTextViewSelectedPickUpTime.setText(
 //                DateTimeFactory.getInstance().getPrettyTime(date) +
 //                DateTimeFactory.getInstance().getNewLine() +
-                DateTimeFactory.getInstance().getStringTime(getActivity(), date));
+                DateTimeFactory.getInstance().getStringTime(getActivity(), date) +
+                        getString(R.string.time_tilde) +
+                        DateTimeFactory.getInstance().getStringTime(getActivity(), c.getTime()));
     }
 
     /**
@@ -672,10 +690,16 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
      * @param date 최종 선택된 배달 시간
      */
     private void dropOffTimeSelected(Date date) {
+        Calendar c = getCalendar();
+        c.setTime(date);
+        c.add(Calendar.HOUR_OF_DAY, 1);
+
         mTextViewSelectedDropOffTime.setText(
 //                DateTimeFactory.getInstance().getPrettyTime(date) +
 //                DateTimeFactory.getInstance().getNewLine() +
-                DateTimeFactory.getInstance().getStringTime(getActivity(), date));
+                DateTimeFactory.getInstance().getStringTime(getActivity(), date) +
+                        getString(R.string.time_tilde) +
+                        DateTimeFactory.getInstance().getStringTime(getActivity(), c.getTime()));
     }
 
     /**
@@ -948,7 +972,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         if (calculationCostInfo != null && mTotal >= FREE_PICK_UP_PRICE)
             mCalculationInfoAdapter.remove(calculationCostInfo);
         else if (calculationCostInfo == null && mTotal < FREE_PICK_UP_PRICE)
-            mCalculationInfoAdapter.add(new CalculationInfo("ic_sale", getString(R.string.pick_up_cost), 2000, CalculationInfo.COST));
+            mCalculationInfoAdapter.add(new CalculationInfo("pick_up_cost", getString(R.string.pick_up_cost), 2000, CalculationInfo.COST));
 
         /* 총계 계산 */
         CalculationInfo calculationTotalInfo = mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL);
@@ -1039,11 +1063,16 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
             }
 
             if (getItem(position).image != null)
-                holder.imageViewCalculationInfo.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).image));
+                holder.imageViewCalculationInfo.setImageResource(getDrawableByString(getItem(position).image));
             holder.textViewCalculationInfo.setText(getItem(position).name);
             holder.textViewCalculation.setText(getItem(position).price + getString(R.string.monetary_unit));
 
             return convertView;
+        }
+
+        /* 이름으로 아이콘을 가져옵니다 */
+        public int getDrawableByString(String name) {
+            return getContext().getResources().getIdentifier("ic_order_" + name, "drawable", getContext().getPackageName());
         }
 
         public int getTotal() {

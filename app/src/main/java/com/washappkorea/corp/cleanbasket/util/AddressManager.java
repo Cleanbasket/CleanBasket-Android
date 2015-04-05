@@ -7,7 +7,9 @@ public class AddressManager {
 	public final static String LOGOUT = "logout/success";
 
 	public final static String REGID = "regid";
-	public final static String REGISTER = "member/join";
+	public final static String REGISTER = "member/register";
+	public final static String AUTH_CODE = "code";
+    public final static String AUTH_REGISTER = "member/auth";
 
     public final static String GET_APP_INFO = "appinfo";
     public final static String GET_ORDER_ITEM = "item";

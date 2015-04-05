@@ -14,7 +14,8 @@
         android:visibility="gone" />
 
     <ScrollView android:id="@+id/login_form" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="false">
 
         <LinearLayout android:id="@+id/register_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
@@ -24,12 +25,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/register_inform"/>
 
-            <AutoCompleteTextView android:id="@+id/email" android:layout_width="match_parent"
+            <EditText android:id="@+id/edittext_email" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress" android:maxLines="1"
                 android:singleLine="true" />
 
             <EditText
+                android:id="@+id/edittext_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_phone" />
@@ -40,6 +42,7 @@
                 android:orientation="horizontal">
 
                 <EditText
+                    android:id="@+id/edittext_authorization"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/button_authorization"
@@ -53,31 +56,77 @@
                     android:text="@string/authorization_request" />
             </RelativeLayout>
 
-            <CheckedTextView
-                android:id="@+id/textview_agree"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checkMark="?android:attr/textCheckMark"
-                android:text="@string/all_agree"
-                android:gravity="center_vertical" />
+                android:layout_height="wrap_content">
 
-            <CheckedTextView
-                android:id="@+id/textview_service"
+                <TextView
+                    android:id="@+id/checkedtextview_agree_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/all_agree" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_agree_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:button="@drawable/checkbox" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checkMark="?android:attr/textCheckMark"
-                android:text="@string/info_service"
-                android:gravity="center_vertical" />
+                android:layout_height="wrap_content">
 
-            <CheckedTextView
-                android:id="@+id/textview_protection"
+                <TextView
+                    android:id="@+id/checkedtextview_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/info_service" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:button="@drawable/checkbox" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checkMark="?android:attr/textCheckMark"
-                android:text="@string/info_protection"
-                android:gravity="center_vertical" />
+                android:layout_height="wrap_content">
 
-            <Button android:id="@+id/email_register_button" style="?android:textAppearanceSmall"
+                <TextView
+                    android:id="@+id/checkedtextview_protection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/info_protection" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_protection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:button="@drawable/checkbox" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/register_button" style="?android:textAppearanceSmall"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:text="@string/action_sign_up"
                 android:textStyle="bold" />

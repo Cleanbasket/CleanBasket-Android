@@ -21,6 +21,8 @@ public final class Constants {
     public static final int SESSION_VALID = 17;
     public static final int AREA_UNAVAILABLE = 18;
     public static final int DATE_UNAVAILABLE = 19;
+    public static final int AUTH_CODE_INVALID = 20;
+    public static final int AUTH_CODE_TIME = 21;
 
     public static final int DUPLICATION = 207;
     public static final int INVALID = 208;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">크린바스켓</string>
+    <string name="app_description">세탁 수거배달앱</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -11,6 +12,7 @@
     <string name="action_sign_in">로그인</string>
     <string name="action_sign_in_email">이메일 로그인</string>
     <string name="action_sign_in_short">로그인</string>
+    <string name="action_next">다음</string>
     <string name="action_sign_up">가입</string>
     <string name="find_password">비밀번호 찾기</string>
     <string name="all_agree">전체 동의</string>
@@ -96,6 +98,8 @@
     <string name="coupon_not_available">10,000원 이상 주문 시 쿠폰을 사용하실 수 있습니다</string>
 
     <!-- related to address info -->
+    <string name="address">주소</string>
+    <string name="contact_title">연락처</string>
     <string name="address_district">동 주소를 입력해주세요</string>
     <string name="address_detail">상세 주소를 입력해주세요</string>
     <string name="address_search_inform">동을 입력해주세요. (예. 역삼동)</string>
@@ -274,4 +278,22 @@
     <string name="kindness_feedback">PD가 불친절합니다</string>
     <string name="feedback_success">평가가 완료되었습니다</string>
     <string name="feedback_failure">평가에 실패했습니다</string>
+
+    <!-- -->
+    <string name="notice_available_area">크린바스켓 서비스 지역을\n알려드립니다</string>
+    <string name="notice_service_info">크린바스켓 서비스를\n소개합니다</string>
+    <string name="notice_service_login">지금 바로 사용해보세요</string>
+    <string name="notice_service_info_mobile">스마트폰 App을 통한 편리한 주문</string>
+    <string name="notice_service_info_cleaning">고급 세탁 서비스</string>
+    <string name="notice_service_info_price">합리적인 가격</string>
+    <string name="notice_service_info_time">수거배달시간 : 10:00~24:00</string>
+    <string name="notice_login_facebook">페이스북 로그인</string>
+    <string name="notice_login_kakao">카카오톡 로그인</string>
+    <string name="notice_login_email">이메일 로그인</string>
+
+    <!-- -->
+    <string name="order_list_title">주문 항목</string>
+    <string name="no_order">현재 진행 중인 주문이 없습니다</string>
+    <string name="finish_order">이미 완료된 주문입니다</string>
+    <string name="need_agree">서비스약관과 개인정보취급방침에 동의해주셔야 합니다</string>
 </resources>

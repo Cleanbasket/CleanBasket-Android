@@ -18,6 +18,7 @@ import com.washappkorea.corp.cleanbasket.io.model.OrderCategory;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
 import com.washappkorea.corp.cleanbasket.util.StringMatcher;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +28,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
     private LayoutInflater mLayoutInflater;
     private HashMap<Integer, OrderCategory> mOrderCategoryMap;
     private ArrayList<OrderItem> mFixedOrderItem;
+    private DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
 
     public OrderItemAdapter(Context context, int resource) {
         super(context, resource);
@@ -66,6 +68,11 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.textViewOrderItem = (TextView) convertView.findViewById(R.id.textview_orderitem);
             holder.textViewOrderItemPrice = (TextView) convertView.findViewById(R.id.textview_orderitem_price);
             holder.badgeView = new BadgeView(getContext(), holder.orderImageView);
+            holder.badgeView.setBadgeBackgroundColor(getContext().getResources().getColor(R.color.badge_color));
+
+            int width = CleanBasketApplication.getInstance().getPx(27);
+            holder.badgeView.setLayoutParams(new LinearLayout.LayoutParams(width, width));
+            holder.badgeView.setBadgeMargin(13);
             convertView.setTag(holder);
         } else
             holder = (OrderItemViewHolder) convertView.getTag();
@@ -93,7 +100,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         if (getItem(position).discount_rate > 0)
             holder.textViewDiscountInfo.setText(getItem(position).discount_rate * 100 + "%");
         holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
-        holder.textViewOrderItemPrice.setText(String.valueOf(getItem(position).price) + getContext().getString(R.string.monetary_unit));
+        holder.textViewOrderItemPrice.setText(mFormatKRW.format((double) getItem(position).price) + getContext().getString(R.string.monetary_unit));
 
         return convertView;
     }
@@ -116,6 +123,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.custom_header, parent, false);
             holder = new HeaderViewHolder();
+            holder.imageView = (ImageView) convertView.findViewById(R.id.imageview_category);
             holder.textView = (TextView) convertView.findViewById(R.id.textview_header);
             convertView.setTag(holder);
         } else
@@ -126,6 +134,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         try {
             orderCategory = mOrderCategoryMap.get(getItem(position).category);
 
+            holder.imageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByCategoryString(orderCategory.name));
             holder.textView.setText(CleanBasketApplication.getInstance().getStringByString(orderCategory.name));
         } catch (NullPointerException e) {
             holder.textView.setText(R.string.etc);
@@ -135,6 +144,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
     }
 
     protected class HeaderViewHolder {
+        public ImageView imageView;
         public TextView textView;
     }
 

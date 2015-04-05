@@ -2,6 +2,7 @@ package com.washappkorea.corp.cleanbasket.ui;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -43,6 +46,7 @@ import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -62,9 +66,13 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
     private SearchView mSearchView;
     private RelativeLayout mOrderButton;
 
+    private ImageView mImageViewSearchIcon;
+
     private TextView mTextViewItemNumber;
     private TextView mTextViewItemTotal;
     private TextView mTextViewOrderButton;
+
+    private DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
 
     private ArrayList<OrderItem> mOrderItem;
 
@@ -75,6 +83,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         mOrderItemsView = (OrderItemsView) rootView.findViewById(R.id.gridview_item);
         mOrderItemAdapter = new OrderItemAdapter(getActivity(), R.layout.item_orderitem);
         mSearchView = (SearchView) rootView.findViewById(R.id.searchview_item);
+        mImageViewSearchIcon = (ImageView) rootView.findViewById(R.id.search_icon);
         mOrderButton = (RelativeLayout) rootView.findViewById(R.id.button_order);
         mTextViewOrderButton = (TextView) rootView.findViewById(R.id.textview_order_button_label);
         mTextViewItemNumber = (TextView) rootView.findViewById(R.id.textview_item_number);
@@ -83,6 +92,24 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         mOrderItemsView.setNumColumns(3);
         mOrderItemsView.setAreHeadersSticky(true);
         mOrderItemsView.setAdapter(mOrderItemAdapter);
+
+        int searchCloseButtonId = mSearchView.getContext().getResources()
+                .getIdentifier("android:id/search_close_btn", null, null);
+        ImageView closeButton = (ImageView) mSearchView.findViewById(searchCloseButtonId);
+
+        int searchIconId = mSearchView.getContext().getResources()
+                .getIdentifier("android:id/search_button", null, null);
+        ImageView searchIcon = (ImageView) mSearchView.findViewById(searchIconId);
+        searchIcon.setImageResource(R.drawable.ic_menu_search);
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchView.setQuery("", true);
+                mSearchView.setVisibility(View.GONE);
+                mImageViewSearchIcon.setVisibility(View.VISIBLE);
+            }
+        });
 
         return rootView;
     }
@@ -96,6 +123,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
         mSearchView.setOnClickListener(this);
         mSearchView.setOnQueryTextListener(this);
+        mImageViewSearchIcon.setOnClickListener(this);
         mOrderButton.setOnClickListener(this);
 
         getOrderItemAdapter().registerDataSetObserver(new DataSetObserver() {
@@ -235,7 +263,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
             mTextViewItemTotal.setText(
                     getResources().getString(R.string.label_total) +
                             " " +
-                            getOrderItemAdapter().getItemTotal() +
+                            mFormatKRW.format((double) getOrderItemAdapter().getItemTotal()) +
                             getResources().getString(R.string.monetary_unit));
         };
     }
@@ -243,8 +271,11 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.searchview_item:
-                mSearchView.setIconified(false);
+            case R.id.search_icon:
+                mSearchView.requestFocus();
+                showSoftKeyboard();
+                mSearchView.setVisibility(View.VISIBLE);
+                mImageViewSearchIcon.setVisibility(View.GONE);
                 break;
 
             case R.id.button_order:
@@ -379,6 +410,12 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                     }
                 })
                 .create().show();
+    }
+
+    private void showSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     private DBHelper getDBHelper() {

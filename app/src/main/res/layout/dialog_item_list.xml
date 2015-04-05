@@ -1,80 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="297dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:weightSum="1"
-    android:background="@color/listview_item_background"
     tools:context=".ItemListFragment">
+
+    <TextView
+        android:id="@+id/textview_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/order_list_title"
+        android:textSize="21dp"
+        android:textColor="@color/dialog_text" />
 
     <GridView
         android:id="@+id/gridview_item_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.8"
-        android:background="@color/listview_background" />
+        android:layout_width="236dp"
+        android:layout_height="205dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/textview_title"
+        android:listSelector="@android:color/transparent"
+        android:verticalSpacing="10dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.1"
-        android:weightSum="1">
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_width="236dp"
+        android:layout_height="@dimen/thick_line"
+        android:layout_below="@+id/gridview_item_list"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:background="@color/point_color" />
+
+    <RelativeLayout
+        android:id="@+id/layout_total_info"
+        android:layout_width="236dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/line_bottom"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/textview_item_number_list"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
+            android:layout_toLeftOf="@+id/textview_item_total_list"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/dialog_text"
             android:gravity="center" />
 
         <TextView
             android:id="@+id/textview_item_total_list"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"
+            android:textColor="@color/point_color"
             android:gravity="center" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.1"
+        android:layout_width="236dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:layout_marginBottom="27dp"
+        android:layout_below="@+id/layout_total_info"
         android:weightSum="1"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button_accept_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/label_confirm" />
-
-        <Button
-            android:id="@+id/button_accept_list_big"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/label_confirm" />
-
-        <Button
-            android:id="@+id/button_modify_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/label_modify" />
-
-        <Button
+            style="@style/White.Button.CleanBasket"
             android:id="@+id/button_cancel_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:layout_margin="5dp"
+            android:textSize="14dp"
             android:text="@string/label_cancel" />
+
+        <Button
+            style="@style/White.Button.CleanBasket"
+            android:id="@+id/button_modify_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_margin="5dp"
+            android:textSize="14dp"
+            android:text="@string/label_modify" />
+
+        <Button
+            style="@style/White.Button.CleanBasket"
+            android:id="@+id/button_accept_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_margin="5dp"
+            android:textSize="14dp"
+            android:text="@string/label_confirm" />
+
+        <Button
+            style="@style/White.Button.CleanBasket"
+            android:id="@+id/button_accept_list_big"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textSize="14dp"
+            android:text="@string/label_confirm" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

@@ -124,8 +124,6 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
 
         mButtonAccept.setOnClickListener(this);
         mButtonCancel.setOnClickListener(this);
-
-        
     }
 
     @Override
@@ -194,7 +192,7 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         // 처음 선택 가능 시간이 정각이 아니라면 dummy unit 삽입
         if (firstHour < 24 && firstMinute == 30) {
             timeSet.add(new TimeUnit(-1, -1));
-            timeSet.add(new TimeUnit(firstHour, firstMinute, 10));
+            timeSet.add(new TimeUnit(firstHour, firstMinute));
             firstHour++;
             firstMinute = 0;
         }

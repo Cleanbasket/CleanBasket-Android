@@ -5,6 +5,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -69,6 +72,11 @@ public class CouponDialog extends DialogFragment implements View.OnClickListener
         int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
         int height = getDialog().getWindow().getAttributes().height;
         getDialog().getWindow().setLayout(width, height);
+
+        final Drawable d = new ColorDrawable(Color.BLACK);
+        d.setAlpha(150);
+
+        getDialog().getWindow().setBackgroundDrawable(d);
     }
 
     @Override
@@ -178,7 +186,7 @@ public class CouponDialog extends DialogFragment implements View.OnClickListener
             } else
                 holder = (CouponListViewHolder) convertView.getTag();
 
-            holder.textViewCouponPrice.setBackgroundResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
+            holder.textViewCouponPrice.setText((getItem(position).value) + getString(R.string.monetary_unit));
             holder.textViewCouponTitle.setText(getItem(position).name);
             if (getItem(position).start_date.equals("") || getItem(position).equals(""))
                 holder.textViewCouponValidateTime.setText(getString(R.string.coupon_invalidate));

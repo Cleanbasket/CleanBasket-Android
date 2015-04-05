@@ -6,9 +6,13 @@
     <!-- related to order fragment -->
     <color name="gridview_background">#FFFFFF</color>
     <color name="listview_background">#FFFFFF</color>
+    <color name="order_background">#FFFFFF</color>
     <color name="order_info_background">#FFFFFF</color>
     <color name="order_state_background">#FFFFFF</color>
-    <color name="header_text">#82d9cf</color>
+    <color name="user_fragment_background">#FFFFFF</color>
+    <color name="header_text">#000000</color>
+    <color name="info_text">#000000</color>
+    <color name="splash_text">#707070</color>
     <color name="textview_order_button">#FFFFFF</color>
     <color name="order_button_background">#82d9cf</color>
 
@@ -18,11 +22,13 @@
     <!-- general -->
     <color name="point_color">#82d9cf</color>
     <color name="dialog_color">#FFFFFF</color>
+    <color name="badge_color">#000000</color>
 
     <!-- notification -->
     <color name="notification_checked">#FFFFFF</color>
     <color name="notification_unchecked">#DDDDDD</color>
 
-    <!-- notification -->
+    <!-- dialog -->
     <color name="dialog_text">#FFFFFF</color>
+    <color name="dialog_background">#90000000</color>
 </resources>

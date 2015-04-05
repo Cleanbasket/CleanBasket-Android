@@ -6,15 +6,28 @@
     <dimen name="float_fragment_horizontal_margin">30dp</dimen>
     <dimen name="icon_default_margin">10dp</dimen>
     <dimen name="item_default_margin">20dp</dimen>
+    <dimen name="default_icon">32dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="status_view_margin">10dp</dimen>
+    <dimen name="slim_line">0.1dp</dimen>
+    <dimen name="thick_line">2dp</dimen>
+
+    <!-- Text -->
+    <dimen name="small_text">10dp</dimen>
 
     <!-- Dialog -->
+    <dimen name="dialog_margin">13dp</dimen>
+    <dimen name="dialog_edittext_height">40dp</dimen>
     <dimen name="dialog_width">300dp</dimen>
-    <dimen name="dialog_height">600dp</dimen>
+    <dimen name="dialog_height">404dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="time_picker_header_text_size">18dp</dimen>
     <dimen name="time_picker_discount_text_size">10dp</dimen>
+
+    <!-- Login -->
+    <dimen name="login_facebook_icon_dimen">58dp</dimen>
+    <dimen name="login_kakao_icon_dimen">48dp</dimen>
+    <dimen name="login_email_icon_dimen">46dp</dimen>
 </resources>

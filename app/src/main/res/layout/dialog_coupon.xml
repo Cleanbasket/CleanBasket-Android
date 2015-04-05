@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="@color/listview_item_background"
     tools:context=".CouponDialog">
 
     <!-- Login progress -->
@@ -21,17 +20,31 @@
     <LinearLayout android:id="@+id/coupon_form" android:layout_width="match_parent"
         android:layout_height="wrap_content" android:orientation="vertical">
 
+        <TextView
+            style="@style/White.TextView.CleanBasket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="29dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/coupon_info"
+            android:textSize="21dp" />
+
         <ListView
             android:id="@+id/listview_coupon_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.8"
-            android:background="@color/listview_background" />
+            android:layout_marginTop="29dp" />
 
         <Button
+            style="@style/White.Button.CleanBasket"
             android:id="@+id/button_cancel_coupon_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="27dp"
             android:text="@string/label_not_use" />
     </LinearLayout>
 </LinearLayout>

@@ -71,6 +71,7 @@ public class OrderStatusFragment extends Fragment {
 
     private LayoutInflater mLayoutInflater;
 
+    private TextView mTextViewEmpty;
     private ExpandableListView mOrderStateListView;
     private View mProgressView;
 
@@ -81,6 +82,7 @@ public class OrderStatusFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_order_status, container, false);
 
         mOrderStateListView = (ExpandableListView) rootView.findViewById(R.id.listview_order_state);
+        mTextViewEmpty = (TextView) rootView.findViewById(R.id.textview_no_item);
         mProgressView = rootView.findViewById(R.id.loading_progress);
 
         return rootView;
@@ -154,7 +156,10 @@ public class OrderStatusFragment extends Fragment {
             OrderStateAdapter orderStatusAdapter = new OrderStateAdapter(orders, mLayoutInflater);
             mOrderStateListView.setAdapter(orderStatusAdapter);
             mOrderStateListView.expandGroup(0);
+            mTextViewEmpty.setVisibility(View.GONE);
         }
+        else
+            mTextViewEmpty.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -258,9 +263,6 @@ public class OrderStatusFragment extends Fragment {
             } else
                 holder = (OrderStatusDetailViewHolder) convertView.getTag();
 
-            // todo
-//            holder.imageViewStatusBar.setImageResource(getDrawableByStatus(getGroup(position).state));
-
             int state = getGroup(position).state;
 
             holder.buttonModifyOrder.setVisibility(View.GONE);
@@ -269,10 +271,12 @@ public class OrderStatusFragment extends Fragment {
             // state에 따라 컴포넌트를 출력합니다
             switch (state) {
                 case PICK_UP_WAIT:
+                    holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline1);
                     holder.buttonModifyOrder.setVisibility(View.VISIBLE);
                     break;
 
                 case PICK_UP_MAN_SELECTED:
+                    holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline2);
                     holder.buttonModifyOrder.setVisibility(View.VISIBLE);
                     if (getGroup(position).pickupInfo != null) {
                         setPDFaceImage(holder.imageViewPdFace, getGroup(position).pickupInfo.img);
@@ -281,6 +285,7 @@ public class OrderStatusFragment extends Fragment {
                     break;
 
                 case DELIVERY_MAN_SELECTED:
+                    holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline3);
                     if (getGroup(position).dropoffInfo != null) {
                             setPDFaceImage(holder.imageViewPdFace, getGroup(position).dropoffInfo.img);
                             holder.textViewPDName.setText(getGroup(position).dropoffInfo.name + " " + getString(R.string.pd_name_default));
@@ -288,6 +293,7 @@ public class OrderStatusFragment extends Fragment {
                     break;
 
                 case DELIVERY_FINISH:
+                    holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline4);
                     holder.buttonFeedback.setVisibility(View.VISIBLE);
 
                 default:

@@ -8,8 +8,9 @@
 
     <ImageView
         android:id="@+id/imageview_calculation_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/default_icon"
+        android:layout_height="@dimen/default_icon"
+        android:layout_marginLeft="20dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true" />
 
@@ -18,10 +19,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/imageview_calculation_info"
         android:orientation="vertical">
 
         <TextView
+            style="@style/Black.Big.TextView.CleanBasket"
             android:id="@+id/textview_calculation_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -30,6 +33,7 @@
             android:id="@+id/textview_calculation_label_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="10dp"
             android:visibility="gone" />
     </LinearLayout>
 
@@ -38,14 +42,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:textSize="12dp"
+        android:layout_marginRight="20dp"
         android:layout_alignParentRight="true" />
 
     <Button
         android:id="@+id/button_use"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:layout_gravity="center_vertical"
         android:text="@string/button_label_use"
+        android:textSize="12dp"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/textview_back_grey" />
 </RelativeLayout>

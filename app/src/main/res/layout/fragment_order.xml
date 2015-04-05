@@ -8,24 +8,33 @@
     android:layout_height="match_parent"
     tools:context=".OrderFragment">
 
+    <View
+        android:id="@+id/line_top"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/slim_line"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/black" />
+
     <RelativeLayout
         android:id="@+id/layout_header_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="36dp"
+        android:layout_below="@+id/line_top"
+        android:background="@color/order_background">
 
         <RelativeLayout
             android:id="@+id/layout_status_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
 
             <ImageView
                 android:id="@+id/imageview_basket"
-                android:layout_width="wrap_content"
+                android:layout_width="42dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/status_view_margin"
-                android:src="@drawable/ic_basket" />
+                android:layout_marginLeft="24dp"
+                android:src="@drawable/ic_menu_itembox" />
 
             <TextView
                 android:id="@+id/textview_item_number"
@@ -46,40 +55,62 @@
 
         <SearchView
             android:id="@+id/searchview_item"
-            android:layout_width="wrap_content"
+            android:layout_width="36dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/layout_status_view"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:background="@android:color/transparent"
-            android:baselineAligned="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp"
+            android:background="@color/point_color"
+            android:baselineAligned="true"
+            android:iconifiedByDefault="false"
+            android:gravity="right"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_menu_search" />
     </RelativeLayout>
+
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/slim_line"
+        android:layout_below="@+id/layout_header_view"
+        android:background="@android:color/black" />
 
     <com.washappkorea.corp.cleanbasket.ui.widget.OrderItemsView
         android:id="@+id/gridview_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_order"
-        android:layout_below="@+id/layout_header_view"
-        android:background="@color/gridview_background" />
+        android:layout_below="@+id/line_bottom"
+        android:background="@color/gridview_background"
+        android:verticalSpacing="10dp"
+        android:listSelector="@android:color/transparent" />
 
     <RelativeLayout
         android:id="@+id/button_order"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:layout_alignParentBottom="true"
         android:background="@color/point_color">
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true">
+            android:layout_height="36dp"
+            android:layout_centerInParent="true">
 
             <ImageView
                 android:id="@+id/imageview_button_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_basket" />
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_button_order" />
 
             <TextView
                 android:id="@+id/textview_order_button_label"
@@ -87,7 +118,9 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/imageview_button_order"
                 android:layout_centerVertical="true"
-                android:text="@string/button_order" />
+                android:layout_marginLeft="9dp"
+                android:text="@string/button_order"
+                android:textStyle="bold" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

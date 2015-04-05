@@ -2,6 +2,9 @@ package com.washappkorea.corp.cleanbasket.ui.dialog;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -180,6 +183,20 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
         ft.commit();
     }
 
+    @Override
+    public void onStart() {
+        int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
+        int height = getDialog().getWindow().getAttributes().height;
+        getDialog().getWindow().setLayout(width, height);
+
+        final Drawable d = new ColorDrawable(Color.BLACK);
+        d.setAlpha(150);
+
+        getDialog().getWindow().setBackgroundDrawable(d);
+
+        super.onStart();
+    }
+
     class ItemListAdapter extends OrderItemAdapterHelper {
         private LayoutInflater mLayoutInflater;
 
@@ -195,19 +212,20 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
 
             if (convertView == null) {
                 convertView = mLayoutInflater.inflate(R.layout.item_orderitem_list, parent, false);
+
                 holder = new OrderItemListViewHolder();
                 holder.textViewOrderItem = (TextView) convertView.findViewById(R.id.textview_orderitem_list);
                 holder.textViewOrderItemPrice = (TextView) convertView.findViewById(R.id.textview_orderitem_price_list);
                 holder.textViewOrderItemCount = (TextView) convertView.findViewById(R.id.textview_orderitem_count_list);
-                holder.textViewOrderItemTotalPrice = (TextView) convertView.findViewById(R.id.textview_orderitem_total_list);
+//                holder.textViewOrderItemTotalPrice = (TextView) convertView.findViewById(R.id.textview_orderitem_total_list);
                 convertView.setTag(holder);
             } else
                 holder = (OrderItemListViewHolder) convertView.getTag();
 
             holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
             holder.textViewOrderItemPrice.setText(String.valueOf(getItem(position).price) + getContext().getString(R.string.monetary_unit));
-            holder.textViewOrderItemCount.setText(getItem(position).count + getString(R.string.item_unit));
-            holder.textViewOrderItemTotalPrice.setText(String.valueOf(getItem(position).price * getItem(position).count) + getContext().getString(R.string.monetary_unit));
+            holder.textViewOrderItemCount.setText(getItem(position).count + "");
+//            holder.textViewOrderItemTotalPrice.setText(String.valueOf(getItem(position).price * getItem(position).count) + getContext().getString(R.string.monetary_unit));
 
             return convertView;
         }

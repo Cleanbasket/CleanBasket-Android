@@ -55,6 +55,7 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
     private TextView mTextViewPickUpTime;
     private TextView mTextViewDropOffDate;
     private TextView mTextViewDropOffTime;
+    private TextView mTextViewFinish;
     private View mModifyDateTimeFormView;
     private View mPickUpFormView;
     private View mProgressView;
@@ -93,6 +94,7 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
         mTextViewPickUpTime = (TextView) rootView.findViewById(R.id.textview_pick_up_time);
         mTextViewDropOffDate = (TextView) rootView.findViewById(R.id.textview_drop_off_date);
         mTextViewDropOffTime = (TextView) rootView.findViewById(R.id.textview_drop_off_time);
+        mTextViewFinish = (TextView) rootView.findViewById(R.id.finish_order);
 
         Button buttonModify = (Button) rootView.findViewById(R.id.modify_datetime_button);
         buttonModify.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +105,6 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
         });
 
         mPickUpFormView = rootView.findViewById(R.id.layout_pick_up_modify);
-
         mModifyDateTimeFormView = rootView.findViewById(R.id.modify_datetime_form);
         mProgressView = rootView.findViewById(R.id.login_progress);
 
@@ -144,12 +145,20 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
 
                 switch (jsonData.constant) {
                     case Constants.SUCCESS:
-
                         showProgress(false);
+
                         ArrayList<Order> orders = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, new TypeToken<ArrayList<Order>>(){}.getType());
+
                         if (getOrderInfo(orders) != null) {
+                            mModifyDateTimeFormView.setVisibility(View.VISIBLE);
+                            mTextViewFinish.setVisibility(View.GONE);
                             insertOrderInfo(getOrderInfo(orders));
                         }
+                        else {
+                            showProgress(true);
+                            mTextViewFinish.setVisibility(View.VISIBLE);
+                        }
+
                         break;
                 }
             }

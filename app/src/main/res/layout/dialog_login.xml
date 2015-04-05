@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="@android:color/transparent"
     tools:context=".EmailDialog">
 
     <!-- Login progress -->
@@ -24,53 +23,62 @@
         <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
 
-            <AutoCompleteTextView android:id="@+id/email" android:layout_width="match_parent"
-                android:layout_height="40dp" android:hint="@string/prompt_email"
+            <AutoCompleteTextView style="@style/White.EditText.CleanBasket"
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog_edittext_height"
+                android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress" android:maxLines="1"
                 android:imeActionId="@+id/email"
-                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeActionLabel="@string/action_next"
                 android:imeOptions="actionNext"
-                android:singleLine="true"
-                style="@style/White.EditText.CleanBasket" />
+                android:singleLine="true" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/white" />
 
-            <EditText android:id="@+id/password" android:layout_width="match_parent"
-                android:layout_height="40dp"
+            <EditText
+                style="@style/White.EditText.CleanBasket"
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog_edittext_height"
                 android:hint="@string/prompt_password"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionDone" android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
                 android:maxLines="1"
-                android:singleLine="true"
-                style="@style/White.EditText.CleanBasket" />
+                android:singleLine="true" />
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/white" />
 
-            <Button android:id="@+id/email_sign_in_button"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
-                android:text="@string/action_sign_in"
-                style="@style/White.Button.CleanBasket" />
-
-            <Button android:id="@+id/textview_sign_up"
+            <Button
+                style="@style/White.Button.CleanBasket"
+                android:id="@+id/email_sign_in_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
-                android:text="@string/action_sign_up"
-                style="@style/White.Button.CleanBasket" />
+                android:layout_marginTop="@dimen/dialog_margin"
+                android:text="@string/action_sign_in" />
 
-            <TextView android:id="@+id/textview_find_password" style="?android:textAppearanceSmall"
+            <Button
+                style="@style/White.Button.CleanBasket"
+                android:id="@+id/textview_sign_up"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dialog_margin"
+                android:text="@string/action_sign_up" />
+
+            <TextView
+                android:id="@+id/textview_find_password" style="?android:textAppearanceSmall"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="13dp" android:text="@string/find_password"
+                android:layout_marginTop="@dimen/dialog_margin" android:text="@string/find_password"
                 android:textStyle="bold"
                 android:textColor="@color/dialog_text"
                 android:gravity="center_horizontal" />

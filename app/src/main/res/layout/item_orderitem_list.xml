@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="10dp">
-
-    <ImageView
-        android:id="@+id/imageview_orderitem_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/layout_orderitem"
@@ -23,23 +16,35 @@
         <TextView
             android:id="@+id/textview_orderitem_list"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="3dp"
+            android:textSize="12dp" android:textColor="@color/dialog_color" />
 
         <TextView
             android:id="@+id/textview_orderitem_price_list"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="3dp"
+            android:textSize="@dimen/small_text" android:textColor="@color/dialog_color" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageview_multiply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/textview_orderitem_count_list"
+        android:src="@drawable/ic_order_multiply" />
 
     <TextView
         android:id="@+id/textview_orderitem_count_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
-
-    <TextView
-        android:id="@+id/textview_orderitem_total_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
-</LinearLayout>
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:textSize="19dp" android:textColor="@color/dialog_color" />
+</RelativeLayout>
