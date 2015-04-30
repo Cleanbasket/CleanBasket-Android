@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
     tools:context=".RegisterActivity">
 
     <!-- Login progress -->
@@ -23,42 +25,64 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/register_inform"/>
 
-            <EditText android:id="@+id/edittext_email" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="@string/prompt_email"
+            <EditText
+                style="@style/Grey.EditText.CleanBasket"
+                android:id="@+id/edittext_email" android:layout_width="match_parent"
+                android:layout_height="32dp" android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress" android:maxLines="1"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:singleLine="true" />
 
             <EditText
+                style="@style/Grey.EditText.CleanBasket"
                 android:id="@+id/edittext_phone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:hint="@string/prompt_phone" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="horizontal">
 
                 <EditText
+                    style="@style/Grey.EditText.CleanBasket"
                     android:id="@+id/edittext_authorization"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="32dp"
                     android:layout_toLeftOf="@+id/button_authorization"
                     android:hint="@string/prompt_authorization_code" />
 
                 <Button
+                    style="@style/Black.Button.CleanBasket"
                     android:id="@+id/button_authorization"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_alignParentRight="true"
-                    android:text="@string/authorization_request" />
+                    android:text="@string/authorization_request"
+                    android:textColor="@color/dialog_color" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
 
                 <TextView
                     android:id="@+id/checkedtextview_agree_all"
@@ -81,9 +105,12 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
 
-                <TextView
+            <TextView
                     android:id="@+id/checkedtextview_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -104,9 +131,12 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
 
-                <TextView
+            <TextView
                     android:id="@+id/checkedtextview_protection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -126,10 +156,12 @@
             </RelativeLayout>
 
             <Button
-                android:id="@+id/register_button" style="?android:textAppearanceSmall"
+                style="@style/Black.Button.CleanBasket"
+                android:id="@+id/register_button"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:text="@string/action_sign_up"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_margin="10dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

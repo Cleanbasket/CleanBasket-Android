@@ -53,7 +53,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-public class OrderFragment extends Fragment implements View.OnClickListener, SearchView.OnQueryTextListener {
+public class OrderFragment extends Fragment implements View.OnClickListener, SearchView.OnQueryTextListener, ItemListDialog.ItemListListener, CalculationDialog.CalculationListener {
     public static final String TAG = OrderFragment.class.getSimpleName();
     public static final String ITEM_LIST_DIALOG_TAG = "ITEM_LIST_DIALOG";
     public static final String MODIFY_ITEM_LIST_DIALOG_TAG = "MODIFY_ITEM_LIST_DIALOG";
@@ -285,16 +285,28 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                 }
 
                 if (isModifyOrder)
-                    popCalculationDialog(CalculationDialog.MODIFY_TAG);
+                    popItemListDialog(getOrderItemAdapter().getSelectedItems(), MODIFY_ITEM_LIST_DIALOG_TAG);
                 else
                     popItemListDialog(getOrderItemAdapter().getSelectedItems(), ITEM_LIST_DIALOG_TAG);
                 break;
         }
     }
 
+    @Override
+    public void onItemListFinish(ItemListDialog dialog) {
+        if (isModifyOrder) {
+            popCalculationDialog(CalculationDialog.MODIFY_TAG);
+        }
+    }
+
+    @Override
+    public void onCalculationFinish(CalculationDialog dialog) {
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
     private void popItemListDialog(ArrayList<OrderItem> orderItems, String tag) {
         ItemListDialog itemListDialog =
-                ItemListDialog.newInstance(orderItems);
+                ItemListDialog.newInstance(orderItems, this);
 
         itemListDialog.show(
                 getActivity().getSupportFragmentManager(),
@@ -303,9 +315,15 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
     private void popCalculationDialog(String tag) {
         mOrder.item = getOrderItemAdapter().getSelectedItems();
+        mOrder.price = getOrderItemAdapter().getItemTotal();
+
+        if (getOrderItemAdapter().getItemTotal() >= OrderInfoFragment.FREE_PICK_UP_PRICE)
+            mOrder.dropoff_price = 0;
+        else
+            mOrder.dropoff_price = 2000;
 
         CalculationDialog calculationDialog =
-                CalculationDialog.newInstance(mOrder);
+                CalculationDialog.newInstance(mOrder, this);
 
         calculationDialog.show(
                 getActivity().getSupportFragmentManager(),

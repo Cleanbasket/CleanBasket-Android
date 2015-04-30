@@ -7,9 +7,11 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -38,7 +40,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class FeedbackActivity extends BaseActivity implements View.OnClickListener, Response.Listener<JSONObject>, RatingBar.OnRatingBarChangeListener {
+public class FeedbackActivity extends BaseActivity implements View.OnClickListener, CheckBox.OnCheckedChangeListener, Response.Listener<JSONObject>, RatingBar.OnRatingBarChangeListener {
     private static final String TAG = FeedbackActivity.class.getSimpleName();
 
     private Order mOrder;
@@ -75,10 +77,54 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         mCheckBoxTime = (CheckBox) findViewById(R.id.checkbox_late_feedback);
         mCheckBoxLaundry = (CheckBox) findViewById(R.id.checkbox_laundry_feedback);
         mCheckBoxKindness = (CheckBox) findViewById(R.id.checkbox_kindness_feedback);
-        mButton = (Button) findViewById(R.id.button_feedback_send);
 
+        mButton = (Button) findViewById(R.id.button_feedback_send);
         mButton.setOnClickListener(this);
         mRatingBar.setOnRatingBarChangeListener(this);
+
+        mEditTextFree.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case R.id.finish:
+                        if (checkAvailable())
+                            sendFeedback();
+                        return true;
+                }
+
+                return false;
+            }
+        });
+
+        mCheckBoxTime.setOnCheckedChangeListener(this);
+        mCheckBoxLaundry.setOnCheckedChangeListener(this);
+        mCheckBoxKindness.setOnCheckedChangeListener(this);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.checkbox_late_feedback:
+                if (mCheckBoxTime.isChecked())
+                    mCheckBoxTime.setBackgroundResource(R.drawable.button_green);
+                else
+                    mCheckBoxTime.setBackgroundResource(R.drawable.textview_back_grey);
+                break;
+
+            case R.id.checkbox_laundry_feedback:
+                if (mCheckBoxLaundry.isChecked())
+                    mCheckBoxLaundry.setBackgroundResource(R.drawable.button_green);
+                else
+                    mCheckBoxLaundry.setBackgroundResource(R.drawable.textview_back_grey);
+                break;
+
+            case R.id.checkbox_kindness_feedback:
+                if (mCheckBoxKindness.isChecked())
+                    mCheckBoxKindness.setBackgroundResource(R.drawable.button_green);
+                else
+                    mCheckBoxKindness.setBackgroundResource(R.drawable.textview_back_grey);
+                break;
+        }
     }
 
     @Override
@@ -86,8 +132,11 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         super.onStart();
 
         mRatingStar = -1;
+
         int oid = getIntent().getIntExtra("oid", 0);
+
         Log.i(TAG, oid +"");
+
         getOrder(oid);
     }
 
@@ -127,12 +176,14 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void insertOrderInfo(Order order) {
-        if (order != null) {
-            setPDFaceImage(mImageViewPdFace, order.dropoffInfo.img);
-            mTextViewUserName.setText(order.dropoffInfo.name);
-        }
+//        if (order != null) {
+//            setPDFaceImage(mImageViewPdFace, order.dropoffInfo.img);
+//            mTextViewUserName.setText(order.dropoffInfo.name);
+//        }
 
         mOrder = order;
+
+        confirmFeedback();
     }
 
 
@@ -169,6 +220,8 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         if (mRatingStar >= 0)
             return true;
 
+        CleanBasketApplication.getInstance().showToast(getString(R.string.feedback_empty));
+
         return false;
     }
 
@@ -185,21 +238,55 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         feedback.memo = mEditTextFree.getText().toString();
 
         if (mCheckBoxTime.isChecked())
-            feedback.time = 0;
-        else
             feedback.time = 1;
+        else
+            feedback.time = 0;
 
         if (mCheckBoxLaundry.isChecked())
-            feedback.quality = 0;
-        else
             feedback.quality = 1;
+        else
+            feedback.quality = 0;
 
         if (mCheckBoxKindness.isChecked())
-            feedback.kindness = 0;
-        else
             feedback.kindness = 1;
+        else
+            feedback.kindness = 0;
 
         return feedback;
+    }
+
+    private void confirmFeedback() {
+        showProgress(true);
+
+        GetRequest getRequest = new GetRequest(this);
+
+        getRequest.setUrl(AddressManager.RATE_ORDER);
+        getRequest.setParams("oid", mOrder.oid);
+        getRequest.setListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonData jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
+
+                switch (jsonData.constant) {
+                    case Constants.DUPLICATION_FEEDBACK:
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.feedback_duplication));
+                        showProgress(false);
+                        finish();
+                        break;
+                    case Constants.SUCCESS:
+                        showProgress(false);
+                        break;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
+                showProgress(false);
+                finish();
+            }
+        });
+        RequestQueue.getInstance(this).addToRequestQueue(getRequest.doRequest());
     }
 
     private void sendFeedback() {
@@ -221,7 +308,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         postRequest.setListener(this, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getBaseContext(), getString(R.string.toast_error), Toast.LENGTH_SHORT).show();
+                CleanBasketApplication.getInstance().showToast(getString(R.string.toast_error));
                 showProgress(false);
             }
         });
@@ -235,10 +322,10 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         JsonData jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
         switch (jsonData.constant) {
             case Constants.ERROR:
-                Toast.makeText(this, R.string.feedback_failure, Toast.LENGTH_SHORT).show();
+                CleanBasketApplication.getInstance().showToast(getString(R.string.feedback_failure));
                 finish();
             case Constants.SUCCESS:
-                Toast.makeText(this, R.string.feedback_success, Toast.LENGTH_SHORT).show();
+                CleanBasketApplication.getInstance().showToast(getString(R.string.feedback_success));
                 finish();
                 break;
         }

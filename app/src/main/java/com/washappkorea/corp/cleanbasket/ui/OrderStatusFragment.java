@@ -21,10 +21,10 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.Config;
 import com.washappkorea.corp.cleanbasket.R;
@@ -42,6 +42,7 @@ import com.washappkorea.corp.cleanbasket.ui.dialog.ModifyDialog;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
 import com.washappkorea.corp.cleanbasket.util.DateTimeFactory;
+import com.washappkorea.corp.cleanbasket.util.ImageManager;
 
 import org.json.JSONObject;
 
@@ -156,10 +157,17 @@ public class OrderStatusFragment extends Fragment {
             OrderStateAdapter orderStatusAdapter = new OrderStateAdapter(orders, mLayoutInflater);
             mOrderStateListView.setAdapter(orderStatusAdapter);
             mOrderStateListView.expandGroup(0);
+            mOrderStateListView.setSelection(1);
             mTextViewEmpty.setVisibility(View.GONE);
         }
-        else
+        else {
+            // 리스트뷰에 아이템이 남아 있을 경우 모두 제거
+            if (mOrderStateListView != null) {
+                OrderStateAdapter orderStatusAdapter = new OrderStateAdapter(orders, mLayoutInflater);
+                mOrderStateListView.setAdapter(orderStatusAdapter);
+            }
             mTextViewEmpty.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -234,11 +242,23 @@ public class OrderStatusFragment extends Fragment {
 
 //            holder.imageViewOrderStatus.setImageResource(getDrawableByStatus(getGroup(position).state));
             holder.textViewOrderStatus.setText(getStringByState(getGroup(position).state));
-            holder.textViewOrderNumber.setText(getGroup(position).order_number);
-            holder.textViewPickUpDateTime.setText(getGroup(position).pickup_date);
-            holder.textViewDropOffDateTime.setText(getGroup(position).dropoff_date);
-            holder.textViewTotal.setText(getTotalFromOrder(position) + getString(R.string.monetary_unit));
-            holder.textViewTotalNumber.setText(getTotalNumberFromOrder(position) + getString(R.string.item_unit));
+            holder.textViewOrderNumber.setText(getString(R.string.order_number) + " " + getGroup(position).oid);
+            holder.textViewPickUpDateTime.setText(
+                    DateTimeFactory.getInstance().getDate(getActivity(), getGroup(position).pickup_date) +
+                    DateTimeFactory.getInstance().getNewLine() +
+                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).pickup_date));
+            holder.textViewDropOffDateTime.setText(
+                    DateTimeFactory.getInstance().getDate(getActivity(), getGroup(position).dropoff_date) +
+                    DateTimeFactory.getInstance().getNewLine() +
+                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).dropoff_date));
+            holder.textViewTotal.setText(
+                    getString(R.string.label_total) + " " +
+                    getTotalFromOrder(position) +
+                    getString(R.string.monetary_unit));
+            holder.textViewTotalNumber.setText(
+                    getString(R.string.label_item) + " " +
+                    getTotalNumberFromOrder(position) +
+                    getString(R.string.item_unit));
 
             return convertView;
         }
@@ -271,6 +291,7 @@ public class OrderStatusFragment extends Fragment {
             // state에 따라 컴포넌트를 출력합니다
             switch (state) {
                 case PICK_UP_WAIT:
+                    holder.imageViewPdFace.setImageResource(R.drawable.ic_launcher);
                     holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline1);
                     holder.buttonModifyOrder.setVisibility(View.VISIBLE);
                     break;
@@ -287,8 +308,8 @@ public class OrderStatusFragment extends Fragment {
                 case DELIVERY_MAN_SELECTED:
                     holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline3);
                     if (getGroup(position).dropoffInfo != null) {
-                            setPDFaceImage(holder.imageViewPdFace, getGroup(position).dropoffInfo.img);
-                            holder.textViewPDName.setText(getGroup(position).dropoffInfo.name + " " + getString(R.string.pd_name_default));
+                        setPDFaceImage(holder.imageViewPdFace, getGroup(position).dropoffInfo.img);
+                        holder.textViewPDName.setText(getGroup(position).dropoffInfo.name + " " + getString(R.string.pd_name_default));
                     }
                     break;
 
@@ -297,7 +318,8 @@ public class OrderStatusFragment extends Fragment {
                     holder.buttonFeedback.setVisibility(View.VISIBLE);
 
                 default:
-                    holder.imageViewPdFace.setImageResource(R.drawable.ic_sale);
+                    holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline2);
+                    holder.imageViewPdFace.setImageResource(R.drawable.ic_launcher);
                     holder.textViewPDName.setText(getString(R.string.pd_name_default));
                     break;
             }
@@ -310,13 +332,17 @@ public class OrderStatusFragment extends Fragment {
                     DateTimeFactory.getInstance().getDate(getActivity(), getGroup(position).dropoff_date) +
                     DateTimeFactory.getInstance().getNewLine() +
                     DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).dropoff_date));
-            holder.textViewPickUpDateTime.setText(getString(R.string.label_item) + " " + DateTimeFactory.getInstance().getPrettyTime(getGroup(position).pickup_date));
-            holder.textViewDropOffDateTime.setText(DateTimeFactory.getInstance().getPrettyTime(getGroup(position).dropoff_date));
-            holder.buttonOrderItem.setText(getTotalNumberFromOrder(position) + getString(R.string.item_unit));
+//            holder.textViewPickUpDateTime.setText(
+//                    DateTimeFactory.getInstance().getPrettyTime(getGroup(position).pickup_date) + DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).pickup_date));
+//            holder.textViewDropOffDateTime.setText(
+//                    DateTimeFactory.getInstance().getPrettyTime(getGroup(position).dropoff_date) + DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).dropoff_date));
+            holder.buttonOrderItem.setText(
+                    getString(R.string.label_item) + " " + getTotalNumberFromOrder(position) + getString(R.string.item_unit));
             holder.buttonOrderItem.setTag(getGroup(position));
+
             /* 총계를 구해 버튼에 새깁니다 */
-            holder.buttonTotalGross.setText(getString(R.string.label_total) +
-                    " " +
+            holder.buttonTotalGross.setText(
+                    getString(R.string.label_total) + " " +
                     (getTotalFromOrder(position) + getGroup(position).dropoff_price - getGroup(position).mileage + getCouponTotal(getGroup(position))) +
                     getString(R.string.monetary_unit));
             holder.buttonTotalGross.setTag(getGroup(position));
@@ -365,11 +391,13 @@ public class OrderStatusFragment extends Fragment {
         }
 
         private void setPDFaceImage(ImageView imageView, String imageInfo) {
-            ImageLoader imageLoader = RequestQueue.getInstance(getActivity()).getImageLoader();
-            imageLoader.get(Config.SERVER_ADDRESS + imageInfo,
-                    ImageLoader.getImageListener(
-                            imageView, R.drawable.ic_sale, R.drawable.ic_sale
-                    ));
+            Picasso.with(getActivity()).load(Config.SERVER_ADDRESS + imageInfo).transform(ImageManager.getCircleTransformation()).into(imageView);
+
+//            ImageLoader imageLoader = RequestQueue.getInstance(getActivity()).getImageLoader();
+//            imageLoader.get(Config.SERVER_ADDRESS + imageInfo,
+//                    ImageLoader.getImageListener(
+//                            imageView, R.drawable.ic_sale, R.drawable.ic_sale
+//                    ));
         }
 
         private String getStringByState(int state) {
@@ -433,7 +461,7 @@ public class OrderStatusFragment extends Fragment {
             switch (v.getId()) {
                 case R.id.button_order_item_child:
                     ItemListDialog itemListDialog =
-                            ItemListDialog.newInstance(order.item);
+                            ItemListDialog.newInstance(order.item, null);
 
                     itemListDialog.show(
                             getActivity().getSupportFragmentManager(),
@@ -442,7 +470,7 @@ public class OrderStatusFragment extends Fragment {
 
                 case R.id.button_total:
                     CalculationDialog calculationDialog =
-                            CalculationDialog.newInstance(order);
+                            CalculationDialog.newInstance(order, null);
 
                     calculationDialog.show(
                             getActivity().getSupportFragmentManager(),

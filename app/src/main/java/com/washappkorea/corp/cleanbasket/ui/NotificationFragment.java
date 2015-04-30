@@ -23,7 +23,6 @@ import com.washappkorea.corp.cleanbasket.ui.dialog.MessageDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.ModifyDateTimeDialog;
 import com.washappkorea.corp.cleanbasket.util.DateTimeFactory;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,6 +30,7 @@ import java.util.List;
 
 public class NotificationFragment extends Fragment implements ListView.OnItemClickListener {
     private ListView mNotificationListView;
+    private TextView mTextViewEmpty;
     public NotificationAdapter mNotificationAdapter;
 
     @Override
@@ -38,14 +38,9 @@ public class NotificationFragment extends Fragment implements ListView.OnItemCli
         View rootView = inflater.inflate(R.layout.fragment_notification, container, false);
 
         mNotificationListView = (ListView) rootView.findViewById(R.id.listview_notification);
+        mTextViewEmpty = (TextView) rootView.findViewById(R.id.textview_no_item);
+
         ArrayList<Notification> notifications = new ArrayList<Notification>();
-
-        try {
-            notifications = (ArrayList<Notification>) ((MainActivity) getActivity()).getDBHelper().getNotificationDao().queryBuilder().query();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         mNotificationAdapter = new NotificationAdapter(getActivity(), R.layout.item_notice, notifications, inflater);
         mNotificationListView.setAdapter(mNotificationAdapter);
         mNotificationListView.setOnItemClickListener(this);
@@ -61,9 +56,13 @@ public class NotificationFragment extends Fragment implements ListView.OnItemCli
     }
 
     private void getDataFromDB() {
+        int uid = ((MainActivity) getActivity()).getUid(getActivity());
+
+        if (uid == 0) return;
+
         ArrayList<Notification> notifications;
 
-        notifications = (ArrayList<Notification>) ((MainActivity) getActivity()).getDBHelper().getNotificationDao().queryForAll();
+        notifications = (ArrayList<Notification>) ((MainActivity) getActivity()).getDBHelper().getNotificationDao().queryForEq(Notification.UID, uid);
 
         Collections.sort(notifications, new Comparator<Notification>() {
             @Override
@@ -75,6 +74,11 @@ public class NotificationFragment extends Fragment implements ListView.OnItemCli
         if (mNotificationAdapter != null) {
             mNotificationAdapter.clear();
             mNotificationAdapter.addAll(notifications);
+            mTextViewEmpty.setVisibility(View.GONE);
+        }
+
+        if (notifications.size() == 0) {
+            mTextViewEmpty.setVisibility(View.VISIBLE);
         }
     }
 
@@ -145,9 +149,11 @@ public class NotificationFragment extends Fragment implements ListView.OnItemCli
         if (mNotificationAdapter != null)
             notification = mNotificationAdapter.getItem(position);
 
+        Intent intent;
+
         switch (notification.type) {
             case Notification.EVENT_ALARM:
-                Intent intent = new Intent();
+                intent = new Intent();
                 intent.setAction("com.washappkorea.corp.cleanbasket.ui.NoticeActivity");
                 intent.putExtra("value", mNotificationAdapter.getItem(position).value);
                 startActivity(intent);
@@ -176,6 +182,12 @@ public class NotificationFragment extends Fragment implements ListView.OnItemCli
                 });
 
                 cd.show(getActivity().getSupportFragmentManager(), UserFragment.COUPON_VIEW_DIALOG_TAG);
+                break;
+            case Notification.FEEDBACK_ALARM:
+                intent = new Intent();
+                intent.setAction("com.washappkorea.corp.cleanbasket.ui.FeedbackActivity");
+                intent.putExtra("oid", mNotificationAdapter.getItem(position).oid);
+                startActivity(intent);
                 break;
         }
 

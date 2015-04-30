@@ -34,6 +34,10 @@ public class GetRequest {
         mUrl.appendEncodedPath(url);
     }
 
+    public void setParams(String key, int value) {
+        mUrl.appendQueryParameter(key, String.valueOf(value));
+    }
+
     public void setListener(Response.Listener<String> listener, Response.ErrorListener errListener) {
         this.mListener = listener;
         this.mErrListener = errListener;

@@ -148,6 +148,12 @@ public class MileageDialog extends DialogFragment {
             cancel = true;
         }
 
+        if (mileage % 100 > 0) {
+            mEditTextMileage.setError(getString(R.string.mileage_info));
+            focusView = mEditTextMileage;
+            cancel = true;
+        }
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -231,6 +237,6 @@ public class MileageDialog extends DialogFragment {
 
     private void updateMileage(int mileage) {
         mAvailableMileage = mileage;
-        mTextViewInfo.setText(getString(R.string.mileage_available) + " " + mAvailableMileage + getString(R.string.point_unit));
+        mTextViewInfo.setText(getString(R.string.mileage_available) + " " + mAvailableMileage);
     }
 }

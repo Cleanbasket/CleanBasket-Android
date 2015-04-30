@@ -1,5 +1,5 @@
 #
-# generated on 2015/03/09 12:35:03
+# generated on 2015/04/30 01:30:42
 #
 # --table-start--
 dataClass=com.washappkorea.corp.cleanbasket.io.model.AppInfo
@@ -66,6 +66,82 @@ fieldName=img
 # --field-end--
 # --field-start--
 fieldName=discount_rate
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.washappkorea.corp.cleanbasket.io.model.Address
+tableName=address
+# --table-fields-start--
+# --field-start--
+fieldName=adrid
+id=true
+# --field-end--
+# --field-start--
+fieldName=address
+# --field-end--
+# --field-start--
+fieldName=address_detail
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.washappkorea.corp.cleanbasket.io.model.Notification
+tableName=notification
+# --table-fields-start--
+# --field-start--
+fieldName=nid
+generatedId=true
+allowGeneratedIdInsert=true
+# --field-end--
+# --field-start--
+fieldName=uid
+# --field-end--
+# --field-start--
+fieldName=oid
+# --field-end--
+# --field-start--
+fieldName=type
+# --field-end--
+# --field-start--
+fieldName=title
+# --field-end--
+# --field-start--
+fieldName=message
+# --field-end--
+# --field-start--
+fieldName=image
+# --field-end--
+# --field-start--
+fieldName=value
+# --field-end--
+# --field-start--
+fieldName=date
+# --field-end--
+# --field-start--
+fieldName=check
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.washappkorea.corp.cleanbasket.io.model.Notice
+tableName=notice
+# --table-fields-start--
+# --field-start--
+fieldName=noid
+id=true
+# --field-end--
+# --field-start--
+fieldName=title
+# --field-end--
+# --field-start--
+fieldName=content
+# --field-end--
+# --field-start--
+fieldName=rdate
 # --field-end--
 # --table-fields-end--
 # --table-end--

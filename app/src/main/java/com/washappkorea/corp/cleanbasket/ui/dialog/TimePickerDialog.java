@@ -3,6 +3,9 @@ package com.washappkorea.corp.cleanbasket.ui.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -168,16 +171,16 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         if(minute == 0)
             mTextViewTimeWindow.setText(hour +
                     getString(R.string.time_separate) +
-                    getString(R.string.time_exact) +
-                    getString(R.string.time_tilde) +
+                    getString(R.string.time_exact) + " " +
+                    getString(R.string.time_tilde) + " " +
                     (hour + 1) +
                     getString(R.string.time_separate) +
                     getString(R.string.time_exact));
         else
             mTextViewTimeWindow.setText(hour +
                     getString(R.string.time_separate) +
-                    getString(R.string.time_half) +
-                    getString(R.string.time_tilde) +
+                    getString(R.string.time_half) + " " +
+                    getString(R.string.time_tilde) + " " +
                     (hour + 1) +
                     getString(R.string.time_separate) +
                     getString(R.string.time_half));
@@ -261,6 +264,20 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         }
     }
 
+    @Override
+    public void onStart() {
+        int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
+        int height = getDialog().getWindow().getAttributes().height;
+        getDialog().getWindow().setLayout(width, height);
+
+        final Drawable d = new ColorDrawable(Color.BLACK);
+        d.setAlpha(150);
+
+        getDialog().getWindow().setBackgroundDrawable(d);
+
+        super.onStart();
+    }
+
     protected class TimeUnitAdapter extends ArrayAdapter<TimeUnit> {
         private LayoutInflater mLayoutInflater;
 
@@ -284,16 +301,17 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
             } else
                 holder = (TimeUnitHolder) convertView.getTag();
 
+            holder.imageViewTimeUnit.setVisibility(View.INVISIBLE);
+
             // 아이템이 1개 이상 선택되었을 경우
             if (getItem(position).hour < 0)
                 return convertView;
 
-            if (getItem(position).discountRate > 0) {
-                holder.imageViewTimeUnit.setVisibility(View.VISIBLE);
-                holder.textViewDiscountRate.setText(getItem(position).discountRate + "% 할인");
-            }
-            else
-                holder.imageViewTimeUnit.setVisibility(View.INVISIBLE);
+//            if (getItem(position).discountRate > 0) {
+//                holder.imageViewTimeUnit.setVisibility(View.VISIBLE);
+//                holder.textViewDiscountRate.setText(getItem(position).discountRate + "% 할인");
+//            }
+//            else
 
             if (getItem(position).minute == 0)
                 holder.textViewTime.setText(getItem(position).hour +

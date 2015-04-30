@@ -4,6 +4,7 @@ package com.washappkorea.corp.cleanbasket.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -205,6 +206,9 @@ public class MapActivity extends BaseActivity implements MapView.MapViewEventLis
                 break;
 
             case R.id.button_accept_address:
+                if (TextUtils.isEmpty(mTextViewCurrentAddress.getText().toString()))
+                    return;
+
                 Intent intent = new Intent();
                 intent.putExtra("address", mTextViewCurrentAddress.getText().toString());
                 setResult(OrderInfoFragment.ADDRESS_RESULT, intent);

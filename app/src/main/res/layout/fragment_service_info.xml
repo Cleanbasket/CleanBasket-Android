@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_order_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginFragment"
+    android:background="@color/splash_background">
+
+    <!--
+    <ImageView
+        android:id="@+id/imageview_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background_03" /> -->
+
+    <TextView
+        android:id="@+id/textview_service_info_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="67dp"
+        android:layout_centerHorizontal="true"
+        android:lineSpacingExtra="9dp"
+        android:text="@string/notice_service_info"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="@color/splash_text" />
+
+    <ImageView
+        android:id="@+id/imageview_easy_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textview_service_info_title"
+        android:src="@drawable/ic_service_introduce_01mobile" />
+
+    <TextView
+        android:id="@+id/textview_easy_info"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_marginTop="9dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageview_easy_info"
+        android:text="@string/notice_service_info_mobile"
+        android:textColor="@color/splash_text" />
+
+    <ImageView
+        android:id="@+id/imageview_easy_cleaning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textview_easy_info"
+        android:src="@drawable/ic_service_introduce_02cleaning" />
+
+    <TextView
+        android:id="@+id/textview_easy_cleaning"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_marginTop="9dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageview_easy_cleaning"
+        android:text="@string/notice_service_info_cleaning"
+        android:textColor="@color/splash_text" />
+
+    <ImageView
+        android:id="@+id/imageview_easy_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textview_easy_cleaning"
+        android:src="@drawable/ic_service_introduce_03price" />
+
+    <TextView
+        android:id="@+id/textview_easy_price"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_marginTop="9dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageview_easy_price"
+        android:text="@string/notice_service_info_price"
+        android:textColor="@color/splash_text" />
+
+    <ImageView
+        android:id="@+id/imageview_easy_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textview_easy_price"
+        android:src="@drawable/ic_service_introduce_04time" />
+
+    <TextView
+        android:id="@+id/textview_easy_time"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_marginTop="9dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageview_easy_time"
+        android:text="@string/notice_service_info_time"
+        android:textColor="@color/splash_text" />
+</RelativeLayout>

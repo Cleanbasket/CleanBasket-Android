@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context=".EmailDialog">
+
+    <!-- Login progress -->
+    <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <ScrollView android:id="@+id/login_form" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical">
+
+            <AutoCompleteTextView style="@style/White.EditText.CleanBasket"
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog_edittext_height"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress" android:maxLines="1"
+                android:imeActionId="@+id/email"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionNext"
+                android:singleLine="true" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/white" />
+
+            <EditText
+                style="@style/White.EditText.CleanBasket"
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog_edittext_height"
+                android:hint="@string/prompt_password"
+                android:imeActionId="@+id/password"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/white" />
+
+            <EditText
+                style="@style/White.EditText.CleanBasket"
+                android:id="@+id/password_repeat"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog_edittext_height"
+                android:hint="@string/prompt_password_repeat"
+                android:imeActionId="@+id/password_repeat"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/white" />
+
+            <Button
+                style="@style/White.Button.CleanBasket"
+                android:id="@+id/email_sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dialog_margin"
+                android:text="@string/action_sign_up" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

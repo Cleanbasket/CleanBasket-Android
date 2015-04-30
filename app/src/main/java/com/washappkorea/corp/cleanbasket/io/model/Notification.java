@@ -13,7 +13,10 @@ public class Notification {
     public static final int COUPON_ALARM = 4;
     public static final int FEEDBACK_ALARM = 5;
 
+    public static final String UID = "uid";
+
     @DatabaseField(allowGeneratedIdInsert = true, generatedId = true) public int nid;
+    @DatabaseField public int uid;
     @DatabaseField public int oid;
     @DatabaseField public int type;
     @DatabaseField public String title;

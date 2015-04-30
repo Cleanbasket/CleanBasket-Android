@@ -19,5 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:textColor="@color/splash_text"
+        android:textSize="10dp"
         android:padding="10dp" />
 </RelativeLayout>

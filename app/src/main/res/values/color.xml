@@ -13,8 +13,10 @@
     <color name="header_text">#000000</color>
     <color name="info_text">#000000</color>
     <color name="splash_text">#707070</color>
+    <color name="splash_background">#F9F9F9</color>
     <color name="textview_order_button">#FFFFFF</color>
     <color name="order_button_background">#82d9cf</color>
+    <color name="grey_line_color">#707070</color>
 
     <!-- related to item list fragment -->
     <color name="listview_item_background">#FFFFFF</color>
@@ -31,4 +33,8 @@
     <!-- dialog -->
     <color name="dialog_text">#FFFFFF</color>
     <color name="dialog_background">#90000000</color>
+
+    <!-- dialog -->
+    <color name="text_black">#000000</color>
+    <color name="text_white">#FFFFFF</color>
 </resources>

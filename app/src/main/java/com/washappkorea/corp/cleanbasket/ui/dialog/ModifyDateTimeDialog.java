@@ -4,6 +4,9 @@ package com.washappkorea.corp.cleanbasket.ui.dialog;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -11,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,11 +86,11 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        if (getShowsDialog()) {
-//            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-//        }
+        if (getShowsDialog()) {
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        }
 
-        getDialog().setTitle(getString(R.string.label_order_modify));
+//        getDialog().setTitle(getString(R.string.label_order_modify));
 
         View rootView = inflater.inflate(R.layout.dialog_modify_date, container, false);
 
@@ -104,7 +108,7 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
             }
         });
 
-        mPickUpFormView = rootView.findViewById(R.id.layout_pick_up_modify);
+        mPickUpFormView = rootView.findViewById(R.id.modify_datetime_form);
         mModifyDateTimeFormView = rootView.findViewById(R.id.modify_datetime_form);
         mProgressView = rootView.findViewById(R.id.login_progress);
 
@@ -118,6 +122,10 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
         int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
         int height = getDialog().getWindow().getAttributes().height;
         getDialog().getWindow().setLayout(width, height);
+
+        final Drawable d = new ColorDrawable(Color.WHITE);
+
+        getDialog().getWindow().setBackgroundDrawable(d);
     }
 
     @Override
@@ -645,7 +653,9 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
                     ((DialogActivity) getActivity()).setAlarm();
                 }
 
-                this.mOnDialogDismissListener.onDialogDismiss();
+                if (this.mOnDialogDismissListener != null)
+                    this.mOnDialogDismissListener.onDialogDismiss();
+
                 dismiss();
         }
     }

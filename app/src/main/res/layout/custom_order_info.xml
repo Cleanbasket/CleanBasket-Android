@@ -11,16 +11,17 @@
         android:id="@+id/title_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="15dp">
 
         <RelativeLayout
-            android:layout_width="40dp"
-            android:layout_height="40dp">
+            android:layout_width="@dimen/default_icon_box_size"
+            android:layout_height="@dimen/default_icon_box_size">
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="@dimen/default_icon_size"
                 android:src="@drawable/ic_order_address"
+                android:adjustViewBounds="true"
                 android:layout_centerInParent="true" />
         </RelativeLayout>
 
@@ -81,17 +82,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edittext_detail_address"
-        android:layout_marginTop="18dp">
+        android:layout_marginTop="22dp">
 
         <RelativeLayout
             android:id="@+id/layout_contact"
-            android:layout_width="40dp"
-            android:layout_height="40dp">
+            android:layout_width="@dimen/default_icon_box_size"
+            android:layout_height="@dimen/default_icon_box_size">
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="@dimen/default_icon_size"
                 android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
                 android:src="@drawable/ic_order_mobilenumber" />
         </RelativeLayout>
 
@@ -108,10 +110,8 @@
         <EditText
             style="@style/Grey.EditText.CleanBasket"
             android:id="@+id/edittext_contact"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/textview_contact"
-            android:layout_marginLeft="42dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:maxLines="1"
@@ -126,22 +126,23 @@
         android:id="@+id/layout_pickup_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="18dp"
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/layout_contact">
 
         <RelativeLayout
             android:id="@+id/layout_pickup_title"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/default_icon_box_size"
+            android:layout_height="@dimen/default_icon_box_size"
             android:layout_centerVertical="true">
 
             <ImageView
                 android:id="@+id/imageview_pickup_datetime"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/default_icon_size"
                 android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
                 android:src="@drawable/ic_order_pickuptime" />
         </RelativeLayout>
 
@@ -158,83 +159,81 @@
 
         <RelativeLayout
             android:id="@+id/layout_select_date"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true">
 
             <Button
                 android:id="@+id/imageview_datetime_today"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/default_circle_size"
+                android:layout_height="@dimen/default_circle_size"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/imageview_datetime_tomorrow"
-                android:background="@drawable/textview_back_grey"
-                android:textSize="12dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/round_button"
+                android:textSize="@dimen/order_info_font"
                 android:text="@string/time_today" />
 
             <Button
                 android:id="@+id/imageview_datetime_tomorrow"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/imageview_datetime_etc"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/textview_back_grey"
-                android:textSize="12dp"
+                android:layout_width="@dimen/default_circle_size"
+                android:layout_height="@dimen/default_circle_size"
+                android:layout_centerInParent="true"
+                android:background="@drawable/round_button"
+                android:textSize="@dimen/order_info_font"
                 android:text="@string/time_tomorrow" />
 
             <Button
                 android:id="@+id/imageview_datetime_etc"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/default_circle_size"
+                android:layout_height="@dimen/default_circle_size"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/textview_back_grey"
-                android:textSize="12dp"
+                android:background="@drawable/round_button"
+                android:textSize="@dimen/order_info_font"
                 android:text="@string/time_other_day" />
         </RelativeLayout>
 
         <TextView
             style="@style/Black.Default.TextView.CleanBasket"
             android:id="@+id/textview_selected_pickup_date"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/textview_selected_pickup_time"
-            android:background="@drawable/textview_back_grey"
-            android:layout_centerVertical="true" />
+            android:layout_alignParentRight="true"
+            android:background="@drawable/textview_back_grey" />
 
         <TextView
             style="@style/Black.Default.TextView.CleanBasket"
             android:id="@+id/textview_selected_pickup_time"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/textview_back_grey"
-            android:layout_centerVertical="true" />
+            android:layout_below="@+id/textview_selected_pickup_date"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/textview_back_grey" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout_dropoff_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="22dp"
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/layout_pickup_container">
 
         <RelativeLayout
             android:id="@+id/layout_dropoff_title"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/default_icon_box_size"
+            android:layout_height="@dimen/default_icon_box_size"
             android:layout_centerVertical="true">
 
             <ImageView
                 android:id="@+id/imageview_dropoff_datetime"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/default_icon_size"
                 android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
                 android:src="@drawable/ic_button_order" />
         </RelativeLayout>
 
@@ -252,34 +251,34 @@
         <TextView
             style="@style/Black.Default.TextView.CleanBasket"
             android:id="@+id/textview_drop_off_title"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:background="@drawable/textview_back_grey"
             android:text="@string/time_dropoff_inform" />
 
         <TextView
             style="@style/Black.Default.TextView.CleanBasket"
             android:id="@+id/textview_selected_dropoff_date"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/textview_selected_dropoff_time"
-            android:background="@drawable/textview_back_grey"
-            android:layout_centerVertical="true" />
+            android:layout_alignParentRight="true"
+            android:background="@drawable/textview_back_grey" />
 
         <TextView
             style="@style/Black.Default.TextView.CleanBasket"
             android:id="@+id/textview_selected_dropoff_time"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/textview_back_grey"
-            android:layout_centerVertical="true"  />
+            android:layout_below="@+id/textview_selected_dropoff_date"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/textview_back_grey" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="22dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -289,6 +288,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_centerVertical="true"
             android:text="@string/payment_method" />
 
         <RelativeLayout
@@ -310,13 +310,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/imageview_payment_card"
-                android:layout_marginLeft="40dp"
+                android:layout_alignParentRight="true"
                 android:checked="true"
                 android:button="@null"
                 android:drawableRight="@drawable/checkbox"
-                android:drawablePadding="20dp"
-                android:textSize="12dp"
+                android:drawablePadding="25dp"
+                android:textSize="13dp"
                 android:text="@string/payment_card" />
         </RelativeLayout>
 
@@ -339,29 +338,44 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/imageview_payment_cash"
-                android:layout_marginLeft="40dp"
+                android:layout_alignParentRight="true"
                 android:button="@null"
                 android:drawableRight="@drawable/checkbox"
-                android:drawablePadding="20dp"
-                android:textSize="12dp"
+                android:drawablePadding="25dp"
+                android:textSize="13dp"
                 android:text="@string/payment_cash" />
         </RelativeLayout>
     </RelativeLayout>
 
-    <EditText
-        style="@style/Grey.EditText.CleanBasket"
-        android:id="@+id/edittext_memo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:inputType="textCapSentences"
-        android:imeActionId="@+id/memo_hint"
-        android:imeActionLabel="@string/button_order"
-        android:imeOptions="actionDone"
-        android:hint="@string/memo_hint"
-        android:maxLines="5"
-        android:maxEms="200" />
+    <RelativeLayout
+        android:layout_marginTop="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/Black.TextView.CleanBasket"
+            android:id="@+id/textview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/memo_hint" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_memo"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:inputType="textCapSentences"
+            android:imeActionId="@+id/memo_hint"
+            android:imeActionLabel="@string/button_order"
+            android:imeOptions="actionDone"
+            android:hint="@string/memo_hint"
+            android:lines="1"
+            android:minLines="1"
+            android:maxLines="5"
+            android:maxEms="200" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/button_gross_total"

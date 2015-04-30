@@ -19,12 +19,14 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.JsonSyntaxException;
 import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.RequestQueue;
 import com.washappkorea.corp.cleanbasket.io.model.Alarm;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.model.Order;
+import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
 import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.BackPressCloseHandler;
@@ -60,7 +62,9 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
 
     // Related to GCM
     public static final String GCM = "gcm";
+    public static final String UID = "uid";
     public static final String PROPERTY_REG_ID = "registration_id";
+    public static final String USER_ID = "user_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
 
     private BackPressCloseHandler backPressCloseHandler;
@@ -104,6 +108,8 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         backPressCloseHandler = new BackPressCloseHandler(this);
 
         mContext = this;
+
+        getUidFromServer();
     }
 
     private String getRegistrationId(Context context) {
@@ -314,19 +320,18 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
 
                         PendingIntent pIntent = PendingIntent.getBroadcast(mContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        // todo
                         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             if (alarm.type == PICK_UP_ALARM)
-                                alarmManager.setExact(AlarmManager.RTC, System.currentTimeMillis() + 5000, pIntent);
+                                alarmManager.setExact(AlarmManager.RTC, alarm.date, pIntent);
                             else if (alarm.type == DROP_OFF_ALARM)
-                                alarmManager.setExact(AlarmManager.RTC, System.currentTimeMillis() + 8000, pIntent);
+                                alarmManager.setExact(AlarmManager.RTC, alarm.date, pIntent);
                         }
                         else {
                             if (alarm.type == PICK_UP_ALARM)
-                                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 5000, pIntent);
+                                alarmManager.set(AlarmManager.RTC, alarm.date, pIntent);
                             else if (alarm.type == DROP_OFF_ALARM)
-                                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 8000, pIntent);
+                                alarmManager.set(AlarmManager.RTC, alarm.date, pIntent);
                         }
                     }
                 }
@@ -366,5 +371,54 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         for (Alarm alarm : alarms) {
             getDBHelper().getAlarmDao().delete(alarm);
         }
+    }
+
+    public void getUidFromServer() {
+        GetRequest getRequest = new GetRequest(this);
+        getRequest.setUrl(AddressManager.GET_MEMBER_INFO);
+        getRequest.setListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonData jsonData;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+                } catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.SUCCESS:
+                        storeUid(getBaseContext(), Integer.parseInt(jsonData.data));
+                        break;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        RequestQueue.getInstance(this).addToRequestQueue(getRequest.doRequest());
+    }
+
+    private void storeUid(Context context, Integer uid) {
+        final SharedPreferences prefs = getUidPreferences();
+        Log.i(TAG, "Saving UID " + uid);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(USER_ID, uid);
+        editor.commit();
+    }
+
+
+    public int getUid(Context context) {
+        final SharedPreferences prefs = getUidPreferences();
+        int uid = prefs.getInt(USER_ID, 0);
+
+        return uid;
+    }
+
+    private SharedPreferences getUidPreferences() {
+        return getSharedPreferences(UID, Context.MODE_PRIVATE);
     }
 }

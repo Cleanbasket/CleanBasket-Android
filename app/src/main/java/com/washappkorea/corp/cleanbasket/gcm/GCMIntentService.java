@@ -45,6 +45,8 @@ public class GCMIntentService extends IntentService {
         Notification notification = new Notification();
         if (extras.containsKey("oid"))
             notification.oid = Integer.parseInt(extras.getString("oid"));
+        if (extras.containsKey("uid"))
+            notification.uid = Integer.parseInt(extras.getString("uid"));
         if (extras.containsKey("type"))
             notification.type = Integer.parseInt(extras.getString("type"));
         notification.title = extras.getString("title");
@@ -76,7 +78,7 @@ public class GCMIntentService extends IntentService {
                 break;
 
             case Notification.COUPON_ALARM:
-                notification.title = notification.message + getString(R.string.issue_coupon);
+                notification.title = notification.value + getString(R.string.issue_coupon);
                 break;
 
             case Notification.FEEDBACK_ALARM:
@@ -136,7 +138,7 @@ public class GCMIntentService extends IntentService {
                 break;
 
             case Notification.COUPON_ALARM:
-                sendCouponNotification(notification.message + getString(R.string.issue_coupon));
+                sendCouponNotification(notification.value + getString(R.string.issue_coupon));
                 break;
 
             case Notification.FEEDBACK_ALARM:
@@ -247,10 +249,18 @@ public class GCMIntentService extends IntentService {
         intent.putExtra("tag", DialogActivity.MODIFY_TIME_DIALOG);
         intent.putExtra("oid", notification.oid);
 
+        Intent confirmIntent = new Intent();
+        confirmIntent.setAction("com.washappkorea.corp.cleanbasket.ui.DialogActivity");
+        confirmIntent.putExtra("tag", DialogActivity.CONFIRM_TIME_DIALOG);
+        confirmIntent.putExtra("oid", notification.oid);
+
         Log.i(TAG, "intent : " + notification.oid);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 2,
+        PendingIntent contentPIntent = PendingIntent.getActivity(this, 2,
                 intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        PendingIntent confirmPIntent = PendingIntent.getActivity(this, 2,
+                confirmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -259,11 +269,11 @@ public class GCMIntentService extends IntentService {
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(message))
                         .setContentText(message)
-                .addAction(R.drawable.ic_sale, getString(R.string.order_okay), null)
-                .addAction(R.drawable.ic_order_pickuptime, getString(R.string.order_change), contentIntent);
+                .addAction(R.drawable.ic_alarm_delivery, getString(R.string.order_okay), confirmPIntent)
+                .addAction(R.drawable.ic_order_pickuptime, getString(R.string.order_change), contentPIntent);
 
         mBuilder.setAutoCancel(true);
-        mBuilder.setContentIntent(contentIntent);
+        mBuilder.setContentIntent(contentPIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 

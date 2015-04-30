@@ -5,6 +5,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -18,16 +21,24 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
+import com.washappkorea.corp.cleanbasket.io.RequestQueue;
 import com.washappkorea.corp.cleanbasket.io.model.Coupon;
 import com.washappkorea.corp.cleanbasket.io.model.Order;
 import com.washappkorea.corp.cleanbasket.io.model.OrderItem;
+import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
+import com.washappkorea.corp.cleanbasket.util.AddressManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CalculationDialog extends DialogFragment implements View.OnClickListener {
+public class CalculationDialog extends DialogFragment implements View.OnClickListener, Response.Listener, Response.ErrorListener {
     private static final String TAG = CalculationDialog.class.getSimpleName();
     public static final String MODIFY_TAG = "MODIFY_" + CalculationDialog.class.getSimpleName();
 
@@ -39,16 +50,22 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
     private Order mOrder;
 
     private CalculationInfoAdapter mCalculationInfoAdapter;
+    private CalculationListener mCalculationListener;
 
-    public static CalculationDialog newInstance(Order order) {
+    public interface CalculationListener {
+        void onCalculationFinish(CalculationDialog dialog);
+    }
+
+    public static CalculationDialog newInstance(Order order, CalculationListener calculationListener) {
         CalculationDialog cd = new CalculationDialog();
-        cd.initialize(order);
+        cd.initialize(order, calculationListener);
 
         return cd;
     }
 
-    public void initialize(Order order) {
+    public void initialize(Order order, CalculationListener calculationListener) {
         this.mOrder = order;
+        this.mCalculationListener = calculationListener;
     }
 
     @Override
@@ -78,15 +95,15 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
         super.onActivityCreated(savedInstanceState);
 
         ArrayList<CalculationInfo> calculationInfos = new ArrayList<CalculationInfo>();
-        calculationInfos.add(new CalculationInfo("ic_sale", getOrderItemCount() + getString(R.string.item_unit), getOrderPreTotal(), CalculationInfo.PRE_TOTAL));
+        calculationInfos.add(new CalculationInfo(null, getString(R.string.label_item) + " " + getOrderItemCount() + getString(R.string.item_unit), getOrderPreTotal(), CalculationInfo.PRE_TOTAL));
         if (mOrder.dropoff_price > 0)
-            calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.pick_up_cost), mOrder.dropoff_price, CalculationInfo.COST));
+            calculationInfos.add(new CalculationInfo("pick_up_cost", getString(R.string.pick_up_cost), mOrder.dropoff_price, CalculationInfo.COST));
         if (mOrder.sale > 0)
-            calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.sale_label), mOrder.sale, CalculationInfo.SALE));
+            calculationInfos.add(new CalculationInfo(null, getString(R.string.sale_label), mOrder.sale, CalculationInfo.SALE));
         if (mOrder.mileage > 0)
-            calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.mileage), mOrder.mileage, CalculationInfo.MILEAGE));
+            calculationInfos.add(new CalculationInfo("mileage", getString(R.string.mileage), mOrder.mileage, CalculationInfo.MILEAGE));
         if (getCouponTotal() > 0)
-            calculationInfos.add(new CalculationInfo("ic_sale", getString(R.string.coupon), getCouponTotal(), CalculationInfo.COUPON));
+            calculationInfos.add(new CalculationInfo("coupon", getString(R.string.coupon), getCouponTotal(), CalculationInfo.COUPON));
         mCalculationInfoAdapter = new CalculationInfoAdapter(getActivity(), R.layout.item_calculation_info, calculationInfos);
         mCalculationInfoAdapter.add(new CalculationInfo(null, getString(R.string.label_total), getOrderPreTotal() + mCalculationInfoAdapter.getTotal(), CalculationInfo.TOTAL));
 
@@ -96,20 +113,59 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
+        int height = getDialog().getWindow().getAttributes().height;
+        getDialog().getWindow().setLayout(width, height);
+
+        final Drawable d = new ColorDrawable(Color.BLACK);
+        d.setAlpha(150);
+
+        getDialog().getWindow().setBackgroundDrawable(d);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_accpet_calculation_list:
-                if (getTag().equals(MODIFY_TAG)) {
+                if (getTag().equals(MODIFY_TAG))
                     updateOrder(mOrder);
-                }
-
-                dismiss();
+                else
+                    dismiss();
                 break;
         }
     }
 
     private void updateOrder(Order mOrder) {
+        PostRequest postRequest = new PostRequest(getActivity());
+        String body = CleanBasketApplication.getInstance().getGson().toJson(mOrder);
 
+        try {
+            JSONObject jsonObject = new JSONObject(body);
+            postRequest.setParams(jsonObject);
+        } catch (JSONException e) {
+            return;
+        }
+
+        postRequest.setUrl(AddressManager.MODIFY_ORDER_ITEM);
+        postRequest.setListener(this, this);
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest());
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError volleyError) {
+        CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
+    }
+
+    @Override
+    public void onResponse(Object o) {
+        CleanBasketApplication.getInstance().showToast(getString(R.string.order_modify_success));
+
+        mCalculationListener.onCalculationFinish(this);
+
+        dismiss();
     }
 
     private int getOrderItemCount() {
@@ -216,8 +272,12 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
             }
 
             if (getItem(position).image != null)
-                holder.imageViewCalculationInfo.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).image));
+                holder.imageViewCalculationInfo.setImageResource(getDrawableByString(getItem(position).image));
+            else
+                holder.imageViewCalculationInfo.setImageResource(0);
+            holder.textViewCalculationInfo.setTextColor(getResources().getColor(R.color.dialog_text));
             holder.textViewCalculationInfo.setText(getItem(position).name);
+            holder.textViewCalculation.setTextColor(getResources().getColor(R.color.dialog_text));
             holder.textViewCalculation.setText(getItem(position).price + getString(R.string.monetary_unit));
 
             return convertView;
@@ -249,6 +309,11 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
             public TextView textViewCalculationInfoDetail;
             public TextView textViewCalculation;
             public Button buttonUse;
+        }
+
+        /* 이름으로 아이콘을 가져옵니다 */
+        public int getDrawableByString(String name) {
+            return getContext().getResources().getIdentifier("ic_order_" + name, "drawable", getContext().getPackageName());
         }
     }
 

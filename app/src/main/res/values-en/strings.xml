@@ -48,6 +48,7 @@
     <string name="label_item">Item</string>
     <string name="label_pre_total">Sub total</string>
     <string name="label_total">Total</string>
+    <string name="button_next">Next</string>
     <string name="button_order">Order</string>
 
     <!--  reladted to form fill  -->
@@ -101,7 +102,7 @@
     <string name="address_detail">Details</string>
     <string name="address_search_inform">Area (ex. Xx-dong)</string>
     <string name="address_select">Select Address</string>
-    <string name="contact_title">Contact Number</string>
+    <string name="contact_title">Contact</string>
     <string name="contact">Contact Number</string>
     <string name="memo_hint">Additional Request</string>
     <string name="search_no_text">Search</string>
@@ -149,11 +150,11 @@
     <!--  related to order status  -->
     <string name="pd_name_default">CleanBasket PD</string>
     <string name="pick_up_label">Pick Up</string>
-    <string name="laundry_label">Dry Clean</string>
+    <string name="laundry_label">Dry Clean\n Laundry</string>
     <string name="drop_off_label">Drop Off</string>
     <string name="finish_label">Complete</string>
-    <string name="pick_up_time_label">Pick Up Time</string>
-    <string name="drop_off_time_label">Drop Off Time</string>
+    <string name="pick_up_time_label">Pick Up</string>
+    <string name="drop_off_time_label">Drop Off</string>
     <string name="feedback_label">Feedback</string>
     <string name="pick_up_wait">Ready for Pick Up</string>
     <string name="pick_up_man_selected">Ready for Pick Up</string>
@@ -167,8 +168,8 @@
 
     <!--  related to notification  -->
     <string name="today">Today</string>
-    <string name="pick_up_notification">Pick Up Notification</string>
-    <string name="drop_off_notification">Drop Off Notification</string>
+    <string name="pick_up_notification"> Pick Up Notification</string>
+    <string name="drop_off_notification"> Drop Off Notification</string>
     <string name="pd_message">Message from PD</string>
     <string name="recommendation_coupon">Coupon Received</string>
     <string name="issue_coupon">Coupon Issued </string>
@@ -268,9 +269,9 @@
     <string name="thanks_message">Thank you for using Clean Bakset</string>
     <string name="laundry_quality">Did you enjoy our service?</string>
     <string name="free_feedback">We would appreciate your feedback</string>
-    <string name="late_feedback">Late delivery</string>
-    <string name="laundry_feedback">Poor quality</string>
-    <string name="kindness_feedback">Poor delivery service</string>
+    <string name="late_feedback">Late\n delivery</string>
+    <string name="laundry_feedback">Poor\n quality</string>
+    <string name="kindness_feedback">Poor\n delivery</string>
     <string name="feedback_success">Feedback completed</string>
     <string name="feedback_failure">Feedback failed</string>
 
@@ -286,7 +287,20 @@
     <string name="notice_login_email">Login via Email</string>
 
     <!-- -->
+    <string name="order_list_title">Order List</string>
     <string name="no_order">No order in progress</string>
+    <string name="no_notification">Empty</string>
     <string name="finish_order">Already finished order</string>
     <string name="need_agree">You must agree with the terms and conditions</string>
+    <string name="class_info">Class Info</string>
+    <string name="class_label">Class</string>
+    <string name="class_benefit">Benefit</string>
+    <string name="class_total">Used Total</string>
+    <string name="order_number">Order Number</string>
+    <string name="feedback_empty">Please rate</string>
+    <string name="feedback_duplication">You already rated this order</string>
+    <string name="time_confirmed">Order has been confirmed</string>
+    <string name="email_duplication">Registered Email</string>
+    <string name="phone_duplication">Registered Phone</string>
+    <string name="mileage_info">Available in 100 KRW</string>
 </resources>

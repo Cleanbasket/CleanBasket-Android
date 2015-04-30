@@ -45,6 +45,8 @@ public class EmailDialog extends DialogFragment implements EditText.OnEditorActi
     private static final String FIND_PASSWORD_TAG = "FIND_PASSWORD";
     private static final String EMAIL = "EMAIL";
 
+    private OnLoginSuccess mOnLoginSuccess;
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -56,15 +58,19 @@ public class EmailDialog extends DialogFragment implements EditText.OnEditorActi
     private View mLoginFormView;
     private View mProgressView;
 
-    public static EmailDialog newInstance() {
+    public interface OnLoginSuccess {
+        void onLoginSuccess();
+    }
+
+    public static EmailDialog newInstance(OnLoginSuccess onLoginSuccess) {
         EmailDialog ed = new EmailDialog();
-        ed.initialize();
+        ed.initialize(onLoginSuccess);
 
         return ed;
     }
 
-    public void initialize() {
-
+    public void initialize(OnLoginSuccess onLoginSuccess) {
+        this.mOnLoginSuccess = onLoginSuccess;
     }
 
     @Override
@@ -160,7 +166,12 @@ public class EmailDialog extends DialogFragment implements EditText.OnEditorActi
     }
 
     private void popRegisterDialog() {
-        RegisterDialog rd = RegisterDialog.newInstance();
+        RegisterDialog rd = RegisterDialog.newInstance(new RegisterDialog.OnRegisterListener() {
+            @Override
+            public void onRegister(String email) {
+                mEmailView.setText(email);
+            }
+        });
 
         rd.show(getFragmentManager(), REGISTER_TAG);
     }
@@ -348,6 +359,7 @@ public class EmailDialog extends DialogFragment implements EditText.OnEditorActi
                     break;
                 case Constants.SUCCESS:
                     storeEmail(getActivity(), mEmailView.getText().toString());
+                    mOnLoginSuccess.onLoginSuccess();
                     dismiss();
 
                     Intent intent = new Intent();

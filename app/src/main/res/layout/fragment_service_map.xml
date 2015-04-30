@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_order_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginFragment"
+    tools:ignore="MissingPrefix"
+    android:background="@color/splash_background">
+
+    <!--
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_centerHorizontal="true" /> -->
+
+    <TextView
+        android:id="@+id/textview_map_info_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="67dp"
+        android:layout_centerHorizontal="true"
+        android:lineSpacingExtra="9dp"
+        android:text="@string/notice_available_area"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="@color/splash_text" />
+
+    <ImageView
+        android:id="@+id/imageview_seoul_title"
+        android:layout_width="wrap_content"
+        android:layout_height="14dp"
+        android:layout_marginTop="26dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textview_map_info_title"
+        android:src="@drawable/ic_login_seoul" />
+
+    <ImageView
+        android:id="@+id/imageview_seoul_map"
+        android:layout_width="wrap_content"
+        android:layout_height="188dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageview_seoul_title" />
+
+    <ImageView
+        android:id="@+id/imageview_incheon_title"
+        android:layout_width="wrap_content"
+        android:layout_height="14dp"
+        android:layout_marginTop="26dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageview_seoul_map"
+        android:src="@drawable/ic_login_incheon" />
+
+    <ImageView
+        android:id="@+id/imageview_incheon_map"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageview_incheon_title"
+        android:layout_marginTop="12dp" />
+    
+    <RelativeLayout
+        android:layout_width="253dp"
+        android:layout_height="39dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageview_incheon_map">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</RelativeLayout>

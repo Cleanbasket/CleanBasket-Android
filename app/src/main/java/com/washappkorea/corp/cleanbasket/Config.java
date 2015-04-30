@@ -7,6 +7,7 @@ public class Config {
 
 //    public final static String SERVER_ADDRESS = "http://www.cleanbasket.co.kr/";
     public final static String SERVER_ADDRESS = "http://192.168.11.2:8080/wash/";
+//    public final static String SERVER_ADDRESS = "http://192.168.219.106:8080/wash/";
 
     public final static String SEOUL_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/seoul.png";
     public final static String INCHEON_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/incheon.png";

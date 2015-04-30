@@ -23,6 +23,7 @@
         android:orientation="vertical">
 
         <TextView
+            style="@style/White.TextView.CleanBasket"
             android:id="@+id/textview_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,8 +38,18 @@
             android:id="@+id/current_mileage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="29dp"
             android:layout_marginLeft="15dp"
+            android:textColor="@color/dialog_text" />
+
+        <TextView
+            android:id="@+id/current_mileage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:text="@string/mileage_info"
+            android:textSize="10dp"
             android:textColor="@color/dialog_text" />
 
         <EditText

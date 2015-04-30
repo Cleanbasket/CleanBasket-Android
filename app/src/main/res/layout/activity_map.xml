@@ -3,19 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dialog_color"
     tools:context=".MainActivity">
 
     <RelativeLayout
         android:id="@+id/container_address_search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
 
         <EditText
+            style="@style/Grey.EditText.CleanBasket"
             android:id="@+id/edittext_address_search"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/imageview_address_search"
             android:hint="@string/address_search_inform"
             android:maxLines="1"
             android:imeActionId="@+id/use"
@@ -25,9 +28,9 @@
 
         <ImageView
             android:id="@+id/imageview_address_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sale"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_menu_search"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true" />
     </RelativeLayout>
@@ -36,7 +39,11 @@
         android:id="@+id/textview_current_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/container_address_search" />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@id/container_address_search"
+        android:gravity="center_horizontal"
+        android:textSize="21dp"/>
 
     <RelativeLayout
         android:id="@+id/map_view_container"
@@ -54,13 +61,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_sale" />
+            android:src="@drawable/ic_map_search" />
     </RelativeLayout>
 
     <Button
+        style="@style/Black.Button.CleanBasket"
         android:id="@+id/button_accept_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
         android:text="@string/address_select" />
 </RelativeLayout>

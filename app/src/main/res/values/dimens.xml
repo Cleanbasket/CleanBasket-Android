@@ -7,6 +7,9 @@
     <dimen name="icon_default_margin">10dp</dimen>
     <dimen name="item_default_margin">20dp</dimen>
     <dimen name="default_icon">32dp</dimen>
+    <dimen name="default_icon_size">35dp</dimen>
+    <dimen name="default_icon_box_size">40dp</dimen>
+    <dimen name="default_circle_size">50dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="status_view_margin">10dp</dimen>
@@ -15,6 +18,10 @@
 
     <!-- Text -->
     <dimen name="small_text">10dp</dimen>
+    <dimen name="textview_dimen">3dp</dimen>
+
+    <!-- Feedback -->
+    <dimen name="feedback_box">80dp</dimen>
 
     <!-- Dialog -->
     <dimen name="dialog_margin">13dp</dimen>
@@ -26,8 +33,16 @@
     <dimen name="time_picker_header_text_size">18dp</dimen>
     <dimen name="time_picker_discount_text_size">10dp</dimen>
 
+    <!-- Order Info -->
+    <dimen name="order_info_font">12dp</dimen>
+
     <!-- Login -->
-    <dimen name="login_facebook_icon_dimen">58dp</dimen>
-    <dimen name="login_kakao_icon_dimen">48dp</dimen>
-    <dimen name="login_email_icon_dimen">46dp</dimen>
+    <dimen name="login_facebook_icon_dimen">48dp</dimen>
+    <dimen name="login_kakao_icon_dimen">38dp</dimen>
+    <dimen name="login_email_icon_dimen">36dp</dimen>
+    <dimen name="login_default_dimen">10dp</dimen>
+
+    <!-- Order Info -->
+    <dimen name="dimen_status_bar">56dp</dimen>
+    <dimen name="dimen_status_item">90dp</dimen>
 </resources>

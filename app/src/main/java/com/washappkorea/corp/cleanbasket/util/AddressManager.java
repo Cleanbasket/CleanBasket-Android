@@ -22,10 +22,12 @@ public class AddressManager {
     public final static String SET_ADDRESS = "member/address/update";
     public final static String SET_PHONE_NUMBER = "member/phone/update";
     public final static String ADD_ORDER = "member/order";
+    public final static String MODIFY_ORDER_ITEM = "member/order/modify";
 
     public final static String GET_ORDER = "member/order";
     public final static String GET_ORDER_ONE = "member/order/one";
     public final static String DEL_ORDER = "member/order/del";
+    public final static String CONFIRM_ORDER = "member/order/confirm";
     public final static String RATE_ORDER = "member/order/rate";
     public final static String DATE_UPDATE_ORDER = "member/order/date";
 

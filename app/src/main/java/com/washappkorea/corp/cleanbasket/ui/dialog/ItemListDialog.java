@@ -42,16 +42,22 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
 
     private ArrayList<OrderItem> orderItems;
     private ItemListAdapter mItemListAdapter;
+    private ItemListListener mItemListListener;
 
-    public static ItemListDialog newInstance(ArrayList<OrderItem> orderItems) {
+    public interface ItemListListener {
+        void onItemListFinish(ItemListDialog dialog);
+    }
+
+    public static ItemListDialog newInstance(ArrayList<OrderItem> orderItems, ItemListListener itemListListener) {
         ItemListDialog ild = new ItemListDialog();
-        ild.initialize(orderItems);
+        ild.initialize(orderItems, itemListListener);
 
         return ild;
     }
 
-    public void initialize(ArrayList<OrderItem> orderItems) {
+    public void initialize(ArrayList<OrderItem> orderItems, ItemListListener itemListListener) {
         this.orderItems = orderItems;
+        this.mItemListListener = itemListListener;
     }
 
     @Override
@@ -124,12 +130,18 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
                 dismiss();
 
                 if (getTag().equals(OrderFragment.MODIFY_ITEM_LIST_DIALOG_TAG)) {
-                    if (getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY) == null)
-                        addFragment(R.id.layout_order_state_fragment, new OrderInfoFragment());
-                    else {
-                        ((OrderInfoFragment) getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY)).setCalculationInfo();
-                        showFragment(getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY));
-                    }
+//                    if (getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY) == null)
+//                        addFragment(R.id.layout_order_state_fragment, new OrderInfoFragment());
+//                    else {
+//                        ((OrderInfoFragment) getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY)).setCalculationInfo();
+//                        showFragment(getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG_MODIFY));
+//                    }
+
+                    mItemListListener.onItemListFinish(this);
+                    dismiss();
+                }
+                else if (getTag().equals(OrderStatusFragment.ITEM_LIST_DIALOG_TAG)) {
+                    dismiss();
                 }
                 else {
                     if (getActivity().getSupportFragmentManager().findFragmentByTag(OrderInfoFragment.TAG) == null)

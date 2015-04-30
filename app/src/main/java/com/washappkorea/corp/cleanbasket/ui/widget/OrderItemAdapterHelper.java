@@ -24,7 +24,7 @@ public class OrderItemAdapterHelper extends ArrayAdapter<OrderItem> {
         int number = 0;
 
         for (int i = 0; i < getCount(); i++) {
-            if (getItem(i).category > 0 && getItem(i).count > 0)
+            if (getItem(i).count > 0)
                 number = number + getItem(i).count;
         }
 
@@ -36,7 +36,7 @@ public class OrderItemAdapterHelper extends ArrayAdapter<OrderItem> {
         int total = 0;
 
         for (int i = 0; i < getCount(); i++) {
-            if (getItem(i).category > 0 && getItem(i).count > 0)
+            if (getItem(i).count > 0)
                 total = total + getItem(i).count * getItem(i).price;
         }
 

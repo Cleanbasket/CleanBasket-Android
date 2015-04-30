@@ -403,7 +403,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         builder.setMessage(getOrderFragment().getOrderItemAdapter().getItemNumber() +
                 getString(R.string.item_unit) +
                 DateTimeFactory.getInstance().getNewLine() +
-                getOrderFragment().getOrderItemAdapter().getItemTotal() +
+                mCalculationInfoAdapter.getPriceByType(CalculationInfo.TOTAL) +
                 getString(R.string.monetary_unit));
         builder.setPositiveButton(R.string.label_confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -472,7 +472,8 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 ((MainActivity) getActivity()).insertAlarm(order);
                 ((MainActivity) getActivity()).setAlarm();
                 ((MainActivity) getActivity()).getViewPager().setCurrentItem(1);
-                getActivity().getSupportFragmentManager().popBackStack();
+//                getActivity().getSupportFragmentManager().popBackStack();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this);
         }
     }
 
@@ -494,11 +495,12 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
         switch (mode) {
             case PICK_UP_DATETIME:
+            case PICK_UP_TIME:
                 header = DateTimeFactory.getInstance().getStringDate(getActivity(), mSelectedPickUpDate);
                 break;
 
             case DROP_OFF_TIME:
-                header = DateTimeFactory.getInstance().getStringDate(getActivity(), mSelectedPickUpDate);
+                header = DateTimeFactory.getInstance().getStringDate(getActivity(), mSelectedDropOffDate);
                 break;
         }
 
@@ -651,8 +653,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mLayoutSelector.setVisibility(View.GONE);
         mTextViewSelectedPickUpDate.setVisibility(View.VISIBLE);
         mTextViewSelectedPickUpDate.setText(
-//                DateTimeFactory.getInstance().getPrettyTime(date) +
-//                DateTimeFactory.getInstance().getNewLine() +
                 DateTimeFactory.getInstance().getStringDate(getActivity(), date));
     }
 
@@ -667,10 +667,8 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
         mTextViewSelectedPickUpTime.setVisibility(View.VISIBLE);
         mTextViewSelectedPickUpTime.setText(
-//                DateTimeFactory.getInstance().getPrettyTime(date) +
-//                DateTimeFactory.getInstance().getNewLine() +
-                DateTimeFactory.getInstance().getStringTime(getActivity(), date) +
-                        getString(R.string.time_tilde) +
+                DateTimeFactory.getInstance().getStringTime(getActivity(), date) + " " +
+                        getString(R.string.time_tilde) + " " +
                         DateTimeFactory.getInstance().getStringTime(getActivity(), c.getTime()));
     }
 
@@ -680,8 +678,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
      */
     private void dropOffDateSelected(Date date) {
         mTextViewSelectedDropOffDate.setText(
-//                DateTimeFactory.getInstance().getPrettyTime(date) +
-//                DateTimeFactory.getInstance().getNewLine() +
                 DateTimeFactory.getInstance().getStringDate(getActivity(), date));
     }
 
@@ -695,10 +691,8 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         c.add(Calendar.HOUR_OF_DAY, 1);
 
         mTextViewSelectedDropOffTime.setText(
-//                DateTimeFactory.getInstance().getPrettyTime(date) +
-//                DateTimeFactory.getInstance().getNewLine() +
-                DateTimeFactory.getInstance().getStringTime(getActivity(), date) +
-                        getString(R.string.time_tilde) +
+                DateTimeFactory.getInstance().getStringTime(getActivity(), date) + " " +
+                        getString(R.string.time_tilde) + " " +
                         DateTimeFactory.getInstance().getStringTime(getActivity(), c.getTime()));
     }
 
@@ -828,7 +822,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
     private void popItemListDialog(ArrayList<OrderItem> orderItems) {
         ItemListDialog itemListDialog =
-                ItemListDialog.newInstance(orderItems);
+                ItemListDialog.newInstance(orderItems, null);
 
         itemListDialog.show(
                 getActivity().getSupportFragmentManager(),

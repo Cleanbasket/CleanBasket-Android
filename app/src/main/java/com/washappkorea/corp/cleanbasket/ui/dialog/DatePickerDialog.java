@@ -2,6 +2,9 @@ package com.washappkorea.corp.cleanbasket.ui.dialog;
 
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -91,6 +94,20 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
     public void onPause() {
         super.onPause();
         mHapticFeedbackController.stop();
+    }
+
+    @Override
+    public void onStart() {
+        int width = getResources().getDimensionPixelSize(R.dimen.dialog_width);
+        int height = getDialog().getWindow().getAttributes().height;
+        getDialog().getWindow().setLayout(width, height);
+
+        final Drawable d = new ColorDrawable(Color.BLACK);
+        d.setAlpha(150);
+
+        getDialog().getWindow().setBackgroundDrawable(d);
+
+        super.onStart();
     }
 
     public void tryVibrate() {

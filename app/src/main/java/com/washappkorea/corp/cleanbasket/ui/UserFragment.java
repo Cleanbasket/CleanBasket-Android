@@ -37,6 +37,7 @@ import com.washappkorea.corp.cleanbasket.io.model.Coupon;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
 import com.washappkorea.corp.cleanbasket.io.request.PostRequest;
+import com.washappkorea.corp.cleanbasket.ui.dialog.ClassDialog;
 import com.washappkorea.corp.cleanbasket.ui.dialog.CouponDialog;
 import com.washappkorea.corp.cleanbasket.util.AddressManager;
 import com.washappkorea.corp.cleanbasket.util.Constants;
@@ -108,7 +109,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         super.onActivityCreated(savedInstanceState);
 
         ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
-        menuItems.add(new MenuItem(getString(R.string.coupon), "coupon"));
+        menuItems.add(new MenuItem(getString(R.string.coupon), "coupon_info"));
         menuItems.add(new MenuItem(getString(R.string.notification), "notification"));
         menuItems.add(new MenuItem(getString(R.string.setting), "setting"));
         menuItems.add(new MenuItem(getString(R.string.service_info), "service_info"));
@@ -144,7 +145,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                     case Constants.SUCCESS:
                         showProgress(false);
 
-                        if (jsonData.data == null)
+                        if (jsonData.data.equals("null"))
                             showRegisterHeader();
                         else {
                             AuthUser authUser = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, AuthUser.class);
@@ -173,17 +174,34 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             mUserClassMileage = (TextView) mUserInfoView.findViewById(R.id.textview_user_class_mileage);
             mButtonClassInfo = (Button) mUserInfoView.findViewById(R.id.button_view_class_info);
 
-            mImageViewUserClass.setImageResource(R.drawable.ic_sale);
+            mImageViewUserClass.setImageResource(getDrawableByClass(authUser.user_class));
             mUserName.setText(authUser.email);
             mUserClass.setText(getClassName(authUser.user_class));
             mUserClassInfo.setText(getClassDetail(authUser.user_class));
-            mUserClassMileage.setText(getString(R.string.mileage_available) + " "  + authUser.mileage);
             mButtonClassInfo.setOnClickListener(this);
 
             if (mRegisterView != null)
                 mListView.removeHeaderView(mRegisterView);
             mListView.addHeaderView(mUserInfoView);
         }
+
+        if (mUserClassMileage != null)
+            mUserClassMileage.setText(getString(R.string.mileage_available) + " "  + authUser.mileage);
+    }
+
+    private int getDrawableByClass(Integer user_class) {
+        switch (user_class) {
+            case BRONZE:
+                return R.drawable.ic_class_clean;
+            case SILVER:
+                return R.drawable.ic_class_silver;
+            case GOLD:
+                return R.drawable.ic_class_gold;
+            case LOVE:
+                return R.drawable.ic_class_love;
+        }
+
+        return R.drawable.ic_class_clean;
     }
 
     private String getClassName(Integer user_class) {
@@ -250,6 +268,11 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
 
         switch (v.getId()) {
             case R.id.button_view_class_info:
+                ClassDialog classDialog = ClassDialog.newInstance();
+
+                classDialog.show(
+                        getActivity().getSupportFragmentManager(),
+                        "CLASS");
                 break;
 
             case R.id.button_authorization:
@@ -378,9 +401,20 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                         showProgress(false);
                         break;
 
+                    case Constants.ACCOUNT_DUPLICATION:
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.email_duplication));
+                        showProgress(false);
+                        break;
+
+                    case Constants.DUPLICATION:
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.phone_duplication));
+                        showProgress(false);
+                        break;
+
                     case Constants.SUCCESS:
                         CleanBasketApplication.getInstance().showToast(getString(R.string.sign_up_success));
                         showProgress(false);
+                        getUserInfo();
                         break;
                 }
             }
@@ -416,7 +450,12 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         if (mEditTextPhone.getText().length() != 11)
             return;
 
+        if (!mButtonRequestCode.isEnabled())
+            return;
+
         mButtonRequestCode.setEnabled(false);
+        mButtonRequestCode.setBackgroundResource(R.drawable.textview_back_grey);
+        mButtonRequestCode.setTextColor(getResources().getColor(R.color.text_black));
 
         PostRequest postRequest = new PostRequest(getActivity());
         postRequest.setUrl(AddressManager.AUTH_CODE);
@@ -435,8 +474,6 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                 switch (jsonData.constant) {
                     case Constants.SUCCESS:
                         CleanBasketApplication.getInstance().showToast(getString(R.string.authorization_code_sent));
-
-                        mButtonRequestCode.setEnabled(true);
                         break;
                 }
             }
@@ -444,6 +481,8 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 mButtonRequestCode.setEnabled(true);
+                mButtonRequestCode.setBackgroundResource(R.drawable.button_green);
+                mButtonRequestCode.setTextColor(getResources().getColor(R.color.text_white));
 
                 CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
             }
@@ -530,10 +569,14 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             } else
                 holder = (MenuViewHolder) convertView.getTag();
 
-            holder.imageViewMenu.setBackgroundResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
+            holder.imageViewMenu.setBackgroundResource(getDrawableByString(getItem(position).img));
             holder.textViewMenu.setText(getItem(position).name);
 
             return convertView;
+        }
+
+        private int getDrawableByString(String img) {
+            return getContext().getResources().getIdentifier("ic_information_" + img, "drawable", getContext().getPackageName());
         }
 
         protected class MenuViewHolder {
@@ -618,6 +661,10 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                             }
 
                             mEditTextAuthorization.setText(getCode(sms.toString()));
+
+                            mButtonRequestCode.setEnabled(true);
+                            mButtonRequestCode.setBackgroundResource(R.drawable.button_green);
+                            mButtonRequestCode.setTextColor(getResources().getColor(R.color.text_white));
                         }
                     }
                 }

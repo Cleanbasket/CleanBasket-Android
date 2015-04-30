@@ -8,38 +8,50 @@
 
     <ImageView
         android:id="@+id/imageview_user_class"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_sale" />
+        android:layout_marginTop="23dp" />
 
     <TextView
         android:id="@+id/textview_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="23dp"
+        android:textSize="14dp" />
 
     <TextView
         android:id="@+id/textview_user_class"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/textview_user_class_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="10dp"
+        android:layout_marginTop="7dp"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/textview_user_class_mileage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="10dp"
+        android:layout_marginTop="7dp"
         android:layout_gravity="center_horizontal" />
 
     <Button
         android:id="@+id/button_view_class_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_width="277dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="17dp"
+        android:text="@string/class_info"
+        android:background="@drawable/textview_back_grey" />
 </LinearLayout>

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/order_background"
     tools:context=".FeedbackActivity">
 
     <!-- Login progress -->
@@ -10,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:visibility="gone" />
 
     <ScrollView android:id="@+id/feedback_form" android:layout_width="match_parent"
@@ -33,12 +34,23 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/imageview_pd_face" />
 
+            <View
+                android:id="@+id/line_bottom"
+                android:layout_width="250dp"
+                android:layout_height="@dimen/slim_line"
+                android:layout_below="@+id/textview_user_name"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/black" />
+
             <TextView
                 android:id="@+id/textview_thanks_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/textview_user_name"
+                android:layout_marginTop="6dp"
+                android:textStyle="bold"
+                android:textSize="15dp"
                 android:text="@string/thanks_message" />
 
             <TextView
@@ -46,13 +58,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="37dp"
+                android:textSize="13dp"
                 android:layout_below="@+id/textview_thanks_message"
                 android:text="@string/laundry_quality" />
 
             <RatingBar
+                style="@style/RatringBar.CleanBasket"
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
                 android:layout_below="@+id/textview_laundry_quality"
                 android:layout_centerHorizontal="true" />
 
@@ -65,47 +81,69 @@
                 android:text="@string/free_feedback" />
 
             <EditText
+                style="@style/Grey.EditText.CleanBasket"
                 android:id="@+id/edittext_free_feedback"
-                android:layout_width="wrap_content"
+                android:layout_width="260dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginRight="9dp"
                 android:layout_below="@+id/textview_free_feedback"
+                android:imeActionId="@+id/finish"
+                android:imeActionLabel="@string/action_next"
+                android:imeOptions="actionDone"
                 android:singleLine="false"
+                android:lines="2"
                 android:maxLines="5" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/layout_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
                 android:layout_below="@+id/edittext_free_feedback">
 
                 <CheckBox
                     android:id="@+id/checkbox_late_feedback"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/late_feedback" />
+                    android:layout_width="@dimen/feedback_box"
+                    android:layout_height="@dimen/feedback_box"
+                    android:background="@drawable/textview_back_grey"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/late_feedback"
+                    android:textSize="12dp" />
 
                 <CheckBox
                     android:id="@+id/checkbox_laundry_feedback"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/checkbox_late_feedback"
-                    android:text="@string/laundry_feedback" />
+                    android:layout_width="@dimen/feedback_box"
+                    android:layout_height="@dimen/feedback_box"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/textview_back_grey"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/laundry_feedback"
+                    android:textSize="12dp" />
 
                 <CheckBox
                     android:id="@+id/checkbox_kindness_feedback"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/checkbox_laundry_feedback"
-                    android:text="@string/kindness_feedback" />
-            </RelativeLayout>
+                    android:layout_width="@dimen/feedback_box"
+                    android:layout_height="@dimen/feedback_box"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/textview_back_grey"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/kindness_feedback"
+                    android:textSize="12dp" />
+            </LinearLayout>
 
             <Button
+                style="@style/Black.Button.CleanBasket"
                 android:id="@+id/button_feedback_send"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_checkbox"
+                android:layout_margin="10dp"
                 android:text="@string/label_confirm" />
         </RelativeLayout>
     </ScrollView>

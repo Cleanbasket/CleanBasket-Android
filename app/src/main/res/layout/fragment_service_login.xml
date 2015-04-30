@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_order_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginFragment"
+    android:background="@color/splash_background">
+
+    <!--
+    <ImageView
+        android:id="@+id/imageview_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_background_03" /> -->
+
+    <TextView
+        android:id="@+id/textview_map_login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="146dp"
+        android:layout_centerHorizontal="true"
+        android:lineSpacingExtra="9dp"
+        android:text="@string/notice_service_login"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="@color/splash_text" />
+
+    <RelativeLayout
+        android:id="@+id/layout_button_fb"
+        android:layout_width="266dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="64dp"
+        android:layout_below="@+id/textview_map_login_title"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_green"
+        android:visibility="invisible">
+    
+        <ImageView
+            android:layout_width="13dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/login_facebook_icon_dimen"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_login_fb" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/notice_login_facebook"
+            android:textSize="15dp"
+            android:textColor="@color/dialog_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_button_kakao"
+        android:layout_width="266dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/layout_button_fb"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_green">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/login_kakao_icon_dimen"
+            android:layout_centerVertical="true"
+            android:textSize="15dp"
+            android:src="@drawable/ic_login_kakaotalk" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/notice_login_kakao"
+            android:textSize="15dp"
+            android:textColor="@color/dialog_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_button_email"
+        android:layout_width="266dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/layout_button_kakao"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_green">
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/login_email_icon_dimen"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_login_email" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/notice_login_email"
+            android:textSize="15dp"
+            android:textColor="@color/dialog_color" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -37,11 +37,11 @@ public class LoginFragment extends Fragment {
                 ImageLoader imageLoader = RequestQueue.getInstance(getActivity()).getImageLoader();
                 imageLoader.get(Config.SEOUL_IMAGE_ADDRESS,
                         ImageLoader.getImageListener(
-                                mSeoulMap, R.drawable.ic_sale, R.drawable.ic_sale
+                                mSeoulMap, R.drawable.ic_loading, R.drawable.ic_loading
                         ));
                 imageLoader.get(Config.INCHEON_IMAGE_ADDRESS,
                         ImageLoader.getImageListener(
-                                mIncheonMap, R.drawable.ic_sale, R.drawable.ic_sale
+                                mIncheonMap, R.drawable.ic_loading, R.drawable.ic_loading
                         ));
                 break;
             case 3:
@@ -60,7 +60,12 @@ public class LoginFragment extends Fragment {
                 mEmailLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EmailDialog ed = EmailDialog.newInstance();
+                        EmailDialog ed = EmailDialog.newInstance(new EmailDialog.OnLoginSuccess() {
+                            @Override
+                            public void onLoginSuccess() {
+                                getActivity().finish();
+                            }
+                        });
                         ed.show(getActivity().getSupportFragmentManager(), "ed");
                     }
                 });

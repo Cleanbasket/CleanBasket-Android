@@ -19,10 +19,13 @@
             android:padding="@dimen/icon_default_margin" />
 
         <Button android:id="@+id/button_accept"
-            style="?android:textAppearanceSmall"
+            style="@style/Black.Button.CleanBasket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/label_confirm"
             android:textStyle="bold" />
     </LinearLayout>

@@ -37,7 +37,7 @@
     <string name="disable_error">승인되지 않은 사용자입니다</string>
     <string name="account_duplication">이미 가입되어 있습니다</string>
     <string name="sign_up_success">가입에 성공했습니다</string>
-    <string name="register_inform">지금 가입하시면 마일리지 적립과 쿠폰 사용 혜택을 누리실 수 있습니다!</string>
+    <string name="register_inform">지금 가입하시면 마일리지 적립과 \n쿠폰 사용 혜택을 누리실 수 있습니다!</string>
 
     <string name="authorization_request">요청</string>
 
@@ -50,6 +50,7 @@
     <string name="label_item">품목</string>
     <string name="label_pre_total">계</string>
     <string name="label_total">총계</string>
+    <string name="button_next">다음</string>
     <string name="button_order">주문하기</string>
 
     <!-- reladted to form fill -->
@@ -105,7 +106,7 @@
     <string name="address_search_inform">동을 입력해주세요. (예. 역삼동)</string>
     <string name="address_select">주소 선택</string>
     <string name="contact">연락처를 입력해주세요</string>
-    <string name="memo_hint">추가 요청 사항을 입력해주세요</string>
+    <string name="memo_hint">추가 요청 사항</string>
     <string name="search_no_text">검색어를 입력하세요</string>
 
     <!-- general -->
@@ -273,9 +274,9 @@
     <string name="laundry_quality">크린바스켓에 만족하셨나요?</string>
     <string name="free_feedback">자유롭게 서비스에 대한 의견을 남겨주세요</string>
     <string name="request_feedback">서비스에 대한 의견을 남겨주세요</string>
-    <string name="late_feedback">시간이 늦었습니다</string>
-    <string name="laundry_feedback">세탁 상태에 불만족해요</string>
-    <string name="kindness_feedback">PD가 불친절합니다</string>
+    <string name="late_feedback">시간이\n늦었습니다</string>
+    <string name="laundry_feedback">세탁 상태에\n불만족해요</string>
+    <string name="kindness_feedback">PD가\n불친절합니다</string>
     <string name="feedback_success">평가가 완료되었습니다</string>
     <string name="feedback_failure">평가에 실패했습니다</string>
 
@@ -294,6 +295,18 @@
     <!-- -->
     <string name="order_list_title">주문 항목</string>
     <string name="no_order">현재 진행 중인 주문이 없습니다</string>
+    <string name="no_notification">비어있습니다</string>
     <string name="finish_order">이미 완료된 주문입니다</string>
     <string name="need_agree">서비스약관과 개인정보취급방침에 동의해주셔야 합니다</string>
+    <string name="class_info">등급 보기</string>
+    <string name="class_label">등급</string>
+    <string name="class_benefit">혜택</string>
+    <string name="class_total">이용 금액</string>
+    <string name="order_number">주문번호</string>
+    <string name="feedback_empty">별점을 매겨주세요!</string>
+    <string name="feedback_duplication">이미 평가하셨습니다</string>
+    <string name="time_confirmed">시간이 확정되었습니다</string>
+    <string name="email_duplication">이미 가입되어 있는 메일입니다</string>
+    <string name="phone_duplication">이미 가입되어 있는 연락처입니다</string>
+    <string name="mileage_info">100원 단위로 사용 가능합니다</string>
 </resources>

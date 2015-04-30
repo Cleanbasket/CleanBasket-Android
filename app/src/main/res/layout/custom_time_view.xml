@@ -9,6 +9,7 @@
         android:id="@+id/textview_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/dialog_text"
         android:layout_centerInParent="true" />
 
     <TextView
@@ -17,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textview_time"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/dialog_text"
         android:textSize="9dp" />
 
     <ImageView
