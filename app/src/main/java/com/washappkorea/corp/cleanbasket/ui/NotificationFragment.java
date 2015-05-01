@@ -56,7 +56,7 @@ public class NotificationFragment extends Fragment implements ListView.OnItemCli
     }
 
     private void getDataFromDB() {
-        int uid = ((MainActivity) getActivity()).getUid(getActivity());
+        int uid = ((MainActivity) getActivity()).getUid();
 
         if (uid == 0) return;
 

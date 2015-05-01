@@ -6,8 +6,8 @@ public class Config {
     public final static String DAUM_MAP_LOCAL_API = "75fd758f8d2afe314b00006129092860400a529c";
 
 //    public final static String SERVER_ADDRESS = "http://www.cleanbasket.co.kr/";
-    public final static String SERVER_ADDRESS = "http://192.168.11.2:8080/wash/";
-//    public final static String SERVER_ADDRESS = "http://192.168.219.106:8080/wash/";
+//    public final static String SERVER_ADDRESS = "http://192.168.11.2:8080/wash/";
+    public final static String SERVER_ADDRESS = "http://172.30.46.100:8080/wash/";
 
     public final static String SEOUL_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/seoul.png";
     public final static String INCHEON_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/incheon.png";

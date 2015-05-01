@@ -9,6 +9,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.model.Address;
 import com.washappkorea.corp.cleanbasket.io.model.Alarm;
 import com.washappkorea.corp.cleanbasket.io.model.AppInfo;
@@ -34,7 +35,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<Alarm, Integer> alarmDao = null;
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
     }
 
     @Override

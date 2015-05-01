@@ -231,7 +231,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                 return getString(R.string.love_info);
         }
 
-        return getString(R.string.bronze_basket);
+        return getString(R.string.bronze_info);
     }
 
     private void showRegisterHeader() {

@@ -303,4 +303,6 @@
     <string name="email_duplication">Registered Email</string>
     <string name="phone_duplication">Registered Phone</string>
     <string name="mileage_info">Available in 100 KRW</string>
+    <string name="mileage_accumulation">Estimated mileage</string>
+    <string name="join_recommendation">Get mileage sending more info</string>
 </resources>

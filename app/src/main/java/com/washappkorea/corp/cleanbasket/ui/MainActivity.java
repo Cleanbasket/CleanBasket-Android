@@ -24,6 +24,7 @@ import com.washappkorea.corp.cleanbasket.CleanBasketApplication;
 import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.RequestQueue;
 import com.washappkorea.corp.cleanbasket.io.model.Alarm;
+import com.washappkorea.corp.cleanbasket.io.model.AuthUser;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.model.Order;
 import com.washappkorea.corp.cleanbasket.io.request.GetRequest;
@@ -59,6 +60,7 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
     private MainTabsAdapter mTabsAdapter;
 
     private Context mContext;
+    public AuthUser mAuthUser;
 
     // Related to GCM
     public static final String GCM = "gcm";
@@ -110,6 +112,7 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         mContext = this;
 
         getUidFromServer();
+        getUserInfo();
     }
 
     private String getRegistrationId(Context context) {
@@ -411,7 +414,7 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
     }
 
 
-    public int getUid(Context context) {
+    public int getUid() {
         final SharedPreferences prefs = getUidPreferences();
         int uid = prefs.getInt(USER_ID, 0);
 
@@ -420,5 +423,39 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
 
     private SharedPreferences getUidPreferences() {
         return getSharedPreferences(UID, Context.MODE_PRIVATE);
+    }
+
+    public void getUserInfo() {
+        GetRequest getRequest = new GetRequest(this);
+        getRequest.setUrl(AddressManager.GET_AUTH_MEMBER_INFO);
+        getRequest.setListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonData jsonData = null;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+                } catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.SUCCESS:
+
+                        if (jsonData.data.equals("null"))
+                            mAuthUser = null;
+                        else {
+                            mAuthUser = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, AuthUser.class);
+                        }
+                        break;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        RequestQueue.getInstance(this).addToRequestQueue(getRequest.doRequest());
     }
 }

@@ -40,6 +40,7 @@ import com.washappkorea.corp.cleanbasket.Config;
 import com.washappkorea.corp.cleanbasket.R;
 import com.washappkorea.corp.cleanbasket.io.RequestQueue;
 import com.washappkorea.corp.cleanbasket.io.model.Address;
+import com.washappkorea.corp.cleanbasket.io.model.AuthUser;
 import com.washappkorea.corp.cleanbasket.io.model.Coupon;
 import com.washappkorea.corp.cleanbasket.io.model.JsonData;
 import com.washappkorea.corp.cleanbasket.io.model.Order;
@@ -127,6 +128,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     private CalculationInfoAdapter mCalculationInfoAdapter;
 
     private Boolean mAddressFlag;
+    private AuthUser mAuthUser;
 
     private Order mOrder;
     private Integer mPaymentMethod = 0;
@@ -913,6 +915,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     public void onResume() {
         super.onResume();
         setCalculationInfo();
+        mAuthUser = ((MainActivity) getActivity()).mAuthUser;
         mCalculationInfoAdapter.notifyDataSetChanged();
     }
 
@@ -1042,7 +1045,10 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                     break;
 
                 case CalculationInfo.MILEAGE:
-                    holder.textViewCalculationInfoDetail.setText(getString(R.string.mileage_available) + " " + getItem(position).price);
+                    if (mAuthUser != null)
+                        holder.textViewCalculationInfoDetail.setText(getString(R.string.mileage_accumulation) + " " + (int) (mTotal * getAccumulationRate(mAuthUser.user_class)));
+                    else
+                        holder.textViewCalculationInfoDetail.setText(getString(R.string.join_recommendation));
                     holder.textViewCalculationInfoDetail.setVisibility(View.VISIBLE);
                 case CalculationInfo.COUPON:
                     holder.textViewCalculation.setVisibility(View.GONE);
@@ -1064,6 +1070,20 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
             return convertView;
         }
 
+        private float getAccumulationRate(Integer user_class) {
+            switch (user_class) {
+                case UserFragment.BRONZE:
+                    return (float) 0.02;
+                case UserFragment.SILVER:
+                    return (float) 0.03;
+                case UserFragment.GOLD:
+                    return (float) 0.04;
+                case UserFragment.LOVE:
+                    return (float) 0.05;
+            }
+
+            return (float) 0.02;
+        }
         /* 이름으로 아이콘을 가져옵니다 */
         public int getDrawableByString(String name) {
             return getContext().getResources().getIdentifier("ic_order_" + name, "drawable", getContext().getPackageName());

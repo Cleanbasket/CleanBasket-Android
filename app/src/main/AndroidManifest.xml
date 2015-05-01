@@ -149,6 +149,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.washappkorea.corp.cleanbasket.ui.KakaoRegisterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.washappkorea.corp.cleanbasket.ui.KakaoRegisterActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <receiver android:name="com.washappkorea.corp.cleanbasket.gcm.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -165,5 +176,9 @@
         </receiver>
 
         <service android:name=".gcm.GCMIntentService" />
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
     </application>
 </manifest>
