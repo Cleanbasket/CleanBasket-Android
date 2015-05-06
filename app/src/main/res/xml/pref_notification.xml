@@ -5,10 +5,12 @@
     <SwitchPreference
         android:key="notification_switch_event"
         android:title="@string/event_notification"
-        android:defaultValue="true" />
+        android:defaultValue="true"
+        android:textSize="@dimen/setting_text_size" />
 
     <SwitchPreference
         android:key="notification_switch_order"
         android:title="@string/order_notification"
-        android:defaultValue="true" />
+        android:defaultValue="true"
+        android:textSize="@dimen/setting_text_size" />
 </PreferenceScreen>

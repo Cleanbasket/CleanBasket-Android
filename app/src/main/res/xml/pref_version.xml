@@ -5,14 +5,17 @@
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <Preference
         android:key="current_version"
-        android:title="@string/current_version" />
+        android:title="@string/current_version"
+        android:textSize="@dimen/setting_text_size" />
 
     <Preference
         android:key="latest_version"
-        android:title="@string/latest_version" />
+        android:title="@string/latest_version"
+        android:textSize="@dimen/setting_text_size" />
 
     <Preference
         android:key="update"
-        android:title="@string/update" />
+        android:title="@string/update"
+        android:textSize="@dimen/setting_text_size" />
 
 </PreferenceScreen>

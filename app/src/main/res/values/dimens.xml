@@ -19,6 +19,7 @@
     <!-- Text -->
     <dimen name="small_text">10dp</dimen>
     <dimen name="textview_dimen">3dp</dimen>
+    <dimen name="setting_text_size">11dp</dimen>
 
     <!-- Feedback -->
     <dimen name="feedback_box">80dp</dimen>
@@ -45,4 +46,5 @@
     <!-- Order Info -->
     <dimen name="dimen_status_bar">56dp</dimen>
     <dimen name="dimen_status_item">90dp</dimen>
+    <dimen name="dimen_status_menu">60dp</dimen>
 </resources>

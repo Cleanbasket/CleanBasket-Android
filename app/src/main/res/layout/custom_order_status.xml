@@ -191,7 +191,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:textStyle="bold"
-            android:background="@color/order_background" />
+            android:background="?attr/selectableItemBackgroundCompat" />
 
         <View
             android:id="@+id/line_top"
@@ -205,7 +205,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:textStyle="bold"
-            android:background="@color/order_background" />
+            android:background="?attr/selectableItemBackgroundCompat" />
 
         <View
             android:id="@+id/line_top"
@@ -219,7 +219,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/order_modify" android:textStyle="bold"
-            android:background="@color/order_background" />
+            android:background="?attr/selectableItemBackgroundCompat" />
 
         <View
             android:id="@+id/line_top"
@@ -233,7 +233,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/feedback_label" android:textStyle="bold"
-            android:background="@color/order_background" />
+            android:background="?attr/selectableItemBackgroundCompat" />
     </LinearLayout>
 
     <RelativeLayout

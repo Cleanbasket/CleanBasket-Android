@@ -4,6 +4,7 @@
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.CleanBasket</item>
         <item name="android:actionBarTabBarStyle">@style/ActionBarTabBarStyle.CleanBasket</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="selectableItemBackgroundCompat">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="ActionBarStyle.CleanBasket" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">

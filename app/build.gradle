@@ -5,7 +5,7 @@ android {
     buildToolsVersion "19.1.0"
 
     defaultConfig {
-        applicationId "com.washappkorea.corp.cleanbasket"
+        applicationId "com.bridge4biz.laundry"
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
@@ -40,4 +40,5 @@ dependencies {
     compile files('libs/ormlite-android-4.48.jar')
     compile files('libs/volley.jar')
     compile project(':libraries:Kakao')
+    compile files('libs/UrQA-Client_0.97.jar')
 }

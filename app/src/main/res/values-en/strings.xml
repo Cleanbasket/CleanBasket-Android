@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <string name="app_name">Clean Basket</string>
-    <string name="app_description">Premium Dry Cleaning, Laundry Delivery</string>
+    <string name="app_description">Premium Dry Cleaning &amp; Laundry Delivery</string>
 
     <!--  Strings related to login  -->
     <string name="prompt_email">Email</string>
@@ -13,6 +13,7 @@
     <string name="action_sign_in_email">Email Log In</string>
     <string name="action_sign_in_short">Log In</string>
     <string name="action_next">Next</string>
+    <string name="action_done">Done</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="find_password">Search password</string>
     <string name="all_agree">Select All</string>
@@ -36,7 +37,7 @@
     <string name="disable_error">Unauthorized user</string>
     <string name="account_duplication">Registered User</string>
     <string name="sign_up_success">Successfully Signed In</string>
-    <string name="register_inform">Register Now and Receive Mileage &amp; Coupon</string>
+    <string name="register_inform">Input additional Information\n and Receive Mileage &amp; Coupon</string>
     <string name="authorization_request">Request</string>
 
     <!--  related to order fragment  -->

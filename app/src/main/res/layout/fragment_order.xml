@@ -83,7 +83,7 @@
         android:layout_below="@+id/layout_header_view"
         android:background="@android:color/black" />
 
-    <com.washappkorea.corp.cleanbasket.ui.widget.OrderItemsView
+    <com.bridge4biz.laundry.ui.widget.OrderItemsView
         android:id="@+id/gridview_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -91,7 +91,8 @@
         android:layout_below="@+id/line_bottom"
         android:background="@color/gridview_background"
         android:verticalSpacing="10dp"
-        android:listSelector="@android:color/transparent" />
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never" />
 
     <RelativeLayout
         android:id="@+id/button_order"

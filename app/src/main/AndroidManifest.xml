@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.washappkorea.corp.cleanbasket">
+    package="com.bridge4biz.laundry">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -12,21 +12,21 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="com.washappkorea.corp.cleanbasket.permission.C2D_MESSAGE"
+    <permission android:name="com.bridge4biz.laundry.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.washappkorea.corp.cleanbasket.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.bridge4biz.laundry.permission.C2D_MESSAGE" />
 
     <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
     <application
-        android:name="com.washappkorea.corp.cleanbasket.CleanBasketApplication"
+        android:name="com.bridge4biz.laundry.CleanBasketApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.SplashActivity"
+            android:name="com.bridge4biz.laundry.ui.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
@@ -38,144 +38,144 @@
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.LoginActivity"
+            android:name="com.bridge4biz.laundry.ui.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.LoginActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.LoginActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.RegisterActivity"
+            android:name="com.bridge4biz.laundry.ui.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.RegisterActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.RegisterActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.PhoneActivity"
+            android:name="com.bridge4biz.laundry.ui.PhoneActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.PhoneActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.PhoneActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.MainActivity"
+            android:name="com.bridge4biz.laundry.ui.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.MainActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.MainActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.MapActivity"
+            android:name="com.bridge4biz.laundry.ui.MapActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.MapActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.MapActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.NoticeActivity"
+            android:name="com.bridge4biz.laundry.ui.NoticeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.NoticeActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.NoticeActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.SettingActivity"
+            android:name="com.bridge4biz.laundry.ui.SettingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.SettingActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.SettingActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.WebViewActivity"
+            android:name="com.bridge4biz.laundry.ui.WebViewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.WebViewActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.WebViewActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.DialogActivity"
+            android:name="com.bridge4biz.laundry.ui.DialogActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.DialogActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.DialogActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.FeedbackActivity"
+            android:name="com.bridge4biz.laundry.ui.FeedbackActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.FeedbackActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.FeedbackActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.washappkorea.corp.cleanbasket.ui.KakaoRegisterActivity"
+            android:name="com.bridge4biz.laundry.ui.KakaoRegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.washappkorea.corp.cleanbasket.ui.KakaoRegisterActivity" />
+                <action android:name="com.bridge4biz.laundry.ui.KakaoRegisterActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.washappkorea.corp.cleanbasket.gcm.AlarmReceiver">
+        <receiver android:name="com.bridge4biz.laundry.gcm.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <receiver
-            android:name=".gcm.GCMBroadcastReceiver"
+            android:name="com.bridge4biz.laundry.gcm.GCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.washappkorea.corp.cleanbasket.gcm" />
+                <category android:name="com.bridge4biz.laundry.gcm" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".gcm.GCMIntentService" />
+        <service android:name="com.bridge4biz.laundry.gcm.GCMIntentService" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

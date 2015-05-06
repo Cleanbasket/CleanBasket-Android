@@ -13,6 +13,7 @@
     <string name="action_sign_in_email">이메일 로그인</string>
     <string name="action_sign_in_short">로그인</string>
     <string name="action_next">다음</string>
+    <string name="action_done">완료</string>
     <string name="action_sign_up">가입</string>
     <string name="find_password">비밀번호 찾기</string>
     <string name="all_agree">전체 동의</string>
@@ -37,7 +38,7 @@
     <string name="disable_error">승인되지 않은 사용자입니다</string>
     <string name="account_duplication">이미 가입되어 있습니다</string>
     <string name="sign_up_success">가입에 성공했습니다</string>
-    <string name="register_inform">지금 가입하시면 마일리지 적립과 \n쿠폰 사용 혜택을 누리실 수 있습니다!</string>
+    <string name="register_inform">지금 추가 정보를 입력하시면 마일리지 적립과 \n쿠폰 사용 혜택을 누리실 수 있습니다!</string>
 
     <string name="authorization_request">요청</string>
 
@@ -310,5 +311,5 @@
     <string name="phone_duplication">이미 가입되어 있는 연락처입니다</string>
     <string name="mileage_info">100원 단위로 사용 가능합니다</string>
     <string name="mileage_accumulation">예상 적립 마일리지</string>
-    <string name="join_recommendation">추가 정보를 입력 시 마일리지 적립이 가능</string>
+    <string name="join_recommendation">추가 정보 입력 시 마일리지 적립 가능</string>
 </resources>

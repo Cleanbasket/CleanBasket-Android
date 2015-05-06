@@ -4,9 +4,11 @@
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <Preference
         android:key="change_password"
-        android:title="@string/pref_change_password" />
+        android:title="@string/pref_change_password"
+        android:textSize="@dimen/setting_text_size" />
 
     <Preference
         android:key="logout"
-        android:title="@string/logout" />
+        android:title="@string/logout"
+        android:textSize="@dimen/setting_text_size" />
 </PreferenceScreen>
