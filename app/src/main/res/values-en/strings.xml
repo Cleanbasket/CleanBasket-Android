@@ -12,7 +12,7 @@
     <string name="action_sign_in">Sign In</string>
     <string name="action_sign_in_email">Email Log In</string>
     <string name="action_sign_in_short">Log In</string>
-    <string name="action_next">Next</string>
+    <string name="action_next">Order Confirm</string>
     <string name="action_done">Done</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="find_password">Search password</string>
@@ -224,8 +224,8 @@
     <string name="current_password">Existing Password</string>
     <string name="new_password">New Password</string>
     <string name="new_password_repeat">Re-enter</string>
-    <string name="success_password_change">Password was succesfully changed</string>
-    <!-- TODO: string name="error_password_change" -->
+    <string name="success_password_change">Password was successfully changed</string>
+    <string name="error_password_change">Failed in changing Password</string>
 
     <!--  Example settings for Notifications  -->
     <string name="pref_header_notifications">Notification</string>
@@ -248,6 +248,7 @@
     <string name="find_password_success">Temporary password is issued to email address</string>
     <string name="pickup_date_change">Delivery date selected based on pick up date</string>
     <string name="order_modify_success">Order successful</string>
+    <string name="order_delete_success">Cancel Order successful</string>
     <string name="authorization_code_sent">Authorization code is issued</string>
     <string name="authorization_code_wrong">Authorization code is incorrect</string>
     <string name="authorization_member">Thank you. You are now a member of Clean Bakset</string>
@@ -270,6 +271,7 @@
     <string name="thanks_message">Thank you for using Clean Bakset</string>
     <string name="laundry_quality">Did you enjoy our service?</string>
     <string name="free_feedback">We would appreciate your feedback</string>
+    <string name="request_feedback">We would appreciate your feedback</string>
     <string name="late_feedback">Late\n delivery</string>
     <string name="laundry_feedback">Poor\n quality</string>
     <string name="kindness_feedback">Poor\n delivery</string>
@@ -306,4 +308,6 @@
     <string name="mileage_info">Available in 100 KRW</string>
     <string name="mileage_accumulation">Estimated mileage</string>
     <string name="join_recommendation">Get mileage sending more info</string>
+    <string name="password_digit_combination">Password must be combined with letters and numbers</string>
+    <string name="modify_message">Deliver time is changed</string>
 </resources>

@@ -9,7 +9,9 @@
         android:id="@+id/listview_notification"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/listview_background" />
+        android:background="@color/listview_background"
+        android:overScrollMode="never"
+        android:drawSelectorOnTop="true" />
 
     <TextView
         android:id="@+id/textview_no_item"

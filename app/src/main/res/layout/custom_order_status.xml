@@ -180,7 +180,6 @@
         android:orientation="vertical">
 
         <View
-            android:id="@+id/line_top"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slim_line"
             android:background="@color/grey_line_color" />
@@ -194,7 +193,6 @@
             android:background="?attr/selectableItemBackgroundCompat" />
 
         <View
-            android:id="@+id/line_top"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slim_line"
             android:background="@color/grey_line_color" />
@@ -208,7 +206,6 @@
             android:background="?attr/selectableItemBackgroundCompat" />
 
         <View
-            android:id="@+id/line_top"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slim_line"
             android:background="@color/grey_line_color" />
@@ -222,7 +219,7 @@
             android:background="?attr/selectableItemBackgroundCompat" />
 
         <View
-            android:id="@+id/line_top"
+            android:id="@+id/line_bottom"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slim_line"
             android:background="@color/grey_line_color" />

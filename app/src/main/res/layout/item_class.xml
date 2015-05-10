@@ -42,7 +42,7 @@
         <TextView
             style="@style/White.TextView.CleanBasket"
             android:id="@+id/textview_class_total"
-            android:layout_width="55dp"
+            android:layout_width="@dimen/class_total_info_dimen"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"

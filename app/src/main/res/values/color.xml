@@ -20,7 +20,11 @@
 
     <!-- related to item list fragment -->
     <color name="listview_item_background">#FFFFFF</color>
-    <color name="order_background_color">#ede9da</color>
+    <color name="order_background_color">#F9F9F9</color>
+
+    <!-- related to item list fragment -->
+    <color name="button_non_pressed_back">#FFFFFF</color>
+    <color name="button_pressed_back">#ede9da</color>
 
     <!-- general -->
     <color name="point_color">#82d9cf</color>

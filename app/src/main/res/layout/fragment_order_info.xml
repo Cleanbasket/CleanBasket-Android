@@ -22,7 +22,8 @@
         android:layout_above="@+id/button_order_finish"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        android:drawSelectorOnTop="true" />
 
     <Button
         android:id="@+id/button_order_finish"
@@ -31,5 +32,5 @@
         android:layout_alignParentBottom="true"
         android:text="@string/button_order"
         android:textStyle="bold"
-        android:background="@color/point_color" />
+        android:background="@drawable/point_button_background" />
 </RelativeLayout>

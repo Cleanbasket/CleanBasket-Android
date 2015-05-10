@@ -1,5 +1,5 @@
 #
-# generated on 2015/05/02 10:51:00
+# generated on 2015/05/08 03:53:06
 #
 # --table-start--
 dataClass=com.bridge4biz.laundry.io.model.AppInfo
@@ -11,6 +11,9 @@ id=true
 # --field-end--
 # --field-start--
 fieldName=order_item_ver
+# --field-end--
+# --field-start--
+fieldName=district_ver
 # --field-end--
 # --field-start--
 fieldName=android_app_ver
@@ -142,6 +145,26 @@ fieldName=content
 # --field-end--
 # --field-start--
 fieldName=rdate
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.bridge4biz.laundry.io.model.District
+tableName=district
+# --table-fields-start--
+# --field-start--
+fieldName=dcid
+id=true
+# --field-end--
+# --field-start--
+fieldName=city
+# --field-end--
+# --field-start--
+fieldName=district
+# --field-end--
+# --field-start--
+fieldName=dong
 # --field-end--
 # --table-fields-end--
 # --table-end--

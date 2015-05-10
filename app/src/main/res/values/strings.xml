@@ -12,7 +12,7 @@
     <string name="action_sign_in">로그인</string>
     <string name="action_sign_in_email">이메일 로그인</string>
     <string name="action_sign_in_short">로그인</string>
-    <string name="action_next">다음</string>
+    <string name="action_next">주문 확인</string>
     <string name="action_done">완료</string>
     <string name="action_sign_up">가입</string>
     <string name="find_password">비밀번호 찾기</string>
@@ -312,4 +312,6 @@
     <string name="mileage_info">100원 단위로 사용 가능합니다</string>
     <string name="mileage_accumulation">예상 적립 마일리지</string>
     <string name="join_recommendation">추가 정보 입력 시 마일리지 적립 가능</string>
+    <string name="password_digit_combination">비밀번호는 문자와 숫자가 조합되어야 합니다</string>
+    <string name="modify_message">배달 시간이 변경되었습니다</string>
 </resources>

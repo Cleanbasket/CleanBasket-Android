@@ -19,7 +19,7 @@
             android:padding="@dimen/icon_default_margin" />
 
         <Button android:id="@+id/button_accept"
-            style="@style/Black.Button.CleanBasket"
+            style="@style/White.Button.CleanBasket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
