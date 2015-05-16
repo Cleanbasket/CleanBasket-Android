@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -67,6 +69,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
     private RelativeLayout mOrderButton;
 
     private ImageView mImageViewSearchIcon;
+    private ImageView mUndoButton;
 
     private TextView mTextViewItemNumber;
     private TextView mTextViewItemTotal;
@@ -85,6 +88,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         mSearchView = (SearchView) rootView.findViewById(R.id.searchview_item);
         mImageViewSearchIcon = (ImageView) rootView.findViewById(R.id.search_icon);
         mOrderButton = (RelativeLayout) rootView.findViewById(R.id.button_order);
+        mUndoButton = (ImageView) rootView.findViewById(R.id.imageview_undo);
         mTextViewOrderButton = (TextView) rootView.findViewById(R.id.textview_order_button_label);
         mTextViewItemNumber = (TextView) rootView.findViewById(R.id.textview_item_number);
         mTextViewItemTotal = (TextView) rootView.findViewById(R.id.textview_item_total);
@@ -124,11 +128,21 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         mSearchView.setOnQueryTextListener(this);
         mImageViewSearchIcon.setOnClickListener(this);
         mOrderButton.setOnClickListener(this);
+        mUndoButton.setOnClickListener(this);
 
         getOrderItemAdapter().registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
+
+                if (getOrderItemAdapter().getSelectedItems().size() > 0) {
+                    if (mUndoButton.getVisibility() == View.GONE)
+                        popUndoButton(mUndoButton);
+                }
+                else {
+                    if (mUndoButton.getVisibility() == View.VISIBLE)
+                        hideUndoButton(mUndoButton);
+                }
 
                 updateOrderInfo();
             }
@@ -141,6 +155,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
     public void setOrderInfo(Order order) {
         isModifyOrder = true;
+
         mOrder = order;
         mOrderItem = order.item;
     }
@@ -311,6 +326,48 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         };
     }
 
+    private void popUndoButton(View v) {
+        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.undo_button_pop);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mUndoButton.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        v.startAnimation(animation);
+    }
+
+    private void hideUndoButton(View v) {
+        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.undo_button_hide);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mUndoButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        v.startAnimation(animation);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -331,6 +388,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                     popItemListDialog(getOrderItemAdapter().getSelectedItems(), MODIFY_ITEM_LIST_DIALOG_TAG);
                 else
                     popItemListDialog(getOrderItemAdapter().getSelectedItems(), ITEM_LIST_DIALOG_TAG);
+                break;
+
+            case R.id.imageview_undo:
+                getOrderItemAdapter().clearItems();
                 break;
         }
     }

@@ -57,6 +57,7 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         ((LoginActivity) getActivity()).session.getCurrentSession().open(AuthType.KAKAO_TALK, getActivity());
+                        getActivity().finish();
                     }
                 });
 

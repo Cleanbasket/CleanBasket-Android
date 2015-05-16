@@ -25,6 +25,7 @@
             android:textSize="12dp" android:textColor="@color/dialog_color" />
 
         <TextView
+            style="@style/Light.English.TextView.CleanBasket"
             android:id="@+id/textview_orderitem_price_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

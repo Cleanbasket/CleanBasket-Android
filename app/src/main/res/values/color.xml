@@ -17,6 +17,7 @@
     <color name="textview_order_button">#FFFFFF</color>
     <color name="order_button_background">#82d9cf</color>
     <color name="grey_line_color">#707070</color>
+    <color name="total_line_color">#F9F9F9</color>
 
     <!-- related to item list fragment -->
     <color name="listview_item_background">#FFFFFF</color>

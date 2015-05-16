@@ -33,7 +33,7 @@
     </style>
 
     <style name="Black.Button.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.Button">
-        <item name="android:background">@drawable/button_green</item>
+        <item name="android:background">@drawable/round_point_button_background</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/dialog_text</item>
         <item name="android:textSize">14dp</item>
@@ -43,7 +43,7 @@
         <item name="android:background">@null</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/dialog_text</item>
-        <item name="android:textCursorDrawable">@color/dialog_text</item>
+        <item name="android:textCursorDrawable">@null</item>
     </style>
 
     <style name="Grey.EditText.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.EditText">
@@ -51,7 +51,8 @@
         <item name="android:height">32dp</item>
         <item name="android:textSize">13dp</item>
         <item name="android:textColor">@color/info_text</item>
-        <item name="android:textCursorDrawable">@color/dialog_text</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="fontPath">fonts/NanumBarunGothicUltraLight.otf</item>
     </style>
 
     <style name="White.TextView.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.TextView">
@@ -64,8 +65,8 @@
         <item name="android:background">@null</item>
         <item name="android:layout_marginTop">29dp</item>
         <item name="android:textSize">21dp</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/dialog_text</item>
+        <item name="fontPath">fonts/NanumBarunGothicUltraLight.otf</item>
     </style>
 
     <style name="Black.TextView.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.TextView">
@@ -83,6 +84,20 @@
         <item name="android:textSize">17dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/info_text</item>
+    </style>
+
+    <style name="White.Big.TextView.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.TextView">
+        <item name="android:textSize">17dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/dialog_text</item>
+    </style>
+
+    <style name="Light.TextView.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.TextView">
+        <item name="fontPath">fonts/NanumBarunGothicUltraLight.otf</item>
+    </style>
+
+    <style name="Light.English.TextView.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.TextView">
+        <item name="fontPath">fonts/Roboto-Light.ttf</item>
     </style>
 
     <style name="RatringBar.CleanBasket" parent="@android:style/Widget.RatingBar">

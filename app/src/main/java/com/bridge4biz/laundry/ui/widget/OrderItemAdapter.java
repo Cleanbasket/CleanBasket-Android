@@ -3,11 +3,13 @@ package com.bridge4biz.laundry.ui.widget;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bridge4biz.laundry.CleanBasketApplication;
@@ -15,6 +17,10 @@ import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.model.OrderCategory;
 import com.bridge4biz.laundry.io.model.OrderItem;
 import com.bridge4biz.laundry.util.StringMatcher;
+import com.facebook.rebound.SimpleSpringListener;
+import com.facebook.rebound.Spring;
+import com.facebook.rebound.SpringSystem;
+import com.facebook.rebound.SpringUtil;
 import com.readystatesoftware.viewbadger.BadgeView;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleAdapter;
 
@@ -22,19 +28,26 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGridHeadersSimpleAdapter, View.OnClickListener {
+public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGridHeadersSimpleAdapter, View.OnTouchListener {
     private static final String TAG = OrderItemAdapter.class.getSimpleName();
 
     private LayoutInflater mLayoutInflater;
     private HashMap<Integer, OrderCategory> mOrderCategoryMap;
     private ArrayList<OrderItem> mFixedOrderItem;
     private DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
+    private final SpringListener mSpringListener = new SpringListener();
+    private View v;
+
+    private SpringSystem springSystem = SpringSystem.create();
+    private Spring spring = springSystem.createSpring();
 
     public OrderItemAdapter(Context context, int resource) {
         super(context, resource);
 
         this.mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mOrderCategoryMap = new HashMap<Integer, OrderCategory>();
+
+        spring.addListener(mSpringListener);
     }
 
     @Override
@@ -53,6 +66,14 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         return orderItems;
     }
 
+    public void clearItems() {
+        for (int i = 0; i < getCount(); i++) {
+            getItem(i).count = 0;
+        }
+
+        notifyDataSetChanged();
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -63,7 +84,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder = new OrderItemViewHolder();
             holder.linearLayoutOrderItem = (LinearLayout) convertView.findViewById(R.id.layout_orderitem);
             holder.orderImageView = (ImageView) convertView.findViewById(R.id.imageview_orderitem);
-            holder.extractImageView = (ImageView) convertView.findViewById(R.id.imageview_extractitem);
+            holder.extractImageView = (RelativeLayout) convertView.findViewById(R.id.imageview_extractitem);
             holder.textViewDiscountInfo = (TextView) convertView.findViewById(R.id.textview_discount_info);
             holder.textViewOrderItem = (TextView) convertView.findViewById(R.id.textview_orderitem);
             holder.textViewOrderItemPrice = (TextView) convertView.findViewById(R.id.textview_orderitem_price);
@@ -83,7 +104,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.badgeView.show();
             holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img + "_select"));
             holder.extractImageView.setVisibility(View.VISIBLE);
-            holder.extractImageView.setOnClickListener(this);
+            holder.extractImageView.setOnTouchListener(this);
             holder.extractImageView.setTag(getItem(position));
         }
         else {
@@ -93,7 +114,8 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.extractImageView.setOnClickListener(null);
         }
 
-        holder.linearLayoutOrderItem.setOnClickListener(this);
+//        holder.linearLayoutOrderItem.setOnClickListener(this);
+        holder.linearLayoutOrderItem.setOnTouchListener(this);
         holder.linearLayoutOrderItem.setTag(getItem(position));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
@@ -108,7 +130,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
     protected class OrderItemViewHolder {
         public LinearLayout linearLayoutOrderItem;
         public ImageView orderImageView;
-        public ImageView extractImageView;
+        public RelativeLayout extractImageView;
         public TextView textViewDiscountInfo;
         public TextView textViewOrderItem;
         public TextView textViewOrderItemPrice;
@@ -196,21 +218,38 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         };
     }
 
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_orderitem:
                 addOrderItem((OrderItem) v.getTag());
-//                ((OrderItem) v.getTag()).count++;
                 break;
 
             case R.id.imageview_extractitem:
                 extractOrderItem((OrderItem) v.getTag());
-//                ((OrderItem) v.getTag()).count--;
                 break;
         }
 
         notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        this.v = v;
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                // When pressed start solving the spring to 1.
+                spring.setEndValue(1);
+                onClick(v);
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                // When released start solving the spring to 0.
+                spring.setEndValue(0);
+                break;
+        }
+
+        return true;
     }
 
     private void addOrderItem(OrderItem orderItem) {
@@ -224,6 +263,24 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         for (int i = 0; i < getCount(); i++) {
             if(getItem(i).item_code == orderItem.item_code)
                 getItem(i).count--;
+        }
+    }
+
+    protected class SpringListener extends SimpleSpringListener {
+        @Override
+        public void onSpringUpdate(Spring spring) {
+            // On each update of the spring value, we adjust the scale of the image view to match the
+            // springs new value. We use the SpringUtil linear interpolation function mapValueFromRangeToRange
+            // to translate the spring's 0 to 1 scale to a 100% to 50% scale range and apply that to the View
+            // with setScaleX/Y. Note that rendering is an implementation detail of the application and not
+            // Rebound itself. If you need Gingerbread compatibility consider using NineOldAndroids to update
+            // your view properties in a backwards compatible manner.
+            float mappedValue = (float) SpringUtil.mapValueFromRangeToRange(spring.getCurrentValue(), 0, 1, 1, 0.5);
+
+            if (v != null) {
+                v.setScaleX(mappedValue);
+                v.setScaleY(mappedValue);
+            }
         }
     }
 }

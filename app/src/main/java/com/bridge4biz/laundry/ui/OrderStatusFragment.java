@@ -104,6 +104,8 @@ public class OrderStatusFragment extends Fragment {
                 }
 
                 previousChild = groupPosition;
+
+                mOrderStateListView.setSelection(groupPosition + 1);
             }
         });
     }
@@ -247,19 +249,19 @@ public class OrderStatusFragment extends Fragment {
             holder.textViewPickUpDateTime.setText(
                     DateTimeFactory.getInstance().getDate(getActivity(), getGroup(position).pickup_date) +
                     DateTimeFactory.getInstance().getNewLine() +
-                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).pickup_date));
+                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).pickup_date) + getString(R.string.time_tilde) +
+                    DateTimeFactory.getInstance().getPlusOneTime(getActivity(), getGroup(position).pickup_date));
             holder.textViewDropOffDateTime.setText(
                     DateTimeFactory.getInstance().getDate(getActivity(), getGroup(position).dropoff_date) +
                     DateTimeFactory.getInstance().getNewLine() +
-                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).dropoff_date));
+                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).dropoff_date) + getString(R.string.time_tilde) +
+                    DateTimeFactory.getInstance().getPlusOneTime(getActivity(), getGroup(position).dropoff_date));
             holder.textViewTotal.setText(
                     getString(R.string.label_total) + " " +
-                    getTotalFromOrder(position) +
-                    getString(R.string.monetary_unit));
+                            (getTotalFromOrder(position) + getGroup(position).dropoff_price - getGroup(position).mileage - getCouponTotal(getGroup(position))) + getString(R.string.monetary_unit));
             holder.textViewTotalNumber.setText(
                     getString(R.string.label_item) + " " +
-                    getTotalNumberFromOrder(position) +
-                    getString(R.string.item_unit));
+                            getTotalNumberFromOrder(position) + getString(R.string.item_unit));
 
             return convertView;
         }
@@ -287,9 +289,9 @@ public class OrderStatusFragment extends Fragment {
 
             int state = getGroup(position).state;
 
-            holder.buttonModifyOrder.setVisibility(View.GONE);
+            holder.buttonModifyOrder.setVisibility(View.INVISIBLE);
             holder.buttonFeedback.setVisibility(View.GONE);
-            holder.lineBottom.setVisibility(View.GONE);
+            holder.lineBottom.setVisibility(View.INVISIBLE);
 
             // state에 따라 컴포넌트를 출력합니다
             switch (state) {
@@ -332,11 +334,13 @@ public class OrderStatusFragment extends Fragment {
             holder.textViewPickUpDateTime.setText(
                     DateTimeFactory.getInstance().getDate(getActivity(), getGroup(position).pickup_date) +
                     DateTimeFactory.getInstance().getNewLine() +
-                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).pickup_date));
+                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).pickup_date) + getString(R.string.time_tilde) +
+                    DateTimeFactory.getInstance().getPlusOneTime(getActivity(), getGroup(position).pickup_date));
             holder.textViewDropOffDateTime.setText(
                     DateTimeFactory.getInstance().getDate(getActivity(), getGroup(position).dropoff_date) +
                     DateTimeFactory.getInstance().getNewLine() +
-                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).dropoff_date));
+                    DateTimeFactory.getInstance().getTime(getActivity(), getGroup(position).dropoff_date)+ getString(R.string.time_tilde) +
+                    DateTimeFactory.getInstance().getPlusOneTime(getActivity(), getGroup(position).dropoff_date));
             holder.buttonOrderItem.setText(
                     getString(R.string.label_item) + " " + getTotalNumberFromOrder(position) + getString(R.string.item_unit));
             holder.buttonOrderItem.setTag(getGroup(position));

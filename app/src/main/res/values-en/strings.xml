@@ -12,7 +12,7 @@
     <string name="action_sign_in">Sign In</string>
     <string name="action_sign_in_email">Email Log In</string>
     <string name="action_sign_in_short">Log In</string>
-    <string name="action_next">Order Confirm</string>
+    <string name="action_next">Next</string>
     <string name="action_done">Done</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="find_password">Search password</string>
@@ -94,7 +94,7 @@
     <string name="time_dropoff_inform_after">Select Drop Off Time</string>
     <string name="time_parse">HH:mm</string>
     <string name="date_parse">MM-dd(EEE)</string>
-    <string name="datetime_parse">yy.MM.dd(EEE)</string>
+    <string name="datetime_parse">MM.dd(EEE)</string>
     <string name="coupon_not_available">Use Coupon (Minimum Order of W10,000)</string>
 
     <!--  related to address info  -->
@@ -305,9 +305,10 @@
     <string name="time_confirmed">Order has been confirmed</string>
     <string name="email_duplication">Registered Email</string>
     <string name="phone_duplication">Registered Phone</string>
-    <string name="mileage_info">Available in 100 KRW</string>
+    <string name="mileage_info">Available in 1000 KRW</string>
     <string name="mileage_accumulation">Estimated mileage</string>
     <string name="join_recommendation">Get mileage sending more info</string>
     <string name="password_digit_combination">Password must be combined with letters and numbers</string>
     <string name="modify_message">Deliver time is changed</string>
+    <string name="dong">dong</string>
 </resources>

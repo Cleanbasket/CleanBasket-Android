@@ -25,6 +25,7 @@
         android:drawSelectorOnTop="true" />
 
     <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/textview_no_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

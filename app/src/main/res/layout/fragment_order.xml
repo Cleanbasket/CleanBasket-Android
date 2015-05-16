@@ -37,11 +37,13 @@
                 android:src="@drawable/ic_menu_itembox" />
 
             <TextView
+                style="@style/Light.TextView.CleanBasket"
                 android:id="@+id/textview_item_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/imageview_basket"
                 android:layout_centerVertical="true"
+                android:textSize="13dp"
                 android:layout_marginLeft="@dimen/status_view_margin" />
 
             <TextView
@@ -50,7 +52,9 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/textview_item_number"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/status_view_margin" />
+                android:layout_marginLeft="@dimen/status_view_margin"
+                android:textSize="12dp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <SearchView
@@ -94,16 +98,26 @@
         android:listSelector="@android:color/transparent"
         android:overScrollMode="never" />
 
+    <ImageView
+        android:id="@+id/imageview_undo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/button_order"
+        android:padding="10dp"
+        android:src="@drawable/ic_undo"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/button_order"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/point_button_background">
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true">
 
             <ImageView

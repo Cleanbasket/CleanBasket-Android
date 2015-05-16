@@ -6,6 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight">
 
+    <View
+        android:id="@+id/line_top"
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:background="@color/total_line_color" />
+
     <ImageView
         android:id="@+id/imageview_calculation_info"
         android:layout_width="@dimen/default_icon"
@@ -30,6 +36,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            style="@style/Light.TextView.CleanBasket"
             android:id="@+id/textview_calculation_label_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,21 +46,24 @@
     </LinearLayout>
 
     <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/textview_calculation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textSize="12dp"
+        android:textSize="@dimen/textview_small_dimen"
         android:layout_marginRight="20dp"
         android:layout_alignParentRight="true" />
 
-    <Button
+    <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/button_use"
-        android:layout_width="wrap_content"
+        android:layout_width="65dp"
         android:layout_height="32dp"
         android:layout_gravity="center_vertical"
         android:text="@string/button_label_use"
-        android:textSize="12dp"
+        android:textSize="@dimen/textview_small_dimen"
+        android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"

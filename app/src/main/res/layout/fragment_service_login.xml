@@ -18,6 +18,7 @@
         android:src="@drawable/login_background_03" /> -->
 
     <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/textview_map_login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

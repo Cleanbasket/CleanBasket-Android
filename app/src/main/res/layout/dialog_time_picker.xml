@@ -7,14 +7,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context=".TimePickerDialog">
+    tools:ignore="MissingPrefix">
 
     <TextView
         style="@style/White.Dialog.Title.TextView.CleanBasket"
         android:id="@+id/textview_time_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center" />
+        android:gravity="center"
+        fontPath="fonts/NanumBarunGothicUltraLight.otf" />
 
     <GridView
         android:id="@+id/gridview_time_picker"
@@ -31,7 +32,8 @@
         android:layout_marginBottom="10dp"
         android:textColor="@color/dialog_text"
         android:textSize="21dp"
-        android:gravity="center" />
+        android:gravity="center"
+        fontPath="fonts/NanumBarunGothicUltraLight.otf" />
 
     <LinearLayout
         android:layout_width="236dp"

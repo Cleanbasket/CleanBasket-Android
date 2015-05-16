@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/point_color"
-    tools:context=".SplashActivity">
+    tools:ignore="MissingPrefix">
 
     <ImageView
         android:id="@+id/imageview_logo"
@@ -23,7 +23,8 @@
         android:layout_below="@+id/imageview_logo"
         android:layout_centerHorizontal="true"
         android:text="@string/app_description"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        fontPath="fonts/NanumBarunGothicUltraLight.otf" />
 
     <TextView
         android:layout_width="wrap_content"

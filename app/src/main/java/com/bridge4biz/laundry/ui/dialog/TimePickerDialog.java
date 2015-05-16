@@ -195,7 +195,7 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
             firstHour++;
 
         // 8시 이전은 무조건 10:00
-        if (mInitialHourOfDay < 8)
+        if (mInitialHourOfDay < 10)
             firstHour = 10;
 
         return firstHour;
@@ -211,7 +211,7 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
             firstMinute = 30;
 
         // 8시 이전은 무조건 10:00
-        if (mInitialHourOfDay < 8)
+        if (mInitialHourOfDay < 10)
             firstMinute = 0;
 
         return firstMinute;

@@ -148,7 +148,7 @@ public class MileageDialog extends DialogFragment {
             cancel = true;
         }
 
-        if (mileage % 100 > 0) {
+        if (mileage % 1000 > 0) {
             mEditTextMileage.setError(getString(R.string.mileage_info));
             focusView = mEditTextMileage;
             cancel = true;

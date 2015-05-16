@@ -30,6 +30,7 @@
                 android:textColor="@color/dialog_text" />
 
             <TextView
+                style="@style/Light.TextView.CleanBasket"
                 android:id="@+id/textview_coupon_validate_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

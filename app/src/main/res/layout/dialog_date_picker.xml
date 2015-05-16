@@ -7,14 +7,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context=".DatePickerDialog">
+    tools:ignore="MissingPrefix">
 
     <TextView
         style="@style/White.Dialog.Title.TextView.CleanBasket"
         android:id="@+id/textview_time_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center" />
+        android:gravity="center"
+        fontPath="fonts/NanumBarunGothicUltraLight.otf" />
 
     <com.squareup.timessquare.CalendarPickerView
         android:id="@+id/calendar_view"

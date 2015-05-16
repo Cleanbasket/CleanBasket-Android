@@ -2,8 +2,10 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix">
 
     <LinearLayout
         android:id="@+id/layout_orderitem"
@@ -23,15 +25,21 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true" />
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/imageview_extractitem"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="12dp"
-                android:src="@drawable/ic_extract" />
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="12dp"
+                    android:src="@drawable/ic_extract" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <TextView
@@ -49,7 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
-            android:textSize="11dp" />
+            android:textSize="11dp"
+            fontPath="fonts/Roboto-Light.ttf" />
     </LinearLayout>
 
     <TextView

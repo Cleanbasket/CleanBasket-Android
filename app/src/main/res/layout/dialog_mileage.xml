@@ -23,7 +23,7 @@
         android:orientation="vertical">
 
         <TextView
-            style="@style/White.TextView.CleanBasket"
+            style="@style/White.Dialog.Title.TextView.CleanBasket"
             android:id="@+id/textview_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,6 +43,7 @@
             android:textColor="@color/dialog_text" />
 
         <TextView
+            style="@style/Light.TextView.CleanBasket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

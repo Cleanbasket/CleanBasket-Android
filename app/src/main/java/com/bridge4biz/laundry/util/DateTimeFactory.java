@@ -9,6 +9,7 @@ import org.ocpsoft.prettytime.PrettyTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -116,6 +117,32 @@ public class DateTimeFactory {
         SimpleDateFormat transFormat = new SimpleDateFormat(context.getString(R.string.time_parse));
 
         return transFormat.format(date);
+    }
+
+    /**
+     * @brief 날짜와 시간 생성 함수
+     * @details 서버에서 받아온 스트링 형식의 날짜, 시간 값을 가공해 String으로 리턴합니다.
+     */
+    public String getPlusOneTime(Context context, String datetime) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date date = null;
+
+        try {
+            date = simpleDateFormat.parse(datetime);
+        } catch (ParseException e) {
+            Log.d("Error", e.getMessage().toString());
+        } catch (NullPointerException e) {
+            Log.d("Error", e.getMessage().toString());
+        }
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.HOUR_OF_DAY, 1);
+
+        SimpleDateFormat transFormat = new SimpleDateFormat(context.getString(R.string.time_parse));
+
+        return transFormat.format(c.getTime());
     }
 
     /**

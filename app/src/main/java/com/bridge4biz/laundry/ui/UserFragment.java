@@ -40,6 +40,7 @@ import com.bridge4biz.laundry.ui.dialog.ClassDialog;
 import com.bridge4biz.laundry.ui.dialog.CouponDialog;
 import com.bridge4biz.laundry.util.AddressManager;
 import com.bridge4biz.laundry.util.Constants;
+import com.bridge4biz.laundry.util.InputValidationChecker;
 import com.bridge4biz.laundry.util.UserEmailFetcher;
 import com.google.gson.JsonSyntaxException;
 
@@ -108,6 +109,10 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setListView();
+    }
+
+    private void setListView() {
         ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
         menuItems.add(new MenuItem(getString(R.string.coupon), "coupon_info"));
         menuItems.add(new MenuItem(getString(R.string.notification), "notification"));
@@ -184,13 +189,18 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             mUserClassInfo.setText(getClassDetail(authUser.user_class));
             mButtonClassInfo.setOnClickListener(this);
 
-            if (mRegisterView != null)
-                mListView.removeHeaderView(mRegisterView);
+            mListView.setAdapter(null);
             mListView.addHeaderView(mUserInfoView);
+            setListView();
         }
 
-        if (mUserClassMileage != null)
-            mUserClassMileage.setText(getString(R.string.mileage_available) + " "  + authUser.mileage);
+        if (mUserClassMileage != null) {
+            mUserClassMileage.setText(getString(R.string.mileage_available) + " " + authUser.mileage);
+            mImageViewUserClass.setImageResource(getDrawableByClass(authUser.user_class));
+            mUserName.setText(authUser.email);
+            mUserClass.setText(getClassName(authUser.user_class));
+            mUserClassInfo.setText(getClassDetail(authUser.user_class));
+        }
     }
 
     private int getDrawableByClass(Integer user_class) {
@@ -230,7 +240,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             case SILVER:
                 return getString(R.string.silver_info);
             case GOLD:
-                return getString(R.string.bronze_info);
+                return getString(R.string.gold_info);
             case LOVE:
                 return getString(R.string.love_info);
         }
@@ -340,7 +350,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             mEditTextEmail.setError(getString(R.string.error_field_required));
             focusView = mEditTextEmail;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!InputValidationChecker.getInstance(getActivity()).isEmailValid(email)) {
             mEditTextEmail.setError(getString(R.string.error_invalid_email));
             focusView = mEditTextEmail;
             cancel = true;
@@ -438,13 +448,6 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             }
         });
         RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest());
-    }
-
-    private boolean isEmailValid(String email) {
-        Pattern pattern = Pattern.compile("\\w+[@]\\w+\\.\\w+");
-        Matcher match = pattern.matcher(email);
-
-        return match.find();
     }
 
     private void requestAuthorizationCode() {

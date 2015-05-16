@@ -13,8 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/item_default_margin"
-        android:src="@drawable/ic_sale" />
+        android:layout_marginLeft="@dimen/item_default_margin" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -30,10 +29,11 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            style="@style/Light.TextView.CleanBasket"
             android:id="@+id/textview_notification_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/icon_default_margin"
+            android:layout_marginTop="5dp"
             android:textSize="10dp" />
     </LinearLayout>
 

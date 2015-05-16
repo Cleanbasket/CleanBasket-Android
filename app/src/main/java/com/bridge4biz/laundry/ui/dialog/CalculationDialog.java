@@ -4,7 +4,6 @@ package com.bridge4biz.laundry.ui.dialog;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -15,11 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,13 +26,14 @@ import com.bridge4biz.laundry.io.model.Coupon;
 import com.bridge4biz.laundry.io.model.Order;
 import com.bridge4biz.laundry.io.model.OrderItem;
 import com.bridge4biz.laundry.io.request.PostRequest;
+import com.bridge4biz.laundry.ui.widget.CalculationInfo;
+import com.bridge4biz.laundry.ui.widget.CalculationInfoAdapter;
 import com.bridge4biz.laundry.util.AddressManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CalculationDialog extends DialogFragment implements View.OnClickListener, Response.Listener, Response.ErrorListener {
     private static final String TAG = CalculationDialog.class.getSimpleName();
@@ -105,7 +102,7 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
             calculationInfos.add(new CalculationInfo("mileage", getString(R.string.mileage), mOrder.mileage, CalculationInfo.MILEAGE));
         if (getCouponTotal() > 0)
             calculationInfos.add(new CalculationInfo("coupon", getString(R.string.coupon), getCouponTotal(), CalculationInfo.COUPON));
-        mCalculationInfoAdapter = new CalculationInfoAdapter(getActivity(), R.layout.item_calculation_info, calculationInfos);
+        mCalculationInfoAdapter = new CalculationInfoAdapter(getActivity(), R.layout.item_dialog_calculation_info, calculationInfos);
         mCalculationInfoAdapter.add(new CalculationInfo(null, getString(R.string.label_total), getOrderPreTotal() + mCalculationInfoAdapter.getTotal(), CalculationInfo.TOTAL));
 
         mCalculationListView.setAdapter(mCalculationInfoAdapter);
@@ -206,116 +203,6 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
         }
 
         return total;
-    }
-
-    protected class CalculationInfo {
-        public static final int PRE_TOTAL = 0;
-        public static final int COST = 1;
-        public static final int SALE = 2;
-        public static final int MILEAGE = 3;
-        public static final int COUPON = 4;
-        public static final int TOTAL = 5;
-
-        String image;
-        String name;
-        int price;
-        int type;
-
-        public CalculationInfo(String image, String name, int price, int type) {
-            this.image = image;
-            this.name = name;
-            this.price = price;
-            this.type = type;
-        }
-    }
-
-    protected class CalculationInfoAdapter extends ArrayAdapter<CalculationInfo> {
-        private LayoutInflater mLayoutInflater;
-
-        public CalculationInfoAdapter(Context context, int resource, List<CalculationInfo> objects) {
-            super(context, resource, objects);
-
-            this.mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            CalculationInfoHolder holder;
-
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.item_calculation_info, parent, false);
-                holder = new CalculationInfoHolder();
-                holder.imageViewCalculationInfo = (ImageView) convertView.findViewById(R.id.imageview_calculation_info);
-                holder.textViewCalculationInfo = (TextView) convertView.findViewById(R.id.textview_calculation_label);
-                holder.textViewCalculationInfoDetail = (TextView) convertView.findViewById(R.id.textview_calculation_label_detail);
-                holder.textViewCalculation = (TextView) convertView.findViewById(R.id.textview_calculation);
-                holder.buttonUse = (Button) convertView.findViewById(R.id.button_use);
-                convertView.setTag(holder);
-            } else
-                holder = (CalculationInfoHolder) convertView.getTag();
-
-            switch (getItem(position).type) {
-                case CalculationInfo.PRE_TOTAL:
-                case CalculationInfo.COST:
-                case CalculationInfo.SALE:
-                case CalculationInfo.TOTAL:
-                    holder.textViewCalculation.setVisibility(View.VISIBLE);
-                    holder.textViewCalculationInfoDetail.setVisibility(View.GONE);
-                    holder.buttonUse.setVisibility(View.GONE);
-                    break;
-
-                case CalculationInfo.MILEAGE:
-                case CalculationInfo.COUPON:
-                    holder.textViewCalculation.setVisibility(View.VISIBLE);
-                    holder.textViewCalculationInfoDetail.setVisibility(View.GONE);
-                    holder.buttonUse.setVisibility(View.GONE);
-                    holder.textViewCalculation.setText(getItem(position).price + getString(R.string.monetary_unit));
-            }
-
-            if (getItem(position).image != null)
-                holder.imageViewCalculationInfo.setImageResource(getDrawableByString(getItem(position).image));
-            else
-                holder.imageViewCalculationInfo.setImageResource(0);
-            holder.textViewCalculationInfo.setTextColor(getResources().getColor(R.color.dialog_text));
-            holder.textViewCalculationInfo.setText(getItem(position).name);
-            holder.textViewCalculation.setTextColor(getResources().getColor(R.color.dialog_text));
-            holder.textViewCalculation.setText(getItem(position).price + getString(R.string.monetary_unit));
-
-            return convertView;
-        }
-
-        public int getTotal() {
-            int total = 0;
-
-            for (int i = 0; i < getCount(); i++) {
-                switch (getItem(i).type) {
-                    case CalculationInfo.COST:
-                        total = total + getItem(i).price;
-                        break;
-
-                    case CalculationInfo.SALE:
-                    case CalculationInfo.MILEAGE:
-                    case CalculationInfo.COUPON:
-                        total = total - getItem(i).price;
-                        break;
-                }
-            }
-
-            return total;
-        }
-
-        protected class CalculationInfoHolder {
-            public ImageView imageViewCalculationInfo;
-            public TextView textViewCalculationInfo;
-            public TextView textViewCalculationInfoDetail;
-            public TextView textViewCalculation;
-            public Button buttonUse;
-        }
-
-        /* 이름으로 아이콘을 가져옵니다 */
-        public int getDrawableByString(String name) {
-            return getContext().getResources().getIdentifier("ic_order_" + name, "drawable", getContext().getPackageName());
-        }
     }
 
     /**

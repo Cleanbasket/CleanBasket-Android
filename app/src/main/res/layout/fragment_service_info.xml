@@ -18,6 +18,7 @@
         android:src="@drawable/login_background_03" /> -->
 
     <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/textview_service_info_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,6 +41,7 @@
         android:src="@drawable/ic_service_introduce_01mobile" />
 
     <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/textview_easy_info"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
@@ -47,6 +49,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageview_easy_info"
         android:text="@string/notice_service_info_mobile"
+        android:textSize="15dp"
         android:textColor="@color/splash_text" />
 
     <ImageView
@@ -59,6 +62,7 @@
         android:src="@drawable/ic_service_introduce_02cleaning" />
 
     <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/textview_easy_cleaning"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
@@ -66,6 +70,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageview_easy_cleaning"
         android:text="@string/notice_service_info_cleaning"
+        android:textSize="15dp"
         android:textColor="@color/splash_text" />
 
     <ImageView
@@ -78,6 +83,7 @@
         android:src="@drawable/ic_service_introduce_03price" />
 
     <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/textview_easy_price"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
@@ -85,6 +91,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageview_easy_price"
         android:text="@string/notice_service_info_price"
+        android:textSize="15dp"
         android:textColor="@color/splash_text" />
 
     <ImageView
@@ -97,6 +104,7 @@
         android:src="@drawable/ic_service_introduce_04time" />
 
     <TextView
+        style="@style/Light.TextView.CleanBasket"
         android:id="@+id/textview_easy_time"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
@@ -104,5 +112,6 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageview_easy_time"
         android:text="@string/notice_service_info_time"
+        android:textSize="15dp"
         android:textColor="@color/splash_text" />
 </RelativeLayout>

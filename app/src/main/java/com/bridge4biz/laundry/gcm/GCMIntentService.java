@@ -180,8 +180,8 @@ public class GCMIntentService extends IntentService {
         intent.setAction("com.bridge4biz.laundry.ui.NoticeActivity");
         intent.getIntExtra("value", notification.value);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, notification.type,
-                intent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, Notification.EVENT_ALARM,
+                intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -200,8 +200,8 @@ public class GCMIntentService extends IntentService {
      * 이벤트 그림 알림
      */
     protected void sendEventNotificationWithImage(Notification notification, Bitmap image) {
-        PendingIntent contentIntent = PendingIntent.getActivity(this, notification.type,
-                new Intent(this, NoticeActivity.class), 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, Notification.EVENT_ALARM,
+                new Intent(this, NoticeActivity.class), PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -227,7 +227,7 @@ public class GCMIntentService extends IntentService {
         intent.putExtra("tag", DialogActivity.MESSAGE_DIALOG);
         intent.putExtra("message", msg);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 1, intent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, Notification.MESSAGE_ALARM, intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -258,11 +258,11 @@ public class GCMIntentService extends IntentService {
 
         Log.i(TAG, "intent : " + notification.oid);
 
-        PendingIntent contentPIntent = PendingIntent.getActivity(this, 2,
-                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent contentPIntent = PendingIntent.getActivity(this, Notification.PICKUP_ALARM,
+                intent, PendingIntent.FLAG_ONE_SHOT);
 
-        PendingIntent confirmPIntent = PendingIntent.getActivity(this, 2,
-                confirmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent confirmPIntent = PendingIntent.getActivity(this, Notification.PICKUP_ALARM,
+                confirmIntent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -284,8 +284,8 @@ public class GCMIntentService extends IntentService {
      * @param msg 액수
      */
     private void sendCouponNotification(String msg) {
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 4,
-                new Intent(this, CouponDialog.class), 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, Notification.COUPON_ALARM,
+                new Intent(this, CouponDialog.class), PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -300,17 +300,15 @@ public class GCMIntentService extends IntentService {
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
-    /**
-     * 쿠폰 발행 시 전송되는 노티피케이션
-     * @param notification 액수
-     */
     private void sendFeedbackNotification(Notification notification) {
         Intent intent = new Intent();
         intent.setAction("com.bridge4biz.laundry.ui.FeedbackActivity");
         intent.putExtra("oid", notification.oid);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, notification.type,
-                intent, 0);
+        Log.i(TAG, notification.oid + "");
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, Notification.FEEDBACK_ALARM,
+                intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -331,10 +329,8 @@ public class GCMIntentService extends IntentService {
         intent.putExtra("tag", DialogActivity.MODIFY_TIME_DIALOG);
         intent.putExtra("oid", notification.oid);
 
-        Log.i(TAG, "intent : " + notification.oid);
-
-        PendingIntent contentPIntent = PendingIntent.getActivity(this, 2,
-                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent contentPIntent = PendingIntent.getActivity(this, Notification.MODIFY_ALARM,
+                intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

@@ -22,7 +22,7 @@
         android:layout_gravity="center_horizontal" >
 
         <TextView
-            style="@style/White.TextView.CleanBasket"
+            style="@style/White.Dialog.Title.TextView.CleanBasket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="29dp"

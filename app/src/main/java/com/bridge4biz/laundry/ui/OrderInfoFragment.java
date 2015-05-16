@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,22 +31,25 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bridge4biz.laundry.CleanBasketApplication;
-import com.bridge4biz.laundry.Config;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.RequestQueue;
 import com.bridge4biz.laundry.io.model.Address;
-import com.bridge4biz.laundry.io.model.AuthUser;
 import com.bridge4biz.laundry.io.model.Coupon;
 import com.bridge4biz.laundry.io.model.JsonData;
 import com.bridge4biz.laundry.io.model.Order;
 import com.bridge4biz.laundry.io.model.OrderItem;
+import com.bridge4biz.laundry.io.model.map.GeocodeResponse;
 import com.bridge4biz.laundry.io.request.PostRequest;
+import com.bridge4biz.laundry.search.AddressSearcher;
+import com.bridge4biz.laundry.search.OnFinishAddrSearchListener;
 import com.bridge4biz.laundry.ui.dialog.ConfirmDialog;
 import com.bridge4biz.laundry.ui.dialog.CouponDialog;
 import com.bridge4biz.laundry.ui.dialog.DatePickerDialog;
 import com.bridge4biz.laundry.ui.dialog.ItemListDialog;
 import com.bridge4biz.laundry.ui.dialog.MileageDialog;
 import com.bridge4biz.laundry.ui.dialog.TimePickerDialog;
+import com.bridge4biz.laundry.ui.widget.CalculationInfo;
+import com.bridge4biz.laundry.ui.widget.CalculationInfoAdapter;
 import com.bridge4biz.laundry.util.AddressManager;
 import com.bridge4biz.laundry.util.AlarmManager;
 import com.bridge4biz.laundry.util.Constants;
@@ -55,9 +57,6 @@ import com.bridge4biz.laundry.util.DateTimeFactory;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-
-import net.daum.mf.map.api.MapPoint;
-import net.daum.mf.map.api.MapReverseGeoCoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,9 +66,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 
-public class OrderInfoFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, MileageDialog.OnDialogDismissListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, Response.Listener<JSONObject>, Response.ErrorListener, EditText.OnEditorActionListener, AdapterView.OnItemClickListener {
+public class OrderInfoFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, MileageDialog.OnDialogDismissListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, Response.Listener<JSONObject>, Response.ErrorListener, EditText.OnEditorActionListener, AdapterView.OnItemClickListener, MileageDialog.OnMileageSetListener, CouponDialog.OnCouponSetListener, OnFinishAddrSearchListener {
     public static final String TAG = OrderInfoFragment.class.getSimpleName();
     public static final String TAG_MODIFY = OrderInfoFragment.class.getSimpleName() + "_MODIFY";
     public static final String TIME_PICKER_TAG = "TIME_PICKER";
@@ -129,7 +127,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     private CalculationInfoAdapter mCalculationInfoAdapter;
 
     private Boolean mAddressFlag;
-    private AuthUser mAuthUser;
 
     private Order mOrder;
     private Integer mPaymentMethod = 0;
@@ -234,7 +231,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         calculationInfos.add(new CalculationInfo("mileage", getString(R.string.mileage), 0, CalculationInfo.MILEAGE));
         calculationInfos.add(new CalculationInfo("coupon", getString(R.string.coupon), 0, CalculationInfo.COUPON));
 
-        mCalculationInfoAdapter = new CalculationInfoAdapter(getActivity(), R.id.layout_calculation_info, calculationInfos);
+        mCalculationInfoAdapter = new CalculationInfoAdapter(getActivity(), R.layout.item_calculation_info, calculationInfos);
         mCalculationInfoListView.setAdapter(mCalculationInfoAdapter);
         mCalculationInfoListView.setOnItemClickListener(this);
         mCalculationInfoListView.addHeaderView(mHeader);
@@ -590,6 +587,16 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         timePickerDialog.dismiss();
     }
 
+    private void showMileageDialog() {
+        MileageDialog md = MileageDialog.newInstance(this);
+        md.show(getActivity().getSupportFragmentManager(), MILEAGE_DIALOG_TAG);
+    }
+
+    private void showCouponDialog() {
+        CouponDialog cd = CouponDialog.newInstance(this);
+        cd.show(getActivity().getSupportFragmentManager(), COUPON_DIALOG_TAG);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
@@ -597,7 +604,64 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 ArrayList<OrderItem> mOrderItems = getOrderFragment().getOrderItemAdapter().getSelectedItems();
                 popItemListDialog(mOrderItems);
                 break;
+
+            case 2:
+                if (mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.COST) == null)
+                    showMileageDialog();
+                break;
+
+            case 3:
+                if (mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.COST) == null)
+                    showCouponDialog();
+                else
+                    showMileageDialog();
+                break;
+
+            case 4:
+                if (mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.COST) != null)
+                    showCouponDialog();
+                break;
         }
+
+        Log.i(TAG, id + "");
+    }
+
+    @Override
+    public void onCouponSet(CouponDialog dialog, Coupon coupon) {
+        CalculationInfo calculationInfo = mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.COUPON);
+
+        if (coupon == null) {
+            calculationInfo.name = getString(R.string.coupon);
+            calculationInfo.price = 0;
+        }
+        else if (MINIMUM_ORDER > getOrderFragment().getOrderItemAdapter().getItemTotal()) {
+            calculationInfo.name = getString(R.string.coupon);
+            calculationInfo.price = 0;
+
+            CleanBasketApplication.getInstance().showToast(getString(R.string.coupon_not_available));
+        }
+        else {
+            calculationInfo.name = coupon.name;
+            calculationInfo.price = coupon.value;
+        }
+
+        mCoupon = coupon;
+
+        mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL).price = mTotal + mCalculationInfoAdapter.getTotal();
+
+        mCalculationInfoAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void onMileageSet(MileageDialog dialog, int mileage) {
+        CalculationInfo calculationInfo = mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.MILEAGE);
+
+        calculationInfo.price = mileage;
+
+        mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL).price = mTotal + mCalculationInfoAdapter.getTotal();
+
+        mCalculationInfoAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -881,20 +945,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     }
 
     /**
-     * ReverseGeoCodingResultListener
-     * 구글 기본 Api로 좌표를 받아 Daum Map Geocoder를 위치를 가져옵니다.
-     */
-    @Override
-    public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
-        mEditTextAddress.setText(s);
-    }
-
-    @Override
-    public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) {
-
-    }
-
-    /**
      * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.
      */
     protected synchronized void buildGoogleApiClient() {
@@ -916,7 +966,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     public void onResume() {
         super.onResume();
         setCalculationInfo();
-        mAuthUser = ((MainActivity) getActivity()).mAuthUser;
+        mCalculationInfoAdapter.mAuthUser = ((MainActivity) getActivity()).mAuthUser;
         mCalculationInfoAdapter.notifyDataSetChanged();
     }
 
@@ -931,10 +981,28 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     public void onConnected(Bundle connectionHint) {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
-            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            MapReverseGeoCoder reverseGeoCoder = new MapReverseGeoCoder(Config.DAUM_MAP_LOCAL_API, mapPoint, this, getActivity());
-            reverseGeoCoder.startFindingAddress();
+            AddressSearcher addressSearcher = new AddressSearcher();
+            addressSearcher.searchAddr(getActivity(), mLastLocation.getLatitude(), mLastLocation.getLongitude(), this);
         }
+    }
+
+    @Override
+    public void onSuccess(GeocodeResponse geocodeResponse) {
+        String address = "";
+
+        if (geocodeResponse.getResults().size() == 0)
+            return;
+        else {
+            address = geocodeResponse.getResults().get(0).getFormatted_address();
+        }
+
+        String[] fullAddress = address.split(" ");
+        mEditTextAddress.setText(fullAddress[1] + " " + fullAddress[2] + " " + fullAddress[3]);
+    }
+
+    @Override
+    public void onFail() {
+
     }
 
     @Override
@@ -954,6 +1022,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
     public void setCalculationInfo() {
         mTotal = getOrderFragment().getOrderItemAdapter().getItemTotal();
+        mCalculationInfoAdapter.mTotal = mTotal;
         int totalItemNumber = getOrderFragment().getOrderItemAdapter().getItemNumber();
 
 //        mButtonGrossTotal.setOnClickListener(this);
@@ -993,211 +1062,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 return lhs.type - rhs.type;
             }
         });
-    }
-
-    protected class CalculationInfo {
-        public static final int PRE_TOTAL = 0;
-        public static final int COST = 1;
-        public static final int SALE = 2;
-        public static final int MILEAGE = 3;
-        public static final int COUPON = 4;
-        public static final int TOTAL = 5;
-
-        String image;
-        String name;
-        int price;
-        int type;
-
-        public CalculationInfo(String image, String name, int price, int type) {
-            this.image = image;
-            this.name = name;
-            this.price = price;
-            this.type = type;
-        }
-    }
-
-    protected class CalculationInfoAdapter extends ArrayAdapter<CalculationInfo> implements View.OnClickListener, MileageDialog.OnMileageSetListener, CouponDialog.OnCouponSetListener {
-        private LayoutInflater mLayoutInflater;
-
-        public CalculationInfoAdapter(Context context, int resource, List<CalculationInfo> objects) {
-            super(context, resource, objects);
-
-            this.mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            CalculationInfoHolder holder;
-
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.item_calculation_info, parent, false);
-                holder = new CalculationInfoHolder();
-                holder.imageViewCalculationInfo = (ImageView) convertView.findViewById(R.id.imageview_calculation_info);
-                holder.textViewCalculationInfo = (TextView) convertView.findViewById(R.id.textview_calculation_label);
-                holder.textViewCalculationInfoDetail = (TextView) convertView.findViewById(R.id.textview_calculation_label_detail);
-                holder.textViewCalculation = (TextView) convertView.findViewById(R.id.textview_calculation);
-                holder.buttonUse = (Button) convertView.findViewById(R.id.button_use);
-                convertView.setTag(holder);
-            } else
-                holder = (CalculationInfoHolder) convertView.getTag();
-
-            holder.textViewCalculationInfoDetail.setVisibility(View.GONE);
-
-            switch (getItem(position).type) {
-                case CalculationInfo.TOTAL:
-                    holder.imageViewCalculationInfo.setImageResource(0);
-                    holder.textViewCalculation.setTextSize(getResources().getDimension(R.dimen.textview_big_dimen));
-                case CalculationInfo.PRE_TOTAL:
-                case CalculationInfo.COST:
-                case CalculationInfo.SALE:
-                    holder.textViewCalculation.setVisibility(View.VISIBLE);
-                    holder.textViewCalculationInfoDetail.setVisibility(View.GONE);
-                    holder.buttonUse.setVisibility(View.GONE);
-                    break;
-
-                case CalculationInfo.MILEAGE:
-                    if (mAuthUser != null)
-                        holder.textViewCalculationInfoDetail.setText(getString(R.string.mileage_accumulation) + " " + (int) (mTotal * getAccumulationRate(mAuthUser.user_class)));
-                    else
-                        holder.textViewCalculationInfoDetail.setText(getString(R.string.join_recommendation));
-                    holder.textViewCalculationInfoDetail.setVisibility(View.VISIBLE);
-                case CalculationInfo.COUPON:
-                    holder.textViewCalculation.setVisibility(View.GONE);
-                    holder.buttonUse.setVisibility(View.VISIBLE);
-                    holder.buttonUse.setTag(getItem(position).type);
-                    holder.buttonUse.setOnClickListener(this);
-                    if (getItem(position).price > 0)
-                        holder.buttonUse.setText(getItem(position).price + getString(R.string.monetary_unit));
-                    else
-                        holder.buttonUse.setText(getString(R.string.button_label_use));
-                    break;
-            }
-
-            if (getItem(position).image != null)
-                holder.imageViewCalculationInfo.setImageResource(getDrawableByString(getItem(position).image));
-            holder.textViewCalculationInfo.setText(getItem(position).name);
-            holder.textViewCalculation.setText(getItem(position).price + getString(R.string.monetary_unit));
-
-            return convertView;
-        }
-
-        private float getAccumulationRate(Integer user_class) {
-            switch (user_class) {
-                case UserFragment.BRONZE:
-                    return (float) 0.02;
-                case UserFragment.SILVER:
-                    return (float) 0.03;
-                case UserFragment.GOLD:
-                    return (float) 0.04;
-                case UserFragment.LOVE:
-                    return (float) 0.05;
-            }
-
-            return (float) 0.02;
-        }
-        /* 이름으로 아이콘을 가져옵니다 */
-        public int getDrawableByString(String name) {
-            return getContext().getResources().getIdentifier("ic_order_" + name, "drawable", getContext().getPackageName());
-        }
-
-        public int getTotal() {
-            int total = 0;
-
-            for (int i = 0; i < getCount(); i++) {
-                switch (getItem(i).type) {
-                    case CalculationInfo.COST:
-                        total = total + getItem(i).price;
-                        break;
-
-                    case CalculationInfo.SALE:
-                    case CalculationInfo.MILEAGE:
-                    case CalculationInfo.COUPON:
-                        total = total - getItem(i).price;
-                        break;
-                }
-            }
-
-            return total;
-        }
-
-        protected class CalculationInfoHolder {
-            public ImageView imageViewCalculationInfo;
-            public TextView textViewCalculationInfo;
-            public TextView textViewCalculationInfoDetail;
-            public TextView textViewCalculation;
-            public Button buttonUse;
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.button_use:
-                    int type = (Integer) v.getTag();
-                    if (type == CalculationInfo.MILEAGE) {
-                        MileageDialog md = MileageDialog.newInstance(this);
-
-                        md.show(getActivity().getSupportFragmentManager(), MILEAGE_DIALOG_TAG);
-                    }
-                    else if (type == CalculationInfo.COUPON) {
-                        CouponDialog cd = CouponDialog.newInstance(this);
-
-                        cd.show(getActivity().getSupportFragmentManager(), COUPON_DIALOG_TAG);
-                    }
-            }
-        }
-
-        @Override
-        public void onMileageSet(MileageDialog dialog, int mileage) {
-            CalculationInfo calculationInfo = getCalculationInfoByType(CalculationInfo.MILEAGE);
-
-            calculationInfo.price = mileage;
-
-            mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL).price = mTotal + mCalculationInfoAdapter.getTotal();
-
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public void onCouponSet(CouponDialog dialog, Coupon coupon) {
-            CalculationInfo calculationInfo = getCalculationInfoByType(CalculationInfo.COUPON);
-
-            if (coupon == null) {
-                calculationInfo.name = getString(R.string.coupon);
-                calculationInfo.price = 0;
-            }
-            else if (MINIMUM_ORDER > getOrderFragment().getOrderItemAdapter().getItemTotal()) {
-                calculationInfo.name = getString(R.string.coupon);
-                calculationInfo.price = 0;
-
-                CleanBasketApplication.getInstance().showToast(getString(R.string.coupon_not_available));
-            }
-            else {
-                calculationInfo.name = coupon.name;
-                calculationInfo.price = coupon.value;
-            }
-
-            mCoupon = coupon;
-
-            mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL).price = mTotal + mCalculationInfoAdapter.getTotal();
-
-            notifyDataSetChanged();
-        }
-
-        public int getPriceByType(int type) {
-            if (getCalculationInfoByType(type) != null)
-                return getCalculationInfoByType(type).price;
-
-            return 0;
-        }
-
-        private CalculationInfo getCalculationInfoByType(int type) {
-            for (int i = 0; i < getCount(); i++) {
-                if (getItem(i).type == type)
-                    return getItem(i);
-            }
-
-            return null;
-        }
     }
 
     @Override

@@ -45,12 +45,14 @@
         android:layout_marginTop="10dp">
 
         <TextView
+            style="@style/Light.English.TextView.CleanBasket"
             android:id="@+id/textview_item_number_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/textview_item_total_list"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
+            android:textSize="14dp"
             android:textColor="@color/dialog_text"
             android:gravity="center" />
 
@@ -60,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:textSize="12dp"
             android:textStyle="bold"
             android:textColor="@color/point_color"
             android:gravity="center" />

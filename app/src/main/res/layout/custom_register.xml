@@ -48,6 +48,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:inputType="phone"
                 android:hint="@string/prompt_phone" />
 
             <RelativeLayout
@@ -74,7 +75,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_alignParentRight="true"
                     android:text="@string/authorization_request"
-                    android:textColor="@color/dialog_color" />
+                    android:textColor="@color/dialog_color"
+                    android:background="@drawable/button_green" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -161,7 +163,8 @@
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:text="@string/action_sign_up"
                 android:textStyle="bold"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                android:background="@drawable/round_point_button_background" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
