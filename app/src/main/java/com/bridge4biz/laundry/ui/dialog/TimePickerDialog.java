@@ -8,6 +8,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.bridge4biz.laundry.CleanBasketApplication;
 import com.bridge4biz.laundry.R;
@@ -25,7 +28,7 @@ import com.bridge4biz.laundry.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimePickerDialog extends DialogFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class TimePickerDialog extends DialogFragment implements android.app.TimePickerDialog.OnTimeSetListener, View.OnClickListener, AdapterView.OnItemClickListener {
     private OnTimeSetListener mCallback;
 
     private int mInitialHourOfDay;
@@ -43,7 +46,6 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
     private Button mButtonAccept;
     private Button mButtonCancel;
 
-
     /**
      * The callback interface used to indicate the user is done filling in the time (they clicked on the 'Set' button).
      */
@@ -55,15 +57,19 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         public abstract void onDialogDismiss(DialogInterface dialoginterface);
     }
 
-    public static TimePickerDialog newInstance(OnTimeSetListener callback,
-                                                     int hourOfDay, int minute, String header, int mode) {
-        TimePickerDialog tpd = new TimePickerDialog();
-        tpd.initialize(callback, hourOfDay, minute, header, mode);
+    public static TimePickerDialog newInstance(Context context, OnTimeSetListener callback, int hourOfDay, int minute, String header, int mode) {
+        TimePickerDialog timePickerDialog = new TimePickerDialog();
+        timePickerDialog.initialize(context, callback, hourOfDay, minute, header, mode);
 
-        return tpd;
+        return timePickerDialog;
     }
 
-    public void initialize(OnTimeSetListener callback, int hourOfDay, int minute, String header, int mode) {
+    @Override
+    public void show(FragmentManager manager, String tag) {
+
+    }
+
+    public void initialize(Context context, OnTimeSetListener callback, int hourOfDay, int minute, String header, int mode) {
         this.mCallback = callback;
 
         this.mInitialHourOfDay = hourOfDay;
@@ -74,6 +80,19 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
 
         this.mHeader = header;
         this.mMode = mode;
+
+        if (getFirstHour() > 23) {
+            CleanBasketApplication.getInstance().showToast(context.getString(R.string.today_not_available));
+            return;
+        }
+
+        CustomTimePicker ctp = new CustomTimePicker(context, this, header, getFirstHour(), getFirstMinute(), DateFormat.is24HourFormat(context));
+        ctp.show();
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        mCallback.onTimeSet(this, hourOfDay, minute, mMode);
     }
 
     @Override
@@ -191,7 +210,7 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         int firstHour = mInitialHourOfDay;
 
         // 현재 시간이 30분보다 높으면 시간을 한 시간 올림
-        if (mInitialMinute > 30)
+        if (mInitialMinute >= 45)
             firstHour++;
 
         // 8시 이전은 무조건 10:00
@@ -205,9 +224,9 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         int firstMinute = mInitialMinute;
 
         // 현재 시간이 30분보다 높으면 0으로 만듦
-        if (mInitialMinute > 30)
+        if (mInitialMinute >= 45 || mInitialMinute < 15)
             firstMinute = 0;
-        else if (mInitialMinute < 30 && mInitialMinute > 0)
+        else if (mInitialMinute < 45 && mInitialMinute >= 15)
             firstMinute = 30;
 
         // 8시 이전은 무조건 10:00

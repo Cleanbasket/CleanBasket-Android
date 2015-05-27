@@ -14,143 +14,154 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <ScrollView android:id="@+id/feedback_form" android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/feedback_form"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/imageview_pd_face"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"/>
 
-            <ImageView
-                android:id="@+id/imageview_pd_face"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"/>
+        <TextView
+            style="@style/Light.TextView.CleanBasket"
+            android:id="@+id/textview_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/imageview_pd_face" />
 
-            <TextView
+        <View
+            android:id="@+id/line_bottom"
+            android:layout_width="250dp"
+            android:layout_height="@dimen/slim_line"
+            android:layout_below="@+id/textview_user_name"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/black" />
+
+        <TextView
+            android:id="@+id/textview_thanks_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/textview_user_name"
+            android:layout_marginTop="6dp"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:text="@string/thanks_message" />
+
+        <TextView
+            style="@style/Light.TextView.CleanBasket"
+            android:id="@+id/textview_laundry_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="37dp"
+            android:textSize="13dp"
+            android:layout_below="@+id/textview_thanks_message"
+            android:text="@string/laundry_quality" />
+
+        <RatingBar
+            style="@style/RatringBar.CleanBasket"
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_below="@+id/textview_laundry_quality"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            style="@style/Light.TextView.CleanBasket"
+            android:id="@+id/textview_free_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/ratingBar"
+            android:text="@string/free_feedback" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_free_feedback"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="9dp"
+            android:layout_below="@+id/textview_free_feedback"
+            android:imeActionId="@+id/finish"
+            android:imeActionLabel="@string/action_next"
+            android:imeOptions="actionDone"
+            android:singleLine="false"
+            android:lines="2"
+            android:maxLines="5" />
+
+        <LinearLayout
+            android:id="@+id/layout_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/edittext_free_feedback">
+
+            <CheckBox
                 style="@style/Light.TextView.CleanBasket"
-                android:id="@+id/textview_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/imageview_pd_face" />
+                android:id="@+id/checkbox_late_feedback"
+                android:layout_width="@dimen/feedback_box"
+                android:layout_height="@dimen/feedback_box"
+                android:background="@drawable/textview_back_grey"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/late_feedback"
+                android:textSize="12dp" />
 
-            <View
-                android:id="@+id/line_bottom"
-                android:layout_width="250dp"
-                android:layout_height="@dimen/slim_line"
-                android:layout_below="@+id/textview_user_name"
-                android:layout_centerHorizontal="true"
-                android:background="@android:color/black" />
-
-            <TextView
-                android:id="@+id/textview_thanks_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/textview_user_name"
-                android:layout_marginTop="6dp"
-                android:textStyle="bold"
-                android:textSize="15dp"
-                android:text="@string/thanks_message" />
-
-            <TextView
+            <CheckBox
                 style="@style/Light.TextView.CleanBasket"
-                android:id="@+id/textview_laundry_quality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="37dp"
-                android:textSize="13dp"
-                android:layout_below="@+id/textview_thanks_message"
-                android:text="@string/laundry_quality" />
+                android:id="@+id/checkbox_laundry_feedback"
+                android:layout_width="@dimen/feedback_box"
+                android:layout_height="@dimen/feedback_box"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/textview_back_grey"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/laundry_feedback"
+                android:textSize="12dp" />
 
-            <RatingBar
-                style="@style/RatringBar.CleanBasket"
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:layout_below="@+id/textview_laundry_quality"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
+            <CheckBox
                 style="@style/Light.TextView.CleanBasket"
-                android:id="@+id/textview_free_feedback"
+                android:id="@+id/checkbox_kindness_feedback"
+                android:layout_width="@dimen/feedback_box"
+                android:layout_height="@dimen/feedback_box"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/textview_back_grey"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/kindness_feedback"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/button_feedback_send"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/point_button_background">
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/ratingBar"
-                android:text="@string/free_feedback" />
+                android:layout_centerInParent="true">
 
-            <EditText
-                style="@style/Grey.EditText.CleanBasket"
-                android:id="@+id/edittext_free_feedback"
-                android:layout_width="260dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="9dp"
-                android:layout_below="@+id/textview_free_feedback"
-                android:imeActionId="@+id/finish"
-                android:imeActionLabel="@string/action_next"
-                android:imeOptions="actionDone"
-                android:singleLine="false"
-                android:lines="2"
-                android:maxLines="5" />
-
-            <LinearLayout
-                android:id="@+id/layout_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/edittext_free_feedback">
-
-                <CheckBox
-                    style="@style/Light.TextView.CleanBasket"
-                    android:id="@+id/checkbox_late_feedback"
-                    android:layout_width="@dimen/feedback_box"
-                    android:layout_height="@dimen/feedback_box"
-                    android:background="@drawable/textview_back_grey"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="@string/late_feedback"
-                    android:textSize="12dp" />
-
-                <CheckBox
-                    style="@style/Light.TextView.CleanBasket"
-                    android:id="@+id/checkbox_laundry_feedback"
-                    android:layout_width="@dimen/feedback_box"
-                    android:layout_height="@dimen/feedback_box"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/textview_back_grey"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="@string/laundry_feedback"
-                    android:textSize="12dp" />
-
-                <CheckBox
-                    style="@style/Light.TextView.CleanBasket"
-                    android:id="@+id/checkbox_kindness_feedback"
-                    android:layout_width="@dimen/feedback_box"
-                    android:layout_height="@dimen/feedback_box"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/textview_back_grey"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="@string/kindness_feedback"
-                    android:textSize="12dp" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/button_feedback_send"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_below="@+id/layout_checkbox"
-                android:layout_margin="10dp"
-                android:background="@drawable/round_point_button_background"
-                android:text="@string/label_confirm" />
+                <TextView
+                    android:id="@+id/textview_order_button_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="9dp"
+                    android:text="@string/label_confirm"
+                    android:textStyle="bold" />
+            </RelativeLayout>
         </RelativeLayout>
-    </ScrollView>
+    </RelativeLayout>
 </RelativeLayout>

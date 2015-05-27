@@ -186,7 +186,7 @@ public class CouponDialog extends DialogFragment implements View.OnClickListener
             } else
                 holder = (CouponListViewHolder) convertView.getTag();
 
-            holder.textViewCouponPrice.setText((getItem(position).value) + getString(R.string.monetary_unit));
+            holder.textViewCouponPrice.setText(CleanBasketApplication.mFormatKRW.format((double) getItem(position).value)+ getString(R.string.monetary_unit));
             holder.textViewCouponTitle.setText(getItem(position).name);
             if (getItem(position).start_date.equals("") || getItem(position).equals(""))
                 holder.textViewCouponValidateTime.setText(getString(R.string.coupon_invalidate));

@@ -1,6 +1,7 @@
 package com.bridge4biz.laundry.ui;
 
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,46 +11,56 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bridge4biz.laundry.CleanBasketApplication;
+import com.bridge4biz.laundry.Config;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.model.District;
 import com.bridge4biz.laundry.io.model.map.AddressComponent;
 import com.bridge4biz.laundry.io.model.map.GeocodeResponse;
+import com.bridge4biz.laundry.io.model.map.ResponseElement;
 import com.bridge4biz.laundry.search.AddressSearcher;
+import com.bridge4biz.laundry.search.DaumGeocodeSearcher;
 import com.bridge4biz.laundry.search.GeocodeSearcher;
 import com.bridge4biz.laundry.search.OnFinishAddrSearchListener;
+import com.bridge4biz.laundry.search.OnFinishDaumGeocodeSearchListener;
 import com.bridge4biz.laundry.search.OnFinishGeocodeSearchListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapReverseGeoCoder;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChangeListener, OnMapReadyCallback, OnFinishAddrSearchListener, View.OnClickListener {
+public class MapActivity extends BaseActivity implements MapReverseGeoCoder.ReverseGeoCodingResultListener, GoogleMap.OnCameraChangeListener, OnMapReadyCallback, OnFinishAddrSearchListener, View.OnClickListener {
     private static final String TAG = MapActivity.class.getSimpleName();
     private static final String SUBLOCALITY_LV1 = "sublocality_level_1";
     private static final String SUBLOCALITY_LV2 = "sublocality_level_2";
     private static final String LOCALITY = "locality";
+    public static final String OVER_QUERY_LIMIT = "OVER_QUERY_LIMIT";
 
     private EditText mEditTextSearchAddress;
     private ImageView mImageviewAddressSearch;
     private TextView mTextViewCurrentAddress;
-    private MapView mMapView;
-    private Button mAcceptButton;
+    private TextView mTextViewAddressStatus;
+    private RelativeLayout mAcceptButton;
 
     private GoogleMap map;
     private AddressSearcher addressSearcher;
     private GeocodeSearcher geocodeSearcher;
+
+    private double mLastLatitude;
+    private double mLastLongitude;
 
     private ArrayList<String> mDistricts = new ArrayList<String>();
 
@@ -59,12 +70,23 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
 
         setContentView(R.layout.activity_map);
 
-        getActionBar().setTitle(R.string.map_search_title);
+        getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getActionBar().setCustomView(R.layout.action_layout);
+        TextView customTitle = (TextView) getActionBar().getCustomView().findViewById(R.id.actionbar_title);
+        ImageView backButton = (ImageView) getActionBar().getCustomView().findViewById(R.id.imageview_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        customTitle.setText(getString(R.string.map_search_title));
 
         mEditTextSearchAddress = (EditText) findViewById(R.id.edittext_address_search);
         mImageviewAddressSearch = (ImageView) findViewById(R.id.imageview_address_search);
         mTextViewCurrentAddress = (TextView) findViewById(R.id.textview_current_address);
-        mAcceptButton = (Button) findViewById(R.id.button_accept_address);
+        mTextViewAddressStatus = (TextView) findViewById(R.id.textview_address_status);
+        mAcceptButton = (RelativeLayout) findViewById(R.id.button_accept_address);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_view);
         mapFragment.getMapAsync(this);
@@ -87,7 +109,10 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
         ArrayList<District> districts = (ArrayList<District>) CleanBasketApplication.mInstance.getDBHelper().getDistrictDao().queryForAll();
 
         for (District district : districts) {
-            mDistricts.add(district.city + " " + district.district + " " + district.dong);
+            if (TextUtils.isEmpty(district.dong))
+                mDistricts.add(district.city + " " + district.district);
+            else
+                mDistricts.add(district.city + " " + district.district + " " + district.dong);
         }
     }
 
@@ -95,14 +120,34 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
     public void onMapReady(GoogleMap map) {
         this.map = map;
         this.map.setOnCameraChangeListener(this);
-        moveToCurrentLocation(map);
+        moveToCurrentLocation();
     }
 
     private boolean isAvailableDistrict(String address) {
-        if (mDistricts.contains(address))
-            return true;
-        else
-            return false;
+        String[] fullAddress;
+
+        if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr")) {
+            fullAddress = address.split(" ");
+            if (fullAddress.length < 3) return false;
+
+            if (mDistricts.contains(fullAddress[0] + " " + fullAddress[1]))
+                return true;
+            else if (mDistricts.contains(fullAddress[0] + " " + fullAddress[1] + " " + fullAddress[2]))
+                return true;
+            else
+                return false;
+        }
+        else {
+            fullAddress = address.split(", ");
+            if (fullAddress.length < 3) return false;
+
+            if (mDistricts.contains(fullAddress[2] + " " + fullAddress[1]))
+                return true;
+            else if (mDistricts.contains(fullAddress[2] + " " + fullAddress[1] + " " + fullAddress[0]))
+                return true;
+            else
+                return false;
+        }
     }
 
     @Override
@@ -115,21 +160,34 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
     /**
      * 현재 위치로 이동합니다
      */
-    private void moveToCurrentLocation(GoogleMap map) {
+    private void moveToCurrentLocation() {
         Bundle bundle = getIntent().getExtras();
+
+        double latitude = 37.4999072;
+        double longitude = 127.0373932;
 
         if (bundle != null &&
             bundle.containsKey("latitude") &&
             bundle.containsKey("longitude")) {
-            double latitude = bundle.getDouble("latitude");
-            double longitude = bundle.getDouble("longitude");
-
-            LatLng current = new LatLng(latitude, longitude);
-            map.setMyLocationEnabled(true);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 13));
-
-            findAddress(current);
+            latitude = bundle.getDouble("latitude");
+            longitude = bundle.getDouble("longitude");
         }
+
+        LatLng current = new LatLng(latitude, longitude);
+        map.setMyLocationEnabled(true);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 13));
+
+        findAddress(current);
+    }
+
+    @Override
+    public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
+        setAddress(s);
+    }
+
+    @Override
+    public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) {
+
     }
 
     private void moveToLocation(LatLng latLng) {
@@ -146,6 +204,9 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
     private void findAddress(LatLng current) {
         if (addressSearcher == null)
             addressSearcher = new AddressSearcher();
+
+        mLastLatitude = current.latitude;
+        mLastLongitude = current.longitude;
 
         addressSearcher.searchAddr(this, current.latitude, current.longitude, this);
     }
@@ -164,17 +225,20 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
             }
         }
 
-        String[] fullAddress = address.split(" ");
-
-        if (fullAddress.length < 4)
-            return "";
+        String[] fullAddress;
 
         String formattedAddress = "";
 
-        if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr"))
+        if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr")) {
+            fullAddress = address.split(" ");
+            if (fullAddress.length < 4) return "";
             formattedAddress = fullAddress[1] + " " + fullAddress[2] + " " + fullAddress[3];
-        else
-            formattedAddress = fullAddress[0] + " " + fullAddress[1] + " " + fullAddress[2];
+        }
+        else {
+            fullAddress = address.split(", ");
+            if (fullAddress.length < 4) return "";
+            formattedAddress = fullAddress[0] + ", " + fullAddress[1] + ", " + fullAddress[2];
+        }
 
         return formattedAddress;
     }
@@ -183,19 +247,35 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
     public void onSuccess(GeocodeResponse geocodeResponse) {
         String address = "";
 
+        if (geocodeResponse.getStatus().equals(OVER_QUERY_LIMIT)) {
+            Log.i(TAG, OVER_QUERY_LIMIT);
+
+            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(mLastLatitude, mLastLongitude);
+            MapReverseGeoCoder reverseGeoCoder = new MapReverseGeoCoder(Config.DAUM_MAP_API, mapPoint, this, this);
+            reverseGeoCoder.startFindingAddress();
+
+            return;
+        }
+
         if (geocodeResponse.getResults().size() == 0)
             return;
         else
             address = parseAddress(geocodeResponse);
 
-        Log.i(TAG, address);
+        setAddress(address);
+    }
 
+    private void setAddress(String address) {
         mTextViewCurrentAddress.setText(address);
 
-        if (isAvailableDistrict(address))
+        if (isAvailableDistrict(address)) {
             mTextViewCurrentAddress.setBackgroundResource(R.color.point_color);
-        else
-            mTextViewCurrentAddress.setBackgroundResource(android.R.color.holo_red_light);
+            mTextViewAddressStatus.setText(getResources().getString(R.string.area_available));
+        }
+        else {
+            mTextViewCurrentAddress.setBackgroundResource(R.color.address_textview_bacground);
+            mTextViewAddressStatus.setText(getResources().getString(R.string.area_unavailable_error));
+        }
 
         mTextViewCurrentAddress.setText(address);
     }
@@ -228,6 +308,24 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
         }
     }
 
+    private void daumSearch() {
+        mEditTextSearchAddress.clearFocus();
+        String query = mEditTextSearchAddress.getText().toString();
+
+        DaumGeocodeSearcher daumGeocodeSearcher = new DaumGeocodeSearcher();
+        daumGeocodeSearcher.searchGeocode(this, query, new OnFinishDaumGeocodeSearchListener() {
+            @Override
+            public void onSuccess(ResponseElement responseElement) {
+                Log.i(TAG, responseElement.toString());
+            }
+
+            @Override
+            public void onFail() {
+
+            }
+        });
+    }
+
     private void search() {
         mEditTextSearchAddress.clearFocus();
         String query = mEditTextSearchAddress.getText().toString();
@@ -245,6 +343,10 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
         geocodeSearcher.searchGeocode(this, query, new OnFinishGeocodeSearchListener() {
             @Override
             public void onSuccess(GeocodeResponse geocodeResponse) {
+                if (geocodeResponse.getStatus().equals(OVER_QUERY_LIMIT)) {
+
+                }
+
                 if (geocodeResponse.getResults().size() == 0)
                     return;
 
@@ -268,92 +370,3 @@ public class MapActivity extends BaseActivity implements GoogleMap.OnCameraChang
         imm.hideSoftInputFromWindow(mEditTextSearchAddress.getWindowToken(), 0);
     }
 }
-
-//    @Override
-//    public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
-//        Log.i(TAG, "Current Location Update");
-//        findAddress(mapPoint);
-//        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
-//    }
-//
-//    @Override
-//    public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {
-//
-//    }
-//
-//    @Override
-//    public void onCurrentLocationUpdateFailed(MapView mapView) {
-//
-//    }
-//
-//    @Override
-//    public void onCurrentLocationUpdateCancelled(MapView mapView) {
-//
-//    }
-//
-//    @Override
-//    public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
-
-//    }
-//
-//    @Override
-//    public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) {
-//
-//    }
-//
-//    private void search() {
-//        mEditTextSearchAddress.clearFocus();
-//        String query = mEditTextSearchAddress.getText().toString();
-//
-//        if (query == null || query.length() == 0) {
-//            showToast(getString(R.string.search_no_text));
-//            return;
-//        }
-//
-//        hideSoftKeyboard();
-//        MapPoint.GeoCoordinate geoCoordinate = mMapView.getMapCenterPoint().getMapPointGeoCoord();
-//        double latitude = geoCoordinate.latitude;
-//        double longitude = geoCoordinate.longitude;
-//        int radius = 10000;
-//        int page = 1;
-//        String apikey = Config.DAUM_MAP_API;
-//
-//        Searcher searcher = new Searcher();
-//        searcher.searchKeyword(getApplicationContext(), query, latitude, longitude, radius, page, apikey, this);
-//    }
-//
-
-//
-//    private void showResult(List<Item> itemList) {
-//        Item i;
-//
-//        if(itemList.size() > 0) {
-//            i = itemList.get(0);
-//
-//            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(i.latitude, i.longitude);
-//            mMapView.setMapCenterPoint(mapPoint, true);
-//            findAddress(mapPoint);
-//        }
-//    }
-//
-//    @Override
-//    public void onSuccess(List<Item> itemList) {
-//        showResult(itemList);
-//    }
-//
-//    @Override
-//    public void onFail() {
-//
-//    }
-//
-//    private void showToast(final String text) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(MapActivity.this, text, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-
-

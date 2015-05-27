@@ -44,27 +44,41 @@ public class ModifyDialog extends DialogFragment {
                 dismiss();
             }
         });
-        builder.setItems(R.array.order_modify_menu, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_ITEM, orderNumber);
-                        break;
 
-                    case 1:
-                        onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_DATETIME, orderNumber);
-                        break;
+        if (getTag().equals(OrderStatusFragment.MODIFY_DIALOG_TAG)) {
+            builder.setItems(R.array.order_modify_menu, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0:
+                            onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_ITEM, orderNumber);
+                            break;
+
+                        case 1:
+                            onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_DATETIME, orderNumber);
+                            break;
 
 //                    case 2:
 //                        onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_COUPON_MILEAGE, orderNumber);
 //                        break;
 
-                    case 2:
-                        popOrderCancelConfirm();
-                        break;
+                        case 2:
+                            popOrderCancelConfirm();
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            builder.setItems(R.array.order_modify_menu_after_pick_up, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0:
+                            onMenuSelectedListener.onMenuSelected(OrderStatusFragment.MODIFY_DATETIME, orderNumber);
+                            break;
+                    }
+                }
+            });
+        }
 
         return builder.create();
     }

@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <LinearLayout
+        android:id="@+id/title_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="15dp">
+
+        <RelativeLayout
+            android:layout_width="@dimen/default_icon_box_size"
+            android:layout_height="@dimen/default_icon_box_size">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/default_icon_size"
+                android:src="@drawable/ic_order_address"
+                android:adjustViewBounds="true"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+        <TextView
+            style="@style/Black.TextView.CleanBasket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:text="@string/address" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_address_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/title_address">
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:maxLines="1"
+            android:imeActionId="@+id/address"
+            android:imeActionLabel="@string/start"
+            android:imeOptions="actionNext"
+            android:singleLine="true" />
+
+        <ImageView
+            android:id="@+id/imageview_current_location"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_search_radius" />
+    </RelativeLayout>
+
+    <EditText
+        style="@style/Grey.EditText.CleanBasket"
+        android:id="@+id/edittext_detail_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_address_input"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:maxLines="1"
+        android:imeActionId="@+id/address_detail"
+        android:imeActionLabel="@string/start"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:hint="@string/address_detail" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edittext_detail_address"
+        android:layout_marginTop="22dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <TextView
+            style="@style/Black.TextView.CleanBasket"
+            android:id="@+id/textview_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_title"
+            android:layout_centerVertical="true" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_contact"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:maxLines="1"
+            android:imeActionId="@+id/contact"
+            android:imeActionLabel="@string/start"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:inputType="phone"
+            android:hint="@string/contact" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_pickup_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/layout_contact">
+
+        <TextView
+            style="@style/Black.TextView.CleanBasket"
+            android:id="@+id/textview_pick_up_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_up_time_label"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true" />
+
+        <RelativeLayout
+            android:id="@+id/layout_select_date"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
+
+            <Button
+                style="@style/Light.TextView.CleanBasket"
+                android:id="@+id/imageview_datetime_today"
+                android:layout_width="@dimen/default_circle_size"
+                android:layout_height="@dimen/default_circle_size"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/round_button"
+                android:textSize="@dimen/order_info_font"
+                android:text="@string/time_today" />
+
+            <Button
+                style="@style/Light.TextView.CleanBasket"
+                android:id="@+id/imageview_datetime_tomorrow"
+                android:layout_width="@dimen/default_circle_size"
+                android:layout_height="@dimen/default_circle_size"
+                android:layout_centerInParent="true"
+                android:background="@drawable/round_button"
+                android:textSize="@dimen/order_info_font"
+                android:text="@string/time_tomorrow" />
+
+            <Button
+                style="@style/Light.TextView.CleanBasket"
+                android:id="@+id/imageview_datetime_etc"
+                android:layout_width="@dimen/default_circle_size"
+                android:layout_height="@dimen/default_circle_size"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/round_button"
+                android:textSize="@dimen/order_info_font"
+                android:text="@string/time_other_day" />
+        </RelativeLayout>
+
+        <TextView
+            style="@style/Black.Default.TextView.CleanBasket"
+            android:id="@+id/textview_selected_pickup_date"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/text_button_background"
+            fontPath="fonts/NanumBarunGothicUltraLight.otf" />
+
+        <TextView
+            style="@style/Black.Default.TextView.CleanBasket"
+            android:id="@+id/textview_selected_pickup_time"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textview_selected_pickup_date"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/text_button_background"
+            fontPath="fonts/NanumBarunGothicUltraLight.otf" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_dropoff_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/layout_pickup_container">
+
+        <TextView
+            style="@style/Black.TextView.CleanBasket"
+            android:id="@+id/textview_drop_off_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/drop_off_time_label"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            style="@style/Black.Default.TextView.CleanBasket"
+            android:id="@+id/textview_drop_off_title"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/textview_back"
+            android:text="@string/time_dropoff_inform"
+            fontPath="fonts/NanumBarunGothicUltraLight.otf" />
+
+        <TextView
+            style="@style/Black.Default.TextView.CleanBasket"
+            android:id="@+id/textview_selected_dropoff_date"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/text_button_background"
+            fontPath="fonts/NanumBarunGothicUltraLight.otf" />
+
+        <TextView
+            style="@style/Black.Default.TextView.CleanBasket"
+            android:id="@+id/textview_selected_dropoff_time"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textview_selected_dropoff_date"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/text_button_background"
+            fontPath="fonts/NanumBarunGothicUltraLight.otf" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <TextView
+            style="@style/Black.TextView.CleanBasket"
+            android:id="@+id/textview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_centerVertical="true"
+            android:text="@string/payment_method" />
+
+        <RelativeLayout
+            android:id="@+id/layout_radio_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/textview_title">
+
+            <ImageView
+                android:id="@+id/imageview_payment_card"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_order_payment_card" />
+
+            <RadioButton
+                style="@style/Light.TextView.CleanBasket"
+                android:id="@+id/radiobutton_payment_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:checked="true"
+                android:button="@null"
+                android:drawableRight="@drawable/checkbox"
+                android:drawablePadding="25dp"
+                android:textSize="13dp"
+                android:text="@string/payment_card" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/layout_radio_card"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/layout_radio_card">
+
+            <ImageView
+                android:id="@+id/imageview_payment_cash"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_order_payment_cash" />
+
+            <RadioButton
+                style="@style/Light.TextView.CleanBasket"
+                android:id="@+id/radiobutton_payment_cash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:button="@null"
+                android:drawableRight="@drawable/checkbox"
+                android:drawablePadding="25dp"
+                android:textSize="13dp"
+                android:text="@string/payment_cash" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <TextView
+            style="@style/Black.TextView.CleanBasket"
+            android:id="@+id/textview_memo_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/memo_hint" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_memo"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textview_memo_title"
+            android:inputType="textCapSentences"
+            android:imeActionId="@+id/memo_hint"
+            android:imeActionLabel="@string/button_order"
+            android:imeOptions="actionDone"
+            android:hint="@string/memo_hint"
+            android:lines="1"
+            android:minLines="1"
+            android:maxLines="5"
+            android:maxEms="200" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/caculation_item_backgound_color">
+
+        <TextView
+            style="@style/Black.TextView.CleanBasket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:layout_centerVertical="true"
+            android:text="@string/order_list_confirm" />
+    </RelativeLayout>
+</LinearLayout>

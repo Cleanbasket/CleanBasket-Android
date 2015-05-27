@@ -130,15 +130,15 @@ public class NotificationFragment extends Fragment implements ListView.OnItemCli
             case Notification.EVENT_ALARM:
                 return R.drawable.ic_alarm_event;
             case Notification.MESSAGE_ALARM:
-                return R.drawable.ic_alarm_messege;
+                return R.drawable.ic_alarm_message;
             case Notification.PICKUP_ALARM:
                 return R.drawable.ic_alarm_pickup;
             case Notification.DROPOFF_ALARM:
                 return R.drawable.ic_alarm_delivery;
             case Notification.COUPON_ALARM:
-                return R.drawable.ic_alarm_messege;
+                return R.drawable.ic_alarm_message;
             default:
-                return R.drawable.ic_alarm_messege;
+                return R.drawable.ic_alarm_message;
         }
     }
 

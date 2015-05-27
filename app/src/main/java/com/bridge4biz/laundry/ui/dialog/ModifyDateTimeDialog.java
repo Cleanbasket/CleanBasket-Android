@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class ModifyDateTimeDialog extends DialogFragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, Response.Listener<JSONObject>, Response.ErrorListener {
+public class ModifyDateTimeDialog extends DialogFragment implements TimePickerDialog.OnTimeSetListener, View.OnClickListener, DatePickerDialog.OnDateSetListener, Response.Listener<JSONObject>, Response.ErrorListener {
     private static final String TAG = ModifyDateTimeDialog.class.getSimpleName();
 
     private int mOid;
@@ -61,6 +61,7 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
     private TextView mTextViewDropOffDate;
     private TextView mTextViewDropOffTime;
     private TextView mTextViewFinish;
+    private TextView mTextViewCancel;
     private View mModifyDateTimeFormView;
     private View mPickUpFormView;
     private View mProgressView;
@@ -102,14 +103,27 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
         mTextViewFinish = (TextView) rootView.findViewById(R.id.finish_order);
 
         Button buttonModify = (Button) rootView.findViewById(R.id.modify_datetime_button);
+        Button buttonCancel = (Button) rootView.findViewById(R.id.cancel_modify_datetime_button);
         buttonModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptChange();
             }
         });
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+        mTextViewFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
 
-        mPickUpFormView = rootView.findViewById(R.id.modify_datetime_form);
+        mPickUpFormView = rootView.findViewById(R.id.layout_pickup_container);
         mModifyDateTimeFormView = rootView.findViewById(R.id.modify_datetime_form);
         mProgressView = rootView.findViewById(R.id.login_progress);
 
@@ -196,9 +210,9 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
         mSelectedDropOffDate = dropOffDate;
 
         mTextViewPickUpDate.setText(DateTimeFactory.getInstance().getStringDate(getActivity(), pickUpDate));
-        mTextViewPickUpTime.setText(DateTimeFactory.getInstance().getStringTime(getActivity(), pickUpDate));
+        pickUpTimeSelected(pickUpDate);
         mTextViewDropOffDate.setText(DateTimeFactory.getInstance().getStringDate(getActivity(), dropOffDate));
-        mTextViewDropOffTime.setText(DateTimeFactory.getInstance().getStringTime(getActivity(), dropOffDate));
+        dropOffTimeSelected(dropOffDate);
 
         mTextViewPickUpDate.setOnClickListener(this);
         mTextViewPickUpTime.setOnClickListener(this);
@@ -278,7 +292,7 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
                 break;
         }
 
-        TimePickerDialog radialTimePickerDialog = TimePickerDialog.newInstance(this, hour, minute, header, mode);
+        TimePickerDialog radialTimePickerDialog = TimePickerDialog.newInstance(getActivity(), this, hour, minute, header, mode);
 
         radialTimePickerDialog.show(
                 getActivity().getSupportFragmentManager(),
@@ -345,6 +359,10 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
                 pickUpDateSelected(pickUp.getTime());
                 pickUpTimeSelected(pickUp.getTime());
 
+                if (isFastestDay(mSelectedDropOffDate)) {
+                    dropOffTimeSelected(pickUp.getTime());
+                }
+
                 mSelectedPickUpDate = pickUp.getTime();
                 break;
 
@@ -359,8 +377,6 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
                 mSelectedDropOffDate = dropOffDateTime.getTime();
                 break;
         }
-
-        timePickerDialog.dismiss();
     }
 
     /**
@@ -428,11 +444,15 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
      * @param date 최종 선택된 수거 시간
      */
     private void pickUpTimeSelected(Date date) {
+        Calendar c = getCalendar();
+        c.setTime(date);
+        c.add(Calendar.HOUR_OF_DAY, 1);
+
         mTextViewPickUpTime.setVisibility(View.VISIBLE);
         mTextViewPickUpTime.setText(
-//                DateTimeFactory.getInstance().getPrettyTime(date) +
-//                DateTimeFactory.getInstance().getNewLine() +
-                DateTimeFactory.getInstance().getStringTime(getActivity(), date));
+                DateTimeFactory.getInstance().getStringTime(getActivity(), date) + " " +
+                        getString(R.string.time_tilde) + " " +
+                        DateTimeFactory.getInstance().getStringTime(getActivity(), c.getTime()));
     }
 
     /**
@@ -451,10 +471,14 @@ public class ModifyDateTimeDialog extends DialogFragment implements View.OnClick
      * @param date 최종 선택된 배달 시간
      */
     private void dropOffTimeSelected(Date date) {
+        Calendar c = getCalendar();
+        c.setTime(date);
+        c.add(Calendar.HOUR_OF_DAY, 1);
+
         mTextViewDropOffTime.setText(
-//                DateTimeFactory.getInstance().getPrettyTime(date) +
-//                DateTimeFactory.getInstance().getNewLine() +
-                DateTimeFactory.getInstance().getStringTime(getActivity(), date));
+                DateTimeFactory.getInstance().getStringTime(getActivity(), date) + " " +
+                        getString(R.string.time_tilde) + " " +
+                        DateTimeFactory.getInstance().getStringTime(getActivity(), c.getTime()));
     }
 
     /**

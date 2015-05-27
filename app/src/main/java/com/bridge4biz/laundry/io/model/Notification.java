@@ -13,6 +13,7 @@ public class Notification {
     public static final int COUPON_ALARM = 4;
     public static final int FEEDBACK_ALARM = 5;
     public static final int MODIFY_ALARM = 6;
+    public static final int MILEAGE_ALARM = 7;
 
     public static final String UID = "uid";
 
@@ -26,4 +27,7 @@ public class Notification {
     @DatabaseField public int value;
     @DatabaseField public String date;
     @DatabaseField public boolean check;
+
+    public Notification() {
+    }
 }

@@ -81,7 +81,7 @@ public class GCMIntentService extends IntentService {
                 break;
 
             case Notification.COUPON_ALARM:
-                notification.title = notification.value + getString(R.string.issue_coupon);
+                notification.title = notification.value + " " + getString(R.string.issue_coupon);
                 break;
 
             case Notification.FEEDBACK_ALARM:
@@ -91,9 +91,13 @@ public class GCMIntentService extends IntentService {
             case Notification.MODIFY_ALARM:
                 notification.title = getString(R.string.modify_message);
                 break;
+
+            case Notification.MILEAGE_ALARM:
+                notification.title = notification.value + " " + getString(R.string.mileage_message);
+                break;
         }
 
-        Log.i(TAG, notification.oid + " 저장 / " + notification.title);
+        Log.i(TAG, notification.oid + " 저장 / " + notification.title + " / " + notification.uid);
 
         if (!insertDB(notification)) return;
 
@@ -258,10 +262,10 @@ public class GCMIntentService extends IntentService {
 
         Log.i(TAG, "intent : " + notification.oid);
 
-        PendingIntent contentPIntent = PendingIntent.getActivity(this, Notification.PICKUP_ALARM,
+        PendingIntent contentPIntent = PendingIntent.getActivity(this, notification.oid + Notification.PICKUP_ALARM,
                 intent, PendingIntent.FLAG_ONE_SHOT);
 
-        PendingIntent confirmPIntent = PendingIntent.getActivity(this, Notification.PICKUP_ALARM,
+        PendingIntent confirmPIntent = PendingIntent.getActivity(this, notification.oid + Notification.DROPOFF_ALARM,
                 confirmIntent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
@@ -329,7 +333,7 @@ public class GCMIntentService extends IntentService {
         intent.putExtra("tag", DialogActivity.MODIFY_TIME_DIALOG);
         intent.putExtra("oid", notification.oid);
 
-        PendingIntent contentPIntent = PendingIntent.getActivity(this, Notification.MODIFY_ALARM,
+        PendingIntent contentPIntent = PendingIntent.getActivity(this, notification.oid + Notification.MODIFY_ALARM,
                 intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =

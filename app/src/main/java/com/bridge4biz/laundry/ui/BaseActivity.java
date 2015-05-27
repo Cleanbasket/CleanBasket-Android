@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.bridge4biz.laundry.db.DBHelper;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -40,6 +41,20 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -52,5 +67,10 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 }

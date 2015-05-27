@@ -20,7 +20,7 @@
     <com.squareup.timessquare.CalendarPickerView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
-        android:layout_height="274.4dp"
+        android:layout_height="317dp"
         android:layout_marginTop="18dp" />
 
     <LinearLayout

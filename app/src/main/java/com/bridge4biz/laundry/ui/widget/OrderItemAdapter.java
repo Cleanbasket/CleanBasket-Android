@@ -83,7 +83,9 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             convertView = mLayoutInflater.inflate(R.layout.item_orderitem, parent, false);
             holder = new OrderItemViewHolder();
             holder.linearLayoutOrderItem = (LinearLayout) convertView.findViewById(R.id.layout_orderitem);
+            holder.outlineImageView = (ImageView) convertView.findViewById(R.id.imageview_outline);
             holder.orderImageView = (ImageView) convertView.findViewById(R.id.imageview_orderitem);
+            holder.orderItemContainer = (RelativeLayout) convertView.findViewById(R.id.orderitem_container);
             holder.extractImageView = (RelativeLayout) convertView.findViewById(R.id.imageview_extractitem);
             holder.textViewDiscountInfo = (TextView) convertView.findViewById(R.id.textview_discount_info);
             holder.textViewOrderItem = (TextView) convertView.findViewById(R.id.textview_orderitem);
@@ -102,6 +104,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         if (getItem(position).count > 0) {
             holder.badgeView.setText(String.valueOf(getItem(position).count));
             holder.badgeView.show();
+            holder.outlineImageView.setVisibility(View.INVISIBLE);
             holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img + "_select"));
             holder.extractImageView.setVisibility(View.VISIBLE);
             holder.extractImageView.setOnTouchListener(this);
@@ -109,14 +112,15 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         }
         else {
             holder.badgeView.hide();
+            holder.outlineImageView.setVisibility(View.VISIBLE);
             holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
             holder.extractImageView.setVisibility(View.INVISIBLE);
             holder.extractImageView.setOnClickListener(null);
         }
 
 //        holder.linearLayoutOrderItem.setOnClickListener(this);
-        holder.linearLayoutOrderItem.setOnTouchListener(this);
-        holder.linearLayoutOrderItem.setTag(getItem(position));
+        holder.orderItemContainer.setOnTouchListener(this);
+        holder.orderItemContainer.setTag(getItem(position));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
         if (getItem(position).discount_rate > 0)
@@ -129,7 +133,9 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
 
     protected class OrderItemViewHolder {
         public LinearLayout linearLayoutOrderItem;
+        public ImageView outlineImageView;
         public ImageView orderImageView;
+        public RelativeLayout orderItemContainer;
         public RelativeLayout extractImageView;
         public TextView textViewDiscountInfo;
         public TextView textViewOrderItem;
@@ -220,7 +226,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.layout_orderitem:
+            case R.id.orderitem_container:
                 addOrderItem((OrderItem) v.getTag());
                 break;
 
@@ -240,9 +246,9 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             case MotionEvent.ACTION_DOWN:
                 // When pressed start solving the spring to 1.
                 spring.setEndValue(1);
-                onClick(v);
                 break;
             case MotionEvent.ACTION_UP:
+                onClick(v);
             case MotionEvent.ACTION_CANCEL:
                 // When released start solving the spring to 0.
                 spring.setEndValue(0);
@@ -275,7 +281,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             // with setScaleX/Y. Note that rendering is an implementation detail of the application and not
             // Rebound itself. If you need Gingerbread compatibility consider using NineOldAndroids to update
             // your view properties in a backwards compatible manner.
-            float mappedValue = (float) SpringUtil.mapValueFromRangeToRange(spring.getCurrentValue(), 0, 1, 1, 0.5);
+            float mappedValue = (float) SpringUtil.mapValueFromRangeToRange(spring.getCurrentValue(), 0, 1, 1, 0.8);
 
             if (v != null) {
                 v.setScaleX(mappedValue);

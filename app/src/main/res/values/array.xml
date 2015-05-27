@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string-array name="order_modify_menu">
-        <item>품목 변경</item>
-        <item>수거배달 시간 변경</item>
-        <item>주문 취소</item>
+        <item>Modify item</item>
+        <item>Modify datetime</item>
+        <item>Cancel order</item>
+    </string-array>
+
+    <string-array name="order_modify_menu_after_pick_up">
+        <item>Modify datetime</item>
     </string-array>
 </resources>

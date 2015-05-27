@@ -26,9 +26,9 @@
     </style>
 
     <style name="White.Button.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.Button">
-        <item name="android:background">@drawable/button_white</item>
+        <item name="android:background">@drawable/white_outline_button_background</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/dialog_text</item>
+        <item name="android:textColor">@drawable/white_outline_button_text_color</item>
         <item name="android:textSize">14dp</item>
     </style>
 
@@ -47,7 +47,7 @@
     </style>
 
     <style name="Grey.EditText.CleanBasket" parent="@android:style/TextAppearance.Holo.Widget.EditText">
-        <item name="android:background">@drawable/textview_back_grey</item>
+        <item name="android:background">@drawable/textview_back</item>
         <item name="android:height">32dp</item>
         <item name="android:textSize">13dp</item>
         <item name="android:textColor">@color/info_text</item>

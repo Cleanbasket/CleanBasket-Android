@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.util.DateTimeFactory;
 
+import java.text.DecimalFormat;
+
 public class ConfirmDialog extends DialogFragment implements View.OnClickListener {
     private static final String TAG = ConfirmDialog.class.getSimpleName();
 
@@ -28,6 +30,8 @@ public class ConfirmDialog extends DialogFragment implements View.OnClickListene
     private TextView mTextViewInfo;
     private Button mButtonOrder;
     private Button mButtonCancel;
+
+    private DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
 
     public interface OnConfirmListener {
         void onConfirm(ConfirmDialog dialog);
@@ -63,7 +67,7 @@ public class ConfirmDialog extends DialogFragment implements View.OnClickListene
         mButtonCancel.setOnClickListener(this);
 
         mTextViewInfo.setText(getString(R.string.label_item) + " " + unit + getString(R.string.item_unit) + DateTimeFactory.getInstance().getNewLine() +
-                getString(R.string.label_total) + " " + total + getString(R.string.monetary_unit));
+                getString(R.string.label_total) + " " + mFormatKRW.format(total) + getString(R.string.monetary_unit));
 
         return rootView;
     }

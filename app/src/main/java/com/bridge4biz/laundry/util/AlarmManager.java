@@ -83,11 +83,13 @@ public class AlarmManager {
                                     mContext.getString(R.string.minute_text));
 
                         if (alarm.type == MainActivity.PICK_UP_ALARM) {
+                            intent.putExtra("uid", String.valueOf(CleanBasketApplication.getInstance().getUid()));
                             intent.putExtra("type", "2");
                             requestCode = Integer.parseInt("2" + String.valueOf(alarm.oid));
                             calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + PICK_UP_ALRAM_HOUR);
                         }
                         else if (alarm.type == MainActivity.DROP_OFF_ALARM) {
+                            intent.putExtra("uid", String.valueOf(CleanBasketApplication.getInstance().getUid()));
                             intent.putExtra("type", "3");
                             requestCode = Integer.parseInt("3" + String.valueOf(alarm.oid));
                             calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + DROP_OFF_ALRAM_HOUR);

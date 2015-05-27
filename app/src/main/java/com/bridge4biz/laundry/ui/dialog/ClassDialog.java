@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bridge4biz.laundry.CleanBasketApplication;
 import com.bridge4biz.laundry.R;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class ClassDialog extends DialogFragment implements View.OnClickListener 
 
         list.add(new ClassInfo(null,"class_label", "class_benefit", getString(R.string.class_total)));
         list.add(new ClassInfo("clean", "bronze_basket", "bronze_info", "0"));
-        list.add(new ClassInfo("silver", "silver_basket", "silver_info", "100000"));
+        list.add(new ClassInfo("silver", "silver_basket", "silver_info", "150000"));
         list.add(new ClassInfo("gold", "gold_basket", "gold_info", "300000"));
         list.add(new ClassInfo("love", "love_basket", "love_info", "500000"));
 
@@ -132,7 +133,7 @@ public class ClassDialog extends DialogFragment implements View.OnClickListener 
             holder.textViewClassName.setText(getStringByString(getItem(position).name));
             holder.textViewClassBenefit.setText(getStringByString(getItem(position).benefit));
             if (position > 0)
-                holder.textViewClassTotal.setText(getItem(position).total + getString(R.string.monetary_unit));
+                holder.textViewClassTotal.setText(CleanBasketApplication.mFormatKRW.format(Integer.parseInt(getItem(position).total)) + getString(R.string.monetary_unit));
             else
                 holder.textViewClassTotal.setText(getItem(position).total);
 

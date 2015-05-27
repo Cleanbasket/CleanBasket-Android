@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/order_info_background"
     tools:context=".OrderInfoFragment">
 
@@ -20,8 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_order_finish"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:divider="@color/order_info_background"
+        android:dividerHeight="@dimen/slim_line"
         android:overScrollMode="never"
         android:drawSelectorOnTop="true" />
 

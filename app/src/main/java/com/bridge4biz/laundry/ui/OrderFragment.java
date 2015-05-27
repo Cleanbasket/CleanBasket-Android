@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -39,6 +41,8 @@ import com.bridge4biz.laundry.io.model.OrderItem;
 import com.bridge4biz.laundry.io.request.GetRequest;
 import com.bridge4biz.laundry.ui.dialog.CalculationDialog;
 import com.bridge4biz.laundry.ui.dialog.ItemListDialog;
+import com.bridge4biz.laundry.ui.widget.CategoryItemAdapter;
+import com.bridge4biz.laundry.ui.widget.HorizontalListView;
 import com.bridge4biz.laundry.ui.widget.OrderItemAdapter;
 import com.bridge4biz.laundry.ui.widget.OrderItemsView;
 import com.bridge4biz.laundry.util.AddressManager;
@@ -55,7 +59,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-public class OrderFragment extends Fragment implements View.OnClickListener, SearchView.OnQueryTextListener, ItemListDialog.ItemListListener, CalculationDialog.CalculationListener {
+public class OrderFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, SearchView.OnQueryTextListener, ItemListDialog.ItemListListener, CalculationDialog.CalculationListener {
     public static final String TAG = OrderFragment.class.getSimpleName();
     public static final String ITEM_LIST_DIALOG_TAG = "ITEM_LIST_DIALOG";
     public static final String MODIFY_ITEM_LIST_DIALOG_TAG = "MODIFY_ITEM_LIST_DIALOG";
@@ -63,6 +67,8 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
     private Boolean isModifyOrder = false;
 
     private Order mOrder;
+    private HorizontalListView mCategoryListView;
+    private CategoryItemAdapter mCategoryItemAdapter;
     private OrderItemsView mOrderItemsView;
     private OrderItemAdapter mOrderItemAdapter;
     private SearchView mSearchView;
@@ -77,12 +83,16 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
     private DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
 
+    private int mIndex;
     private ArrayList<OrderItem> mOrderItem;
+    private ArrayList<Integer> mCategoryIndex;
+    private Integer[] mCategoryIndexForMoving;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_order, container, false);
 
+        mCategoryListView = (HorizontalListView) rootView.findViewById(R.id.category_horizontal_listview);
         mOrderItemsView = (OrderItemsView) rootView.findViewById(R.id.gridview_item);
         mOrderItemAdapter = new OrderItemAdapter(getActivity(), R.layout.item_orderitem);
         mSearchView = (SearchView) rootView.findViewById(R.id.searchview_item);
@@ -93,9 +103,35 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         mTextViewItemNumber = (TextView) rootView.findViewById(R.id.textview_item_number);
         mTextViewItemTotal = (TextView) rootView.findViewById(R.id.textview_item_total);
 
+//        mCategoryArrowLeft = (ImageView) rootView.findViewById(R.id.button_left);
+//        mCategoryArrowRight = (ImageView) rootView.findViewById(R.id.button_right);
+
+        mCategoryItemAdapter = new CategoryItemAdapter(getActivity(), 0);
+        mCategoryListView.setAdapter(mCategoryItemAdapter);
+        mCategoryListView.setOnItemClickListener(this);
+
         mOrderItemsView.setNumColumns(3);
         mOrderItemsView.setAreHeadersSticky(true);
         mOrderItemsView.setAdapter(mOrderItemAdapter);
+        mOrderItemsView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (mIndex == firstVisibleItem)
+                    return;
+
+                mIndex = firstVisibleItem;
+                int index = firstVisibleItem / 3;
+
+                mCategoryListView.setSelection(mCategoryIndex.get(index));
+
+                mCategoryItemAdapter.selectItem(mCategoryIndex.get(index));
+            }
+        });
 
         int searchCloseButtonId = mSearchView.getContext().getResources()
                 .getIdentifier("android:id/search_close_btn", null, null);
@@ -114,7 +150,13 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
                 mImageViewSearchIcon.setVisibility(View.VISIBLE);
             }
         });
+
         return rootView;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mOrderItemsView.setSelection(mCategoryIndexForMoving[position] * 3);
     }
 
     @Override
@@ -274,6 +316,11 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
     private void insertCategory(ArrayList<OrderCategory> orderCategories) {
         if (mOrderItemAdapter != null)
             mOrderItemAdapter.setOrderCategoryList(orderCategories);
+
+        if (mCategoryItemAdapter != null) {
+            mCategoryItemAdapter.clear();
+            mCategoryItemAdapter.addAll(orderCategories);
+        }
     }
 
     private void insertOrderItem(ArrayList<OrderItem> orderItems) {
@@ -308,6 +355,9 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
             mOrderItemAdapter.addAll(orderItems);
             mOrderItemAdapter.setFixedOrderItem(orderItems);
         }
+
+        makeCategoryIndex();
+        mCategoryItemAdapter.selectItem(0);
     }
 
     private void updateOrderInfo() {
@@ -424,8 +474,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
 
         if (getOrderItemAdapter().getItemTotal() >= OrderInfoFragment.FREE_PICK_UP_PRICE)
             mOrder.dropoff_price = 0;
-        else
+        else {
             mOrder.dropoff_price = 2000;
+            mOrder.price = mOrder.price + 2000;
+        }
 
         CalculationDialog calculationDialog =
                 CalculationDialog.newInstance(mOrder, this);
@@ -433,6 +485,40 @@ public class OrderFragment extends Fragment implements View.OnClickListener, Sea
         calculationDialog.show(
                 getActivity().getSupportFragmentManager(),
                 tag);
+    }
+
+    /**
+     * 두개의 인덱스를 만듭니다. refactoring need
+     */
+    private void makeCategoryIndex() {
+        mCategoryIndex = new ArrayList<Integer>();
+        mCategoryIndexForMoving = new Integer[mCategoryItemAdapter.getCount()];
+
+        mCategoryIndexForMoving[0] = 0;
+
+        for (int i = 1; i < mCategoryItemAdapter.getCount() + 1; i++) {
+            Integer countOfItems = 0;
+
+            try {
+                countOfItems = (int) getDBHelper().getOrderItemDao().queryBuilder().where().eq(OrderItem.CATEGORY_COLUMN, i).countOf();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            int index = countOfItems / 3;
+
+            for (int j = 0; j < index; j++)
+                mCategoryIndex.add(i - 1);
+
+            if (countOfItems % 3 > 0) {
+                mCategoryIndex.add(i - 1);
+                index++;
+            }
+
+            if (i < mCategoryItemAdapter.getCount())
+                mCategoryIndexForMoving[i] = mCategoryIndexForMoving[i - 1] + index + 1;
+            mCategoryIndex.add(i - 1);
+        }
     }
 
     @Override

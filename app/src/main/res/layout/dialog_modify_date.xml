@@ -17,7 +17,6 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-
     <LinearLayout android:id="@+id/modify_datetime_form" android:layout_width="match_parent"
         android:layout_height="wrap_content" android:orientation="vertical">
 
@@ -60,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_pickup_title"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/textview_back_grey"
+                android:background="@drawable/text_button_background"
                 android:layout_centerHorizontal="true" />
 
             <TextView
@@ -71,7 +70,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/textview_pick_up_date"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/textview_back_grey" />
+                android:background="@drawable/text_button_background" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -115,7 +114,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/layout_dropoff_title"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/textview_back_grey" />
+                android:background="@drawable/text_button_background" />
 
             <TextView
                 style="@style/Black.Default.TextView.CleanBasket"
@@ -125,7 +124,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/textview_drop_off_date"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/textview_back_grey" />
+                android:background="@drawable/text_button_background" />
         </RelativeLayout>
 
         <Button
@@ -138,6 +137,17 @@
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/cancel_modify_datetime_button"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@null"
+            android:text="@string/label_cancel"
+            android:textSize="10dp" />
     </LinearLayout>
 
     <Button

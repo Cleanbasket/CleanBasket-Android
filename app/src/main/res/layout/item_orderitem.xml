@@ -19,11 +19,23 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal">
 
-            <ImageView
-                android:id="@+id/imageview_orderitem"
+            <RelativeLayout
+                android:id="@+id/orderitem_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true">
+
+                <ImageView
+                    android:id="@+id/imageview_orderitem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/imageview_outline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_item_outline" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/imageview_extractitem"

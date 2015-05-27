@@ -26,7 +26,7 @@ public class AddressManager {
 
     public final static String GET_ORDER = "member/order";
     public final static String GET_DISTRICT = "district";
-    public final static String DEL_ORDER = "member/order/del";
+    public final static String DEL_ORDER = "member/order/del/new";
     public final static String CONFIRM_ORDER = "member/order/confirm";
     public final static String RATE_ORDER = "member/order/rate";
     public final static String DATE_UPDATE_ORDER = "member/order/date";

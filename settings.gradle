@@ -1,3 +1,2 @@
-include ':Kakao', 'app'
+include 'app'
 include ':libraries:Kakao'
-project(':Kakao').projectDir = new File('libraries/Kakao')

@@ -1,7 +1,9 @@
 package com.bridge4biz.laundry.ui;
 
-
+import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -15,6 +17,9 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -50,7 +55,17 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
 
         getListView().setBackgroundColor(Color.WHITE);
 
-        getActionBar().setTitle(R.string.setting_title);
+        getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getActionBar().setCustomView(R.layout.action_layout);
+        TextView customTitle = (TextView) getActionBar().getCustomView().findViewById(R.id.actionbar_title);
+        ImageView backButton = (ImageView) getActionBar().getCustomView().findViewById(R.id.imageview_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        customTitle.setText(getString(R.string.setting_title));
     }
 
     @Override
@@ -110,7 +125,7 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
                 pd.show(getFragmentManager(), "pd");
             }
             else if (preference.getKey().equals("logout")) {
-                logout();
+                openAlert();
             }
             else if (preference.getKey().equals("update")) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Config.PLAY_STORE_URL));
@@ -131,6 +146,7 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
                 switch (jsonData.constant) {
                     case Constants.SUCCESS:
                         SessionManager.get(getBaseContext()).clearSessionId();
+                        CleanBasketApplication.getInstance().storeRegistrationId(getBaseContext(), null);
                         redirectToLoginActivity();
                         break;
                 }
@@ -210,5 +226,25 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    private void openAlert() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setTitle(getString(R.string.logout));
+        alertDialogBuilder.setMessage(getString(R.string.logout_confirm));
+        alertDialogBuilder.setPositiveButton(R.string.label_confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                logout();
+            }
+        });
+        alertDialogBuilder.setNegativeButton(R.string.label_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

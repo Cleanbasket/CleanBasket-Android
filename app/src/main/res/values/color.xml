@@ -15,22 +15,28 @@
     <color name="splash_text">#707070</color>
     <color name="splash_background">#F9F9F9</color>
     <color name="textview_order_button">#FFFFFF</color>
-    <color name="order_button_background">#82d9cf</color>
+    <color name="order_button_background">#83dbd1</color>
     <color name="grey_line_color">#707070</color>
     <color name="total_line_color">#F9F9F9</color>
+    <color name="caculation_item_backgound_color">#F0F0F0</color>
 
     <!-- related to item list fragment -->
     <color name="listview_item_background">#FFFFFF</color>
     <color name="order_background_color">#F9F9F9</color>
+    <color name="search_background">#D1D1D1</color>
+
+    <color name="address_textview_bacground">#D1D1D1</color>
 
     <!-- related to item list fragment -->
     <color name="button_non_pressed_back">#FFFFFF</color>
-    <color name="button_pressed_back">#ede9da</color>
+    <color name="button_pressed_back">#A5F0E6</color>
 
     <!-- general -->
-    <color name="point_color">#82d9cf</color>
+    <color name="point_color">#83dbd1</color>
     <color name="dialog_color">#FFFFFF</color>
     <color name="badge_color">#000000</color>
+    <color name="actionbar_color">#000000</color>
+    <color name="textview_background">#DDDDDD</color>
 
     <!-- notification -->
     <color name="notification_checked">#FFFFFF</color>

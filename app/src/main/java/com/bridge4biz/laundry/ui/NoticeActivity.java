@@ -4,6 +4,7 @@ package com.bridge4biz.laundry.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -44,6 +46,18 @@ public class NoticeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_notice);
+
+        getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getActionBar().setCustomView(R.layout.action_layout);
+        TextView customTitle = (TextView) getActionBar().getCustomView().findViewById(R.id.actionbar_title);
+        ImageView backButton = (ImageView) getActionBar().getCustomView().findViewById(R.id.imageview_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        customTitle.setText(getString(R.string.notice_title));
 
         mExpandableListView = (ExpandableListView) findViewById(R.id.listview_notice);
         mProgressView = findViewById(R.id.loading_progress);

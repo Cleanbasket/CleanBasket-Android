@@ -4,13 +4,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_calculation_info"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight">
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="@color/caculation_item_backgound_color">
 
     <View
         android:id="@+id/line_top"
         android:layout_width="fill_parent"
         android:layout_height="5dp"
-        android:background="@color/total_line_color" />
+        android:background="@color/order_info_background" />
 
     <ImageView
         android:id="@+id/imageview_calculation_info"
@@ -30,7 +31,7 @@
         android:orientation="vertical">
 
         <TextView
-            style="@style/Black.Big.TextView.CleanBasket"
+            style="@style/Black.TextView.CleanBasket"
             android:id="@+id/textview_calculation_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

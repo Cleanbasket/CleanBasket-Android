@@ -39,11 +39,11 @@ public class LoginFragment extends Fragment {
                 ImageLoader imageLoader = RequestQueue.getInstance(getActivity()).getImageLoader();
                 imageLoader.get(Config.SEOUL_IMAGE_ADDRESS,
                         ImageLoader.getImageListener(
-                                mSeoulMap, R.drawable.ic_loading, R.drawable.ic_loading
+                                mSeoulMap, R.drawable.ic_login_seoul_map, R.drawable.ic_login_seoul_map
                         ));
                 imageLoader.get(Config.INCHEON_IMAGE_ADDRESS,
                         ImageLoader.getImageListener(
-                                mIncheonMap, R.drawable.ic_loading, R.drawable.ic_loading
+                                mIncheonMap, R.drawable.ic_login_incheon_map, R.drawable.ic_login_incheon_map
                         ));
                 break;
 
@@ -57,7 +57,6 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         ((LoginActivity) getActivity()).session.getCurrentSession().open(AuthType.KAKAO_TALK, getActivity());
-                        getActivity().finish();
                     }
                 });
 

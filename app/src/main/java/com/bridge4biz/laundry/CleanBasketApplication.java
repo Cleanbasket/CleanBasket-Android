@@ -11,14 +11,20 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bridge4biz.laundry.db.DBHelper;
+import com.bridge4biz.laundry.ui.MainActivity;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.urqa.clientinterface.URQAController;
+
+import java.text.DecimalFormat;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class CleanBasketApplication extends Application {
     private static final String TAG = CleanBasketApplication.class.getSimpleName();
+
+    public static DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
+
     public static CleanBasketApplication mInstance;
 
     // Related to GCM
@@ -124,5 +130,16 @@ public class CleanBasketApplication extends Application {
     public int getPx(int dimensionDp) {
         float density = getResources().getDisplayMetrics().density;
         return (int) (dimensionDp * density + 0.5f);
+    }
+
+    public int getUid() {
+        final SharedPreferences prefs = getUidPreferences();
+        int uid = prefs.getInt(MainActivity.USER_ID, 0);
+
+        return uid;
+    }
+
+    private SharedPreferences getUidPreferences() {
+        return getSharedPreferences(MainActivity.UID, Context.MODE_PRIVATE);
     }
 }

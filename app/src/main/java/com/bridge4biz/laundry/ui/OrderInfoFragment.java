@@ -28,9 +28,11 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bridge4biz.laundry.CleanBasketApplication;
+import com.bridge4biz.laundry.Config;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.RequestQueue;
 import com.bridge4biz.laundry.io.model.Address;
@@ -58,6 +60,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapReverseGeoCoder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,8 +71,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
-public class OrderInfoFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, MileageDialog.OnDialogDismissListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, Response.Listener<JSONObject>, Response.ErrorListener, EditText.OnEditorActionListener, AdapterView.OnItemClickListener, MileageDialog.OnMileageSetListener, CouponDialog.OnCouponSetListener, OnFinishAddrSearchListener {
+public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTimeSetListener, MapReverseGeoCoder.ReverseGeoCodingResultListener, View.OnClickListener, DatePickerDialog.OnDateSetListener, MileageDialog.OnDialogDismissListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, Response.Listener<JSONObject>, Response.ErrorListener, EditText.OnEditorActionListener, AdapterView.OnItemClickListener, MileageDialog.OnMileageSetListener, CouponDialog.OnCouponSetListener, OnFinishAddrSearchListener {
     public static final String TAG = OrderInfoFragment.class.getSimpleName();
     public static final String TAG_MODIFY = OrderInfoFragment.class.getSimpleName() + "_MODIFY";
     public static final String TIME_PICKER_TAG = "TIME_PICKER";
@@ -119,7 +125,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     private Button mButtonToday;
     private Button mButtonTomorrow;
     private Button mButtonEtc;
-    private Button mButtonGrossTotal;
     private ListView mCalculationInfoListView;
 
     private Button mButtonOrder;
@@ -127,6 +132,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     private CalculationInfoAdapter mCalculationInfoAdapter;
 
     private Boolean mAddressFlag;
+    private Boolean mOrderFlag = false;
 
     private Order mOrder;
     private Integer mPaymentMethod = 0;
@@ -162,7 +168,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mButtonToday = (Button) mHeader.findViewById(R.id.imageview_datetime_today);
         mButtonTomorrow = (Button) mHeader.findViewById(R.id.imageview_datetime_tomorrow);
         mButtonEtc = (Button) mHeader.findViewById(R.id.imageview_datetime_etc);
-        mButtonGrossTotal = (Button) mHeader.findViewById(R.id.button_gross_total);
 
         mEditTextAddress.setOnEditorActionListener(this);
         mEditTextDetailAddress.setOnEditorActionListener(this);
@@ -215,7 +220,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         mButtonToday.setOnClickListener(this);
         mButtonTomorrow.setOnClickListener(this);
         mButtonEtc.setOnClickListener(this);
-        mButtonGrossTotal.setOnClickListener(this);
         mTextViewSelectedPickUpDate.setOnClickListener(this);
         mTextViewSelectedPickUpTime.setOnClickListener(this);
         mTextViewSelectedDropOffDate.setOnClickListener(this);
@@ -232,9 +236,9 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
         calculationInfos.add(new CalculationInfo("coupon", getString(R.string.coupon), 0, CalculationInfo.COUPON));
 
         mCalculationInfoAdapter = new CalculationInfoAdapter(getActivity(), R.layout.item_calculation_info, calculationInfos);
+        mCalculationInfoListView.addHeaderView(mHeader);
         mCalculationInfoListView.setAdapter(mCalculationInfoAdapter);
         mCalculationInfoListView.setOnItemClickListener(this);
-        mCalculationInfoListView.addHeaderView(mHeader);
 
         mButtonCard.setOnClickListener(this);
         mButtonCash.setOnClickListener(this);
@@ -412,6 +416,11 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     }
 
     private void transferOrder() {
+        if (mOrderFlag)
+            return;
+
+        mOrderFlag = true;
+
         PostRequest postRequest = new PostRequest(getActivity());
         String body = CleanBasketApplication.getInstance().getGson().toJson(mOrder);
 
@@ -424,7 +433,11 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
         postRequest.setUrl(AddressManager.ADD_ORDER);
         postRequest.setListener(this, this);
-        RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest());
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(postRequest.doRequest().setRetryPolicy(
+                new DefaultRetryPolicy(
+                (int) TimeUnit.SECONDS.toMillis(10),
+                Config.DEFAULT_MAX_RETRIES,
+                Config.DEFAULT_BACKOFF_MULT)));
     }
 
     @Override
@@ -465,11 +478,15 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 getActivity().getSupportFragmentManager().popBackStack();
 //                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         }
+
+        mOrderFlag = false;
     }
 
     @Override
     public void onErrorResponse(VolleyError volleyError) {
         showProgress(false);
+
+        mOrderFlag = false;
 
         CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
     }
@@ -494,7 +511,7 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 break;
         }
 
-        TimePickerDialog radialTimePickerDialog = TimePickerDialog.newInstance(this, hour, minute, header, mode);
+        TimePickerDialog radialTimePickerDialog = TimePickerDialog.newInstance(getActivity(), this, hour, minute, header, mode);
 
         radialTimePickerDialog.show(
                 getActivity().getSupportFragmentManager(),
@@ -569,6 +586,10 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 pickUpDateSelected(pickUp.getTime());
                 pickUpTimeSelected(pickUp.getTime());
 
+                if (isFastestDay(mSelectedDropOffDate)) {
+                    dropOffTimeSelected(pickUp.getTime());
+                }
+
                 mSelectedPickUpDate = pickUp.getTime();
                 break;
 
@@ -583,8 +604,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
                 mSelectedDropOffDate = dropOffDateTime.getTime();
                 break;
         }
-
-        timePickerDialog.dismiss();
     }
 
     private void showMileageDialog() {
@@ -651,7 +670,6 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
         mCalculationInfoAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     public void onMileageSet(MileageDialog dialog, int mileage) {
@@ -958,13 +976,13 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onStart() {
         super.onStart();
-        if (!mAddressFlag)
-            mGoogleApiClient.connect();
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         setCalculationInfo();
         mCalculationInfoAdapter.mAuthUser = ((MainActivity) getActivity()).mAuthUser;
         mCalculationInfoAdapter.notifyDataSetChanged();
@@ -980,21 +998,36 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onConnected(Bundle connectionHint) {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
+        if (mLastLocation != null && !mAddressFlag) {
             AddressSearcher addressSearcher = new AddressSearcher();
             addressSearcher.searchAddr(getActivity(), mLastLocation.getLatitude(), mLastLocation.getLongitude(), this);
         }
     }
 
     @Override
+    public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
+        mEditTextAddress.setText(s);
+    }
+
+    @Override
+    public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) {
+
+    }
+
+    @Override
     public void onSuccess(GeocodeResponse geocodeResponse) {
         String address = "";
 
+        if (geocodeResponse.getStatus().equals(MapActivity.OVER_QUERY_LIMIT)) {
+            MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            MapReverseGeoCoder reverseGeoCoder = new MapReverseGeoCoder(Config.DAUM_MAP_API, mapPoint, this, getActivity());
+            reverseGeoCoder.startFindingAddress();
+        }
+
         if (geocodeResponse.getResults().size() == 0)
             return;
-        else {
+        else
             address = geocodeResponse.getResults().get(0).getFormatted_address();
-        }
 
         String[] fullAddress = address.split(" ");
         mEditTextAddress.setText(fullAddress[1] + " " + fullAddress[2] + " " + fullAddress[3]);
@@ -1038,6 +1071,10 @@ public class OrderInfoFragment extends Fragment implements View.OnClickListener,
 
         if(calculationPreTotalInfo == null)
             mCalculationInfoAdapter.add(new CalculationInfo(null, getString(R.string.label_item) + " " + totalItemNumber + getString(R.string.item_unit), mTotal, CalculationInfo.PRE_TOTAL));
+        else {
+            calculationPreTotalInfo.name = getString(R.string.label_item) + " " + totalItemNumber + getString(R.string.item_unit);
+            calculationPreTotalInfo.price = mTotal;
+        }
 
         /* 수거배달비 계산 */
         CalculationInfo calculationCostInfo = mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.COST);

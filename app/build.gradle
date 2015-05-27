@@ -8,8 +8,8 @@ android {
         applicationId "com.bridge4biz.laundry"
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 1
-        versionName "1.0"
+        versionCode 18
+        versionName "1.5.1"
     }
 
     packagingOptions {
@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -40,4 +40,6 @@ dependencies {
     compile files('libs/volley.jar')
     compile project(':libraries:Kakao')
     compile files('libs/UrQA-Client_0.97.jar')
+    compile files('libs/libDaumMapAndroid.jar')
+    compile files('libs/libGoogleAnalyticsServices.jar')
 }

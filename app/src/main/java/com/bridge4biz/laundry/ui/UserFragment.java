@@ -66,6 +66,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
 
     private LayoutInflater mInflater;
 
+    private View mHeaderView;
     private View mRegisterView;
     private View mUserInfoView;
 
@@ -101,6 +102,33 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
 
         mProgressView = rootView.findViewById(R.id.loading_progress);
         mListView = (ListView) rootView.findViewById(R.id.listview_menu);
+
+        mHeaderView = mInflater.inflate(R.layout.custom_register, null);
+        mRegisterView = mHeaderView.findViewById(R.id.register_form);
+        mEditTextEmail = (EditText) mHeaderView.findViewById(R.id.edittext_email);
+        mEditTextPhone = (EditText) mHeaderView.findViewById(R.id.edittext_phone);
+        mEditTextAuthorization = (EditText) mHeaderView.findViewById(R.id.edittext_authorization);
+        mCheckedTextViewAll = (TextView) mHeaderView.findViewById(R.id.checkbox_agree_all);
+        mCheckedTextViewService = (TextView) mHeaderView.findViewById(R.id.checkedtextview_service);
+        mCheckedTextViewProtection = (TextView) mHeaderView.findViewById(R.id.checkedtextview_protection);
+        mButtonRequestCode = (Button) mHeaderView.findViewById(R.id.button_authorization);
+        mButtonRegister = (Button) mHeaderView.findViewById(R.id.register_button);
+        mCheckBoxAll = (CheckBox) mHeaderView.findViewById(R.id.checkbox_agree_all);
+        mCheckBoxService = (CheckBox) mHeaderView.findViewById(R.id.checkbox_service);
+        mCheckBoxProtection = (CheckBox) mHeaderView.findViewById(R.id.checkbox_protection);
+        mEditTextEmail.setText(UserEmailFetcher.getEmail(getActivity()));
+        mEditTextPhone.setText(getPhoneNumber());
+
+        mUserInfoView = mHeaderView.findViewById(R.id.view_user_info);
+        mImageViewUserClass = (ImageView) mHeaderView.findViewById(R.id.imageview_user_class);
+        mUserName = (TextView) mHeaderView.findViewById(R.id.textview_user_name);
+        mUserClass = (TextView) mHeaderView.findViewById(R.id.textview_user_class);
+        mUserClassInfo = (TextView) mHeaderView.findViewById(R.id.textview_user_class_info);
+        mUserClassMileage = (TextView) mHeaderView.findViewById(R.id.textview_user_class_mileage);
+        mButtonClassInfo = (Button) mHeaderView.findViewById(R.id.button_view_class_info);
+        mUserInfoView.setVisibility(View.GONE);
+
+        mListView.addHeaderView(mHeaderView);
 
         return rootView;
     }
@@ -174,25 +202,11 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
 
     private void showUserInfoHeader(AuthUser authUser) {
         // UserInfoView
-        if (mUserInfoView == null) {
-            mUserInfoView = mInflater.inflate(R.layout.custom_user_info, null);
-            mImageViewUserClass = (ImageView) mUserInfoView.findViewById(R.id.imageview_user_class);
-            mUserName = (TextView) mUserInfoView.findViewById(R.id.textview_user_name);
-            mUserClass = (TextView) mUserInfoView.findViewById(R.id.textview_user_class);
-            mUserClassInfo = (TextView) mUserInfoView.findViewById(R.id.textview_user_class_info);
-            mUserClassMileage = (TextView) mUserInfoView.findViewById(R.id.textview_user_class_mileage);
-            mButtonClassInfo = (Button) mUserInfoView.findViewById(R.id.button_view_class_info);
-
-            mImageViewUserClass.setImageResource(getDrawableByClass(authUser.user_class));
-            mUserName.setText(authUser.email);
-            mUserClass.setText(getClassName(authUser.user_class));
-            mUserClassInfo.setText(getClassDetail(authUser.user_class));
-            mButtonClassInfo.setOnClickListener(this);
-
-            mListView.setAdapter(null);
-            mListView.addHeaderView(mUserInfoView);
-            setListView();
-        }
+        mImageViewUserClass.setImageResource(getDrawableByClass(authUser.user_class));
+        mUserName.setText(authUser.email);
+        mUserClass.setText(getClassName(authUser.user_class));
+        mUserClassInfo.setText(getClassDetail(authUser.user_class));
+        mButtonClassInfo.setOnClickListener(this);
 
         if (mUserClassMileage != null) {
             mUserClassMileage.setText(getString(R.string.mileage_available) + " " + authUser.mileage);
@@ -201,6 +215,9 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             mUserClass.setText(getClassName(authUser.user_class));
             mUserClassInfo.setText(getClassDetail(authUser.user_class));
         }
+
+        mRegisterView.setVisibility(View.GONE);
+        mUserInfoView.setVisibility(View.VISIBLE);
     }
 
     private int getDrawableByClass(Integer user_class) {
@@ -250,30 +267,11 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
 
     private void showRegisterHeader() {
         // RegisterView
-        if (mRegisterView == null) {
-            mRegisterView = mInflater.inflate(R.layout.custom_register, null);
-            mEditTextEmail = (EditText) mRegisterView.findViewById(R.id.edittext_email);
-            mEditTextPhone = (EditText) mRegisterView.findViewById(R.id.edittext_phone);
-            mEditTextAuthorization = (EditText) mRegisterView.findViewById(R.id.edittext_authorization);
-            mCheckedTextViewAll = (TextView) mRegisterView.findViewById(R.id.checkbox_agree_all);
-            mCheckedTextViewService = (TextView) mRegisterView.findViewById(R.id.checkedtextview_service);
-            mCheckedTextViewProtection = (TextView) mRegisterView.findViewById(R.id.checkedtextview_protection);
-            mButtonRequestCode = (Button) mRegisterView.findViewById(R.id.button_authorization);
-            mButtonRegister = (Button) mRegisterView.findViewById(R.id.register_button);
-            mCheckBoxAll = (CheckBox) mRegisterView.findViewById(R.id.checkbox_agree_all);
-            mCheckBoxService = (CheckBox) mRegisterView.findViewById(R.id.checkbox_service);
-            mCheckBoxProtection = (CheckBox) mRegisterView.findViewById(R.id.checkbox_protection);
-            mEditTextEmail.setText(UserEmailFetcher.getEmail(getActivity()));
-            mEditTextPhone.setText(getPhoneNumber());
-
-            mButtonRequestCode.setOnClickListener(this);
-            mButtonRegister.setOnClickListener(this);
-            mCheckedTextViewService.setOnClickListener(this);
-            mCheckedTextViewProtection.setOnClickListener(this);
-            mCheckBoxAll.setOnClickListener(this);
-
-            mListView.addHeaderView(mRegisterView);
-        }
+        mButtonRequestCode.setOnClickListener(this);
+        mButtonRegister.setOnClickListener(this);
+        mCheckedTextViewService.setOnClickListener(this);
+        mCheckedTextViewProtection.setOnClickListener(this);
+        mCheckBoxAll.setOnClickListener(this);
     }
 
     @Override
@@ -671,7 +669,8 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
 
                             mButtonRequestCode.setEnabled(true);
                             mButtonRequestCode.setBackgroundResource(R.drawable.button_green);
-                            mButtonRequestCode.setTextColor(getResources().getColor(R.color.text_white));
+                            if (isAdded())
+                                mButtonRequestCode.setTextColor(getResources().getColor(R.color.text_white));
                         }
                     }
                 }

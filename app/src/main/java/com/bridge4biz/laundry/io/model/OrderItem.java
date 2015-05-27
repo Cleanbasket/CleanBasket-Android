@@ -10,6 +10,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
 public class OrderItem extends BaseDaoEnabled<OrderItem, Integer> implements Parcelable {
+    public static final String CATEGORY_COLUMN = "category";
+
     @DatabaseField(id = true) public int item_code;
     @DatabaseField public int category;
     @DatabaseField public String name;

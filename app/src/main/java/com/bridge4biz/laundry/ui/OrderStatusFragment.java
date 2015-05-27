@@ -47,6 +47,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,7 +57,10 @@ public class OrderStatusFragment extends Fragment {
     public static final String ITEM_LIST_DIALOG_TAG = "ITEM_LIST_STATUS_DIALOG";
     public static final String TOTAL_DIALOG_TAG = "TOTAL_DIALOG";
     public static final String MODIFY_DIALOG_TAG = "MODIFY_DIALOG";
+    public static final String MODIFY_DIALOG_TAG_AFTER_PICK_UP = "MODIFY_AFTER_PICK_UP_DIALOG";
     public static final String MODIFY_DATETIME_DIALOG_TAG = "MODIFY_DATETIME_DIALOG";
+
+    private DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
 
     public static final int MODIFY_ITEM = 0;
     public static final int MODIFY_DATETIME = 1;
@@ -258,7 +262,7 @@ public class OrderStatusFragment extends Fragment {
                     DateTimeFactory.getInstance().getPlusOneTime(getActivity(), getGroup(position).dropoff_date));
             holder.textViewTotal.setText(
                     getString(R.string.label_total) + " " +
-                            (getTotalFromOrder(position) + getGroup(position).dropoff_price - getGroup(position).mileage - getCouponTotal(getGroup(position))) + getString(R.string.monetary_unit));
+                            mFormatKRW.format(getTotalFromOrder(position) + getGroup(position).dropoff_price - getGroup(position).mileage - getCouponTotal(getGroup(position))) + getString(R.string.monetary_unit));
             holder.textViewTotalNumber.setText(
                     getString(R.string.label_item) + " " +
                             getTotalNumberFromOrder(position) + getString(R.string.item_unit));
@@ -289,9 +293,8 @@ public class OrderStatusFragment extends Fragment {
 
             int state = getGroup(position).state;
 
-            holder.buttonModifyOrder.setVisibility(View.INVISIBLE);
             holder.buttonFeedback.setVisibility(View.GONE);
-            holder.lineBottom.setVisibility(View.INVISIBLE);
+            // holder.lineBottom.setVisibility(View.INVISIBLE);
 
             // state에 따라 컴포넌트를 출력합니다
             switch (state) {
@@ -308,7 +311,7 @@ public class OrderStatusFragment extends Fragment {
                     holder.lineBottom.setVisibility(View.VISIBLE);
                     if (getGroup(position).pickupInfo != null) {
                         setPDFaceImage(holder.imageViewPdFace, getGroup(position).pickupInfo.img);
-                        holder.textViewPDName.setText(getGroup(position).pickupInfo.name + " " + getString(R.string.pd_name_default));
+                        holder.textViewPDName.setText(getGroup(position).pickupInfo.name);
                     }
                     break;
 
@@ -316,7 +319,7 @@ public class OrderStatusFragment extends Fragment {
                     holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline3);
                     if (getGroup(position).dropoffInfo != null) {
                         setPDFaceImage(holder.imageViewPdFace, getGroup(position).dropoffInfo.img);
-                        holder.textViewPDName.setText(getGroup(position).dropoffInfo.name + " " + getString(R.string.pd_name_default));
+                        holder.textViewPDName.setText(getGroup(position).dropoffInfo.name);
                     }
                     break;
 
@@ -348,8 +351,8 @@ public class OrderStatusFragment extends Fragment {
             /* 총계를 구해 버튼에 새깁니다 */
             holder.buttonTotalGross.setText(
                     getString(R.string.label_total) + " " +
-                    (getTotalFromOrder(position) + getGroup(position).dropoff_price - getGroup(position).mileage - getCouponTotal(getGroup(position))) +
-                    getString(R.string.monetary_unit));
+                            mFormatKRW.format(getTotalFromOrder(position) + getGroup(position).dropoff_price - getGroup(position).mileage - getCouponTotal(getGroup(position))) +
+                            getString(R.string.monetary_unit));
             holder.buttonTotalGross.setTag(getGroup(position));
             holder.buttonModifyOrder.setTag(getGroup(position));
             holder.buttonOrderItem.setOnClickListener(this);
@@ -486,7 +489,10 @@ public class OrderStatusFragment extends Fragment {
                 case R.id.button_modify_order:
                     ModifyDialog md = ModifyDialog.newInstance(this, order.oid);
 
-                    md.show(getActivity().getSupportFragmentManager(), MODIFY_DIALOG_TAG);
+                    if (order.state >= PICK_UP_FINISH)
+                        md.show(getActivity().getSupportFragmentManager(), MODIFY_DIALOG_TAG_AFTER_PICK_UP);
+                    else
+                        md.show(getActivity().getSupportFragmentManager(), MODIFY_DIALOG_TAG);
                     break;
             }
         }
@@ -512,6 +518,7 @@ public class OrderStatusFragment extends Fragment {
 
                 case CANCEL_ORDER:
                     cancelOrder(oid);
+                    AlarmManager.getInstance(getActivity()).cancelAlarm(findOrderById(oid));
                     AlarmManager.getInstance(getActivity()).deleteAlarmFromDB(findOrderById(oid));
                     break;
             }

@@ -18,21 +18,21 @@
         android:id="@+id/textview_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14dp"
         android:layout_marginTop="17dp"
         android:layout_below="@+id/imageview_logo"
         android:layout_centerHorizontal="true"
         android:text="@string/app_description"
+        android:textSize="14dp"
         android:textColor="@android:color/white"
         fontPath="fonts/NanumBarunGothicUltraLight.otf" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="36dp"
         android:layout_marginTop="9dp"
         android:layout_below="@+id/textview_subtitle"
         android:layout_centerHorizontal="true"
         android:text="@string/app_name"
+        android:textSize="36dp"
         android:textColor="@android:color/white" />
 </RelativeLayout>

@@ -11,6 +11,8 @@ public class OrderCategory extends BaseDaoEnabled<OrderCategory, Integer> {
     @DatabaseField public String name;
     @DatabaseField public String img;
 
+    public boolean isSelected= false;
+
     public OrderCategory() {
 
     }

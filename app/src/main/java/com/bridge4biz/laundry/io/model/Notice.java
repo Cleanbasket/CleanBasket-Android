@@ -10,4 +10,7 @@ public class Notice {
     @DatabaseField public String title;
     @DatabaseField public String content;
     @DatabaseField public String rdate;
+
+    public Notice() {
+    }
 }

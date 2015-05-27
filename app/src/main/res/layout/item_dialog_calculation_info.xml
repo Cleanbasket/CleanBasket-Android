@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_calculation_info"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight">
+
+    <View
+        android:id="@+id/line_top"
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:background="@color/total_line_color" />
+
+    <ImageView
+        android:id="@+id/imageview_calculation_info"
+        android:layout_width="@dimen/default_icon"
+        android:layout_height="@dimen/default_icon"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/imageview_calculation_info"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/White.Big.TextView.CleanBasket"
+            android:id="@+id/textview_calculation_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/Light.TextView.CleanBasket"
+            android:id="@+id/textview_calculation_label_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="10dp"
+            android:textColor="@color/dialog_text"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/Light.TextView.CleanBasket"
+        android:id="@+id/textview_calculation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/textview_small_dimen"
+        android:textColor="@color/dialog_text"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        style="@style/Light.TextView.CleanBasket"
+        android:id="@+id/button_use"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/button_label_use"
+        android:textSize="@dimen/textview_small_dimen"
+        android:textColor="@color/dialog_text"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp" />
+</RelativeLayout>

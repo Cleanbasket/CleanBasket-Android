@@ -4,17 +4,18 @@ package com.bridge4biz.laundry.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -45,7 +46,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
     private CheckBox mCheckBoxTime;
     private CheckBox mCheckBoxLaundry;
     private CheckBox mCheckBoxKindness;
-    private Button mButton;
+    private RelativeLayout mButton;
 
     private int mOid;
     private int mRatingStar;
@@ -59,7 +60,17 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
 
         setContentView(R.layout.activity_feedback);
 
-        getActionBar().setTitle(R.string.feedback_title);
+        getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getActionBar().setCustomView(R.layout.action_layout);
+        TextView customTitle = (TextView) getActionBar().getCustomView().findViewById(R.id.actionbar_title);
+        ImageView backButton = (ImageView) getActionBar().getCustomView().findViewById(R.id.imageview_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        customTitle.setText(getString(R.string.feedback_title));
 
         mFeedbackFormView = findViewById(R.id.feedback_form);
         mProgressView = findViewById(R.id.feedback_progress);
@@ -72,7 +83,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         mCheckBoxLaundry = (CheckBox) findViewById(R.id.checkbox_laundry_feedback);
         mCheckBoxKindness = (CheckBox) findViewById(R.id.checkbox_kindness_feedback);
 
-        mButton = (Button) findViewById(R.id.button_feedback_send);
+        mButton = (RelativeLayout) findViewById(R.id.button_feedback_send);
         mButton.setOnClickListener(this);
         mRatingBar.setOnRatingBarChangeListener(this);
 
