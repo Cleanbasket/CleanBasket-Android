@@ -112,7 +112,6 @@ public class KakaoRegisterActivity extends BaseActivity {
                     case Constants.ERROR:
                         CleanBasketApplication.getInstance().showToast(getString(R.string.toast_error));
                         logout();
-                        redirectLoginActivity();
                         break;
 
                     case Constants.SUCCESS:
@@ -125,7 +124,6 @@ public class KakaoRegisterActivity extends BaseActivity {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 logout();
-                redirectLoginActivity();
             }
         });
         RequestQueue.getInstance(this).addToRequestQueue(postRequest.doRequest());
@@ -147,23 +145,19 @@ public class KakaoRegisterActivity extends BaseActivity {
                     case Constants.SESSION_EXPIRED:
                         CleanBasketApplication.getInstance().showToast(getString(R.string.session_invalid));
                         logout();
-                        redirectLoginActivity();
                         break;
 
                     case Constants.EMAIL_ERROR:
-                        logout();
-                        redirectLoginActivity();
+                        signUpServer(userId);
                         break;
 
                     case Constants.PASSWORD_ERROR:
                         logout();
-                        redirectLoginActivity();
                         break;
 
                     case Constants.ACCOUNT_DISABLED:
                         CleanBasketApplication.getInstance().showToast(getString(R.string.disable_error));
                         logout();
-                        redirectLoginActivity();
                         break;
 
                     case Constants.SUCCESS:

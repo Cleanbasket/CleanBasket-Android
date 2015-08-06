@@ -400,12 +400,6 @@ public class OrderStatusFragment extends Fragment {
 
         private void setPDFaceImage(ImageView imageView, String imageInfo) {
             Picasso.with(getActivity()).load(Config.SERVER_ADDRESS + imageInfo).transform(ImageManager.getCircleTransformation()).into(imageView);
-
-//            ImageLoader imageLoader = RequestQueue.getInstance(getActivity()).getImageLoader();
-//            imageLoader.get(Config.SERVER_ADDRESS + imageInfo,
-//                    ImageLoader.getImageListener(
-//                            imageView, R.drawable.ic_sale, R.drawable.ic_sale
-//                    ));
         }
 
         private String getStringByState(int state) {

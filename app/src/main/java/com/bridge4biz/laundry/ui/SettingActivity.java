@@ -205,11 +205,11 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
         return getSharedPreferences(NOTIFICATION, Context.MODE_PRIVATE);
     }
 
-    private static int getAppVersion(Context context) {
+    private static String getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionCode;
+            return packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException("Could not get package name: " + e);
         }

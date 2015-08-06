@@ -63,6 +63,7 @@
     <!-- related to order info fragment -->
     <string name="payment_method">현장 결제 수단 선택</string>
     <string name="payment_card">카드 결제</string>
+    <string name="offsite_payment_card">결제 카드 등록</string>
     <string name="payment_cash">현금 결제</string>
     <string name="pick_up_cost">수거배송비</string>
     <string name="sale_label">특별 할인</string>
@@ -246,6 +247,7 @@
     <string name="feedback_title">평가하기</string>
     <string name="message_title">쪽지</string>
     <string name="notice_title">공지사항</string>
+    <string name="payment_title">결재 카드 추가</string>
     <string name="minimum_total">최소 주문 금액은 10,000원입니다</string>
     <string name="delete_impossible">수거 완료된 주문은 취소할 수 없습니다</string>
     <string name="incorrect_time">올바른 시간을 선택해주세요</string>
@@ -324,4 +326,32 @@
     <string name="today_not_available">오늘 주문 시간 가능한 시간이 없습니다</string>
     <string name="order_list_confirm">가격 확인</string>
     <string name="mileage_message">마일리지가 적립되었습니다</string>
+
+    <string name="regex_address_dong">[ㄱ-ㅎ가-힣0-9]+시\\s[ㄱ-ㅎ가-힣0-9]+구\\s[ㄱ-ㅎ가-힣0-9]+동</string>
+    <string name="regex_address_ro">[ㄱ-ㅎ가-힣0-9]+시\\s[ㄱ-ㅎ가-힣0-9]+구\\s[ㄱ-ㅎ가-힣0-9]+로</string>
+
+    <!--  -->
+    <string name="holder">설정</string>
+
+    <!-- Add Payment -->
+    <string name="nice_info">NICEPAY에서 제공하는 결제 서비스입니다.</string>
+    <string name="card_number">카드번호</string>
+    <string name="expiration_date">유효기간</string>
+    <string name="expiration_month">MM</string>
+    <string name="expiration_year">YY</string>
+    <string name="birthday">생년월일</string>
+    <string name="birthday_hint">800101</string>
+    <string name="password">비밀번호</string>
+    <string name="card_name">카드별명</string>
+    <string name="option">선택 사항</string>
+    <string name="agreement">내용에 모두 동의합니다.</string>
+    <string name="service">정기과금 이용약관</string>
+    <string name="service_not_agree">정기과금 이용약관에 동의해주셔야 합니다</string>
+    <string name="six_digit">6자리</string>
+    <string name="button_add">카드 등록</string>
+    <string name="capture_card">카드\n스캔</string>
+    <string name="empty">빈칸을 채워주세요</string>
+    <string name="success">카드 등록에 성공했습니다</string>
+    <string name="delete_card_title">카드 삭제</string>
+    <string name="delete_card">카드를 삭제하시겠습니까?</string>
 </resources>

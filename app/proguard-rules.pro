@@ -32,6 +32,7 @@
 -dontwarn android.support.v4.**,com.ning.http.client.**,org.jboss.netty.**, org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**
 -dontwarn com.squareup.okhttp.**
 -dontwarn com.kakao.**
+-keep class uk.co.chrisjenx.** { *; }
 -keep class com.bridge4biz.laundry.gcm.** { *; }
 -keep class com.bridge4biz.laundry.io.** { *; }
 -keep public class * extends com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper {
@@ -39,4 +40,12 @@
 }
 -keepclassmembers class * {
     public <init> (android.content.Context);
+}
+-libraryjars libs
+-keep class com.urqa.** { *; }
+-dontskipnonpubliclibraryclasses
+-printmapping out.map
+-keep class io.card.**
+-keepclassmembers class io.card.** {
+    *;
 }

@@ -209,7 +209,7 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
         super.onStart();
     }
 
-    class ItemListAdapter extends OrderItemAdapterHelper {
+    protected class ItemListAdapter extends OrderItemAdapterHelper {
         private LayoutInflater mLayoutInflater;
 
         ItemListAdapter(Context context, int resource, List<OrderItem> objects) {

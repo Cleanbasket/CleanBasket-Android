@@ -29,6 +29,7 @@ import com.bridge4biz.laundry.search.GeocodeSearcher;
 import com.bridge4biz.laundry.search.OnFinishAddrSearchListener;
 import com.bridge4biz.laundry.search.OnFinishDaumGeocodeSearchListener;
 import com.bridge4biz.laundry.search.OnFinishGeocodeSearchListener;
+import com.bridge4biz.laundry.util.AddressChecker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -225,20 +226,22 @@ public class MapActivity extends BaseActivity implements MapReverseGeoCoder.Reve
             }
         }
 
-        String[] fullAddress;
-
         String formattedAddress = "";
 
-        if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr")) {
-            fullAddress = address.split(" ");
-            if (fullAddress.length < 4) return "";
-            formattedAddress = fullAddress[1] + " " + fullAddress[2] + " " + fullAddress[3];
+        if (AddressChecker.getInstance(this).isAddressValid(address)) {
+            formattedAddress = AddressChecker.getInstance(this).getValidAddress(address);
         }
-        else {
-            fullAddress = address.split(", ");
-            if (fullAddress.length < 4) return "";
-            formattedAddress = fullAddress[0] + ", " + fullAddress[1] + ", " + fullAddress[2];
-        }
+
+//        if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr")) {
+//            fullAddress = address.split(" ");
+//            if (fullAddress.length < 4) return "";
+//            formattedAddress = fullAddress[1] + " " + fullAddress[2] + " " + fullAddress[3];
+//        }
+//        else {
+//            fullAddress = address.split(", ");
+//            if (fullAddress.length < 4) return "";
+//            formattedAddress = fullAddress[0] + ", " + fullAddress[1] + ", " + fullAddress[2];
+//        }
 
         return formattedAddress;
     }

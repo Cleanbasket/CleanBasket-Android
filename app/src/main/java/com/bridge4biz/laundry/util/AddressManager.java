@@ -38,6 +38,8 @@ public class AddressManager {
 
     public final static String COUPON_GET = "member/coupon/issue";
 	public final static String COUPON_SHARE = "recommendation";
+
+	public final static String ADD_PAYMENT = "member/payment";
 }
  
   

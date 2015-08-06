@@ -162,7 +162,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         try {
             orderCategory = mOrderCategoryMap.get(getItem(position).category);
 
-            holder.imageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByCategoryString(orderCategory.name));
+            holder.imageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByCategoryString(orderCategory.img));
             holder.textView.setText(CleanBasketApplication.getInstance().getStringByString(orderCategory.name));
         } catch (NullPointerException e) {
             holder.textView.setText(R.string.etc);

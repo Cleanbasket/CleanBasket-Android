@@ -14,4 +14,7 @@
     <dimen name="class_total_info_dimen">55dp</dimen>
 
     <dimen name="textview_address">12dp</dimen>
+
+    <!-- Payment Add -->
+    <dimen name="payment_add_textview">50dp</dimen>
 </resources>

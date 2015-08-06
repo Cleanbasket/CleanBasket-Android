@@ -8,8 +8,8 @@ android {
         applicationId "com.bridge4biz.laundry"
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 18
-        versionName "1.5.1"
+        versionCode 22
+        versionName "1.5.3"
     }
 
     packagingOptions {
@@ -26,6 +26,7 @@ android {
 }
 
 dependencies {
+    compile 'io.card:android-sdk:5.0.1'
     compile 'uk.co.chrisjenx:calligraphy:2.0.2'
     compile 'com.facebook.rebound:rebound:0.3.7'
     compile 'com.squareup.picasso:picasso:2.5.0'
@@ -42,4 +43,6 @@ dependencies {
     compile files('libs/UrQA-Client_0.97.jar')
     compile files('libs/libDaumMapAndroid.jar')
     compile files('libs/libGoogleAnalyticsServices.jar')
+    compile files('libs/nicepay-lite-0.9.19.jar')
+    compile files('libs/commons-httpclient-3.0.jar')
 }

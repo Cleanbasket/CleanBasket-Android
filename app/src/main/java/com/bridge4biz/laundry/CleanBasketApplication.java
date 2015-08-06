@@ -29,6 +29,9 @@ public class CleanBasketApplication extends Application {
 
     // Related to GCM
     public static final String GCM = "gcm";
+    public static final String PAYMENT = "payment";
+    public static final String PAYMENT_CARD_NAME = "cardName";
+    public static final String PAYMENT_AUTH_DATE = "authDate";
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
 
@@ -63,6 +66,10 @@ public class CleanBasketApplication extends Application {
         return mGson;
     }
 
+    public SharedPreferences getGCMPreferences() {
+        return getSharedPreferences(GCM, Context.MODE_PRIVATE);
+    }
+
     public void storeRegistrationId(Context context, String regId) {
         final SharedPreferences prefs = getGCMPreferences();
         int appVersion = getAppVersion(context);
@@ -73,8 +80,16 @@ public class CleanBasketApplication extends Application {
         editor.commit();
     }
 
-    public SharedPreferences getGCMPreferences() {
-        return getSharedPreferences(GCM, Context.MODE_PRIVATE);
+    public SharedPreferences getPaymentPreferences() {
+        return getSharedPreferences(PAYMENT, Context.MODE_PRIVATE);
+    }
+
+    public void storePayment(Context context, String cardName, String authDate) {
+        final SharedPreferences prefs = getPaymentPreferences();
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PAYMENT_CARD_NAME, cardName);
+        editor.putString(PAYMENT_AUTH_DATE, authDate);
+        editor.commit();
     }
 
     public static int getAppVersion(Context context) {

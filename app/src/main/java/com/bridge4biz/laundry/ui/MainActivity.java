@@ -134,6 +134,7 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
             @Override
             protected String doInBackground(Void ... params) {
                 String msg = "";
+
                 try {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(getBaseContext());
@@ -291,7 +292,6 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
 
                 switch (jsonData.constant) {
                     case Constants.SUCCESS:
-
                         if (jsonData.data.equals("null"))
                             mAuthUser = null;
                         else {

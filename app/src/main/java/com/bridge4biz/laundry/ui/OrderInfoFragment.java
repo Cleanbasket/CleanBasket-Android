@@ -4,6 +4,7 @@ package com.bridge4biz.laundry.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +42,7 @@ import com.bridge4biz.laundry.io.model.JsonData;
 import com.bridge4biz.laundry.io.model.Order;
 import com.bridge4biz.laundry.io.model.OrderItem;
 import com.bridge4biz.laundry.io.model.map.GeocodeResponse;
+import com.bridge4biz.laundry.io.request.GetRequest;
 import com.bridge4biz.laundry.io.request.PostRequest;
 import com.bridge4biz.laundry.search.AddressSearcher;
 import com.bridge4biz.laundry.search.OnFinishAddrSearchListener;
@@ -52,6 +54,7 @@ import com.bridge4biz.laundry.ui.dialog.MileageDialog;
 import com.bridge4biz.laundry.ui.dialog.TimePickerDialog;
 import com.bridge4biz.laundry.ui.widget.CalculationInfo;
 import com.bridge4biz.laundry.ui.widget.CalculationInfoAdapter;
+import com.bridge4biz.laundry.util.AddressChecker;
 import com.bridge4biz.laundry.util.AddressManager;
 import com.bridge4biz.laundry.util.AlarmManager;
 import com.bridge4biz.laundry.util.Constants;
@@ -59,6 +62,7 @@ import com.bridge4biz.laundry.util.DateTimeFactory;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.JsonSyntaxException;
 
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapReverseGeoCoder;
@@ -97,14 +101,15 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
     public static final int DROP_OFF_DATE = 3;
     public static final int DROP_OFF_TIME = 4;
 
-    public static final int GET_ADDRESS = 0;
+    public static final int ADDRESS_REQUEST = 0;
     public static final int ADDRESS_RESULT = 1;
-
-    public static final int PAYMENT_CARD = 0;
-    public static final int PAYMENT_CASH = 1;
+    public static final int PAYMENT_REQUEST = 2;
+    public static final int PAYMENT_RESULT = 3;
 
     public static final int FREE_PICK_UP_PRICE = 20000;
     public static final int MINIMUM_ORDER = 10000;
+
+    private boolean cardRegistered = false;
 
     private LinearLayout mHeader;
     private View mProgressView;
@@ -115,17 +120,20 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
     private TextView mTextViewDropOffTitle;
     private TextView mTextViewSelectedDropOffDate;
     private TextView mTextViewSelectedDropOffTime;
+    private TextView mTextViewButtonPaymentCard;
     private EditText mEditTextAddress;
     private EditText mEditTextDetailAddress;
     private EditText mEditTextContact;
     private EditText mEditTextMemo;
     private ImageView mImageViewCurrentLocation;
+    private ImageView mImageViewExtractButton;
     private RadioButton mButtonCard;
     private RadioButton mButtonCash;
     private Button mButtonToday;
     private Button mButtonTomorrow;
     private Button mButtonEtc;
     private ListView mCalculationInfoListView;
+    private RelativeLayout mButtonPaymentCard;
 
     private Button mButtonOrder;
 
@@ -168,11 +176,15 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         mButtonToday = (Button) mHeader.findViewById(R.id.imageview_datetime_today);
         mButtonTomorrow = (Button) mHeader.findViewById(R.id.imageview_datetime_tomorrow);
         mButtonEtc = (Button) mHeader.findViewById(R.id.imageview_datetime_etc);
+        mButtonPaymentCard = (RelativeLayout) mHeader.findViewById(R.id.button_offsite_payment_card);
+        mTextViewButtonPaymentCard = (TextView) mHeader.findViewById(R.id.textview_button_add);
+        mImageViewExtractButton = (ImageView) mHeader.findViewById(R.id.imageview_card_extract);
 
         mEditTextAddress.setOnEditorActionListener(this);
         mEditTextDetailAddress.setOnEditorActionListener(this);
         mEditTextContact.setOnEditorActionListener(this);
         mEditTextMemo.setOnEditorActionListener(this);
+        mImageViewExtractButton.setOnClickListener(this);
 
         mCalculationInfoListView = (ListView) rootView.findViewById(R.id.listview_calculation);
         mProgressView = rootView.findViewById(R.id.loading_progress);
@@ -220,6 +232,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         mButtonToday.setOnClickListener(this);
         mButtonTomorrow.setOnClickListener(this);
         mButtonEtc.setOnClickListener(this);
+        mButtonPaymentCard.setOnClickListener(this);
         mTextViewSelectedPickUpDate.setOnClickListener(this);
         mTextViewSelectedPickUpTime.setOnClickListener(this);
         mTextViewSelectedDropOffDate.setOnClickListener(this);
@@ -295,7 +308,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                     intent.putExtra("longitude", mLastLocation.getLongitude());
                 }
 
-                startActivityForResult(intent, GET_ADDRESS);
+                startActivityForResult(intent, PAYMENT_REQUEST);
                 break;
             
             case R.id.textview_selected_pickup_date:
@@ -343,7 +356,69 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                 mButtonCard.setChecked(false);
                 mPaymentMethod = 1;
                 break;
+
+            case R.id.button_offsite_payment_card:
+                if (cardRegistered) return;
+
+                Intent paymentCardIntent = new Intent();
+                paymentCardIntent.setAction("com.bridge4biz.laundry.ui.AddPaymentActivity");
+
+                startActivityForResult(paymentCardIntent, PAYMENT_REQUEST);
+                break;
+
+            case R.id.imageview_card_extract:
+                popConfirmAlert();
+                break;
         }
+    }
+
+    private void removeCard() {
+        GetRequest getRequest = new GetRequest(getActivity());
+        getRequest.setUrl(AddressManager.ADD_PAYMENT);
+        getRequest.setListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonData jsonData;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+                } catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.SUCCESS:
+                        setAddPayMethodButton("", "");
+                        CleanBasketApplication.getInstance().storePayment(getActivity(), "", "");
+                        break;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());
+
+    }
+
+    private void popConfirmAlert() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.delete_card_title))
+                .setMessage(getString(R.string.delete_card))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeCard();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private void insertToDataBase() {
@@ -947,6 +1022,24 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                 mEditTextDetailAddress.requestFocus();
                 showSoftKeyboard(mEditTextDetailAddress);
                 break;
+
+            case PAYMENT_RESULT:
+                Bundle args = data.getExtras();
+
+                String cardName = "";
+                String authDate = "";
+
+                try {
+                    cardName = (String) args.getString(CleanBasketApplication.PAYMENT_CARD_NAME);
+                    authDate = (String) args.getString(CleanBasketApplication.PAYMENT_AUTH_DATE);
+                } catch (Exception e) {
+                    Log.i("Err", e.toString());
+                    return;
+                }
+
+                CleanBasketApplication.getInstance().storePayment(getActivity(), cardName, authDate);
+                setAddPayMethodButton(cardName, authDate);
+                break;
         }
     }
 
@@ -986,6 +1079,24 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         setCalculationInfo();
         mCalculationInfoAdapter.mAuthUser = ((MainActivity) getActivity()).mAuthUser;
         mCalculationInfoAdapter.notifyDataSetChanged();
+
+        String cardName = CleanBasketApplication.getInstance().getPaymentPreferences().getString(CleanBasketApplication.PAYMENT_CARD_NAME, "");
+        String authDate = CleanBasketApplication.getInstance().getPaymentPreferences().getString(CleanBasketApplication.PAYMENT_AUTH_DATE, "");
+
+        setAddPayMethodButton(cardName, authDate);
+    }
+
+    private void setAddPayMethodButton(String cardName, String authDate) {
+        if (cardName.equals("") && authDate.equals("")) {
+            cardRegistered = false;
+            mTextViewButtonPaymentCard.setText(getString(R.string.offsite_payment_card));
+            mImageViewExtractButton.setVisibility(View.GONE);
+        }
+        else {
+            cardRegistered = true;
+            mTextViewButtonPaymentCard.setText(cardName + " (" + authDate + ")");
+            mImageViewExtractButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -1029,8 +1140,10 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         else
             address = geocodeResponse.getResults().get(0).getFormatted_address();
 
-        String[] fullAddress = address.split(" ");
-        mEditTextAddress.setText(fullAddress[1] + " " + fullAddress[2] + " " + fullAddress[3]);
+        if (AddressChecker.getInstance(getActivity()).isAddressValid(address)) {
+            String splitAddress = AddressChecker.getInstance(getActivity()).getValidAddress(address);
+            mEditTextAddress.setText(splitAddress);
+        }
     }
 
     @Override

@@ -52,6 +52,62 @@ public class AlarmManager {
         alarmManager.cancel(pDropOffIntent);
     }
 
+    private void setAlarm(Alarm alarm) {
+        if (alarm.date <= System.currentTimeMillis())
+            return;
+
+        Date date = new Date(alarm.date);
+
+        Intent intent = new Intent("com.google.android.c2dm.intent.RECEIVE");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        intent.putExtra("oid", String.valueOf(alarm.oid));
+
+        int requestCode = 0;
+
+        if (calendar.get(Calendar.MINUTE) == 0) {
+            intent.putExtra("message", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) +
+                    mContext.getString(R.string.hour_text));
+        }
+        else
+            intent.putExtra("message", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) +
+                    mContext.getString(R.string.hour_text) +
+                    " " +
+                    String.valueOf(calendar.get(Calendar.MINUTE)) +
+                    mContext.getString(R.string.minute_text));
+
+        if (alarm.type == MainActivity.PICK_UP_ALARM) {
+            intent.putExtra("uid", String.valueOf(CleanBasketApplication.getInstance().getUid()));
+            intent.putExtra("type", "2");
+            requestCode = Integer.parseInt("2" + String.valueOf(alarm.oid));
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + PICK_UP_ALRAM_HOUR);
+        }
+        else if (alarm.type == MainActivity.DROP_OFF_ALARM) {
+            intent.putExtra("uid", String.valueOf(CleanBasketApplication.getInstance().getUid()));
+            intent.putExtra("type", "3");
+            requestCode = Integer.parseInt("3" + String.valueOf(alarm.oid));
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + DROP_OFF_ALRAM_HOUR);
+        }
+
+        PendingIntent pIntent = PendingIntent.getBroadcast(mContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        android.app.AlarmManager alarmManager = (android.app.AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (alarm.type == MainActivity.PICK_UP_ALARM)
+                alarmManager.setExact(android.app.AlarmManager.RTC, calendar.getTime().getTime(), pIntent);
+            else if (alarm.type == MainActivity.DROP_OFF_ALARM)
+                alarmManager.setExact(android.app.AlarmManager.RTC, calendar.getTime().getTime(), pIntent);
+        }
+        else {
+            if (alarm.type == MainActivity.PICK_UP_ALARM)
+                alarmManager.set(android.app.AlarmManager.RTC, calendar.getTime().getTime(), pIntent);
+            else if (alarm.type == MainActivity.DROP_OFF_ALARM)
+                alarmManager.set(android.app.AlarmManager.RTC, calendar.getTime().getTime(), pIntent);
+        }
+    }
+
     public void setAlarm() {
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -59,58 +115,7 @@ public class AlarmManager {
                 ArrayList<Alarm> arrayList = (ArrayList<Alarm>) mDBHelper.getAlarmDao().queryForAll();
 
                 for (Alarm alarm : arrayList) {
-                    if (alarm.date > System.currentTimeMillis()) {
-                        Date date = new Date(alarm.date);
-
-                        Intent intent = new Intent("com.google.android.c2dm.intent.RECEIVE");
-
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(date);
-
-                        intent.putExtra("oid", String.valueOf(alarm.oid));
-
-                        int requestCode = 0;
-
-                        if (calendar.get(Calendar.MINUTE) == 0) {
-                            intent.putExtra("message", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) +
-                                    mContext.getString(R.string.hour_text));
-                        }
-                        else
-                            intent.putExtra("message", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)) +
-                                    mContext.getString(R.string.hour_text) +
-                                    " " +
-                                    String.valueOf(calendar.get(Calendar.MINUTE)) +
-                                    mContext.getString(R.string.minute_text));
-
-                        if (alarm.type == MainActivity.PICK_UP_ALARM) {
-                            intent.putExtra("uid", String.valueOf(CleanBasketApplication.getInstance().getUid()));
-                            intent.putExtra("type", "2");
-                            requestCode = Integer.parseInt("2" + String.valueOf(alarm.oid));
-                            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + PICK_UP_ALRAM_HOUR);
-                        }
-                        else if (alarm.type == MainActivity.DROP_OFF_ALARM) {
-                            intent.putExtra("uid", String.valueOf(CleanBasketApplication.getInstance().getUid()));
-                            intent.putExtra("type", "3");
-                            requestCode = Integer.parseInt("3" + String.valueOf(alarm.oid));
-                            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + DROP_OFF_ALRAM_HOUR);
-                        }
-
-                        PendingIntent pIntent = PendingIntent.getBroadcast(mContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                        android.app.AlarmManager alarmManager = (android.app.AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                            if (alarm.type == MainActivity.PICK_UP_ALARM)
-                                alarmManager.setExact(android.app.AlarmManager.RTC, calendar.getTime().getTime(), pIntent);
-                            else if (alarm.type == MainActivity.DROP_OFF_ALARM)
-                                alarmManager.setExact(android.app.AlarmManager.RTC, calendar.getTime().getTime(), pIntent);
-                        }
-                        else {
-                            if (alarm.type == MainActivity.PICK_UP_ALARM)
-                                alarmManager.set(android.app.AlarmManager.RTC, calendar.getTime().getTime(), pIntent);
-                            else if (alarm.type == MainActivity.DROP_OFF_ALARM)
-                                alarmManager.set(android.app.AlarmManager.RTC, calendar.getTime().getTime(), pIntent);
-                        }
-                    }
+                    setAlarm(alarm);
                 }
 
                 return null;
