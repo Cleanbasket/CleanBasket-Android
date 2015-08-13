@@ -4,6 +4,8 @@ package com.bridge4biz.laundry.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -271,13 +273,14 @@ public class OrderStatusFragment extends Fragment {
         }
 
         @Override
-        public View getChildView(int position, int groupPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(final int position, int groupPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             OrderStatusDetailViewHolder holder;
 
             if (convertView == null) {
                 convertView = mLayoutInflater.inflate(R.layout.custom_order_status, parent, false);
                 holder = new OrderStatusDetailViewHolder();
                 holder.imageViewPdFace = (ImageView) convertView.findViewById(R.id.imageview_pd_face);
+                holder.buttonCallPD = (Button) convertView.findViewById(R.id.button_call_pd);
                 holder.imageViewStatusBar = (ImageView) convertView.findViewById(R.id.imageview_status_bar);
                 holder.lineBottom = (View) convertView.findViewById(R.id.line_bottom);
                 holder.textViewPDName = (TextView) convertView.findViewById(R.id.textview_pd_name);
@@ -303,6 +306,7 @@ public class OrderStatusFragment extends Fragment {
                     holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline1);
                     holder.buttonModifyOrder.setVisibility(View.VISIBLE);
                     holder.lineBottom.setVisibility(View.VISIBLE);
+                    holder.buttonCallPD.setVisibility(View.GONE);
                     break;
 
                 case PICK_UP_MAN_SELECTED:
@@ -312,6 +316,15 @@ public class OrderStatusFragment extends Fragment {
                     if (getGroup(position).pickupInfo != null) {
                         setPDFaceImage(holder.imageViewPdFace, getGroup(position).pickupInfo.img);
                         holder.textViewPDName.setText(getGroup(position).pickupInfo.name);
+                        holder.buttonCallPD.setVisibility(View.VISIBLE);
+                        holder.buttonCallPD.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                                callIntent.setData(Uri.parse("tel:" + getGroup(position).pickupInfo.phone));
+                                startActivity(callIntent);
+                            }
+                        });
                     }
                     break;
 
@@ -320,6 +333,15 @@ public class OrderStatusFragment extends Fragment {
                     if (getGroup(position).dropoffInfo != null) {
                         setPDFaceImage(holder.imageViewPdFace, getGroup(position).dropoffInfo.img);
                         holder.textViewPDName.setText(getGroup(position).dropoffInfo.name);
+                        holder.buttonCallPD.setVisibility(View.VISIBLE);
+                        holder.buttonCallPD.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                                callIntent.setData(Uri.parse("tel:" + getGroup(position).pickupInfo.phone));
+                                startActivity(callIntent);
+                            }
+                        });
                     }
                     break;
 
@@ -331,6 +353,7 @@ public class OrderStatusFragment extends Fragment {
                     holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline2);
                     holder.imageViewPdFace.setImageResource(R.drawable.ic_launcher);
                     holder.textViewPDName.setText(getString(R.string.pd_name_default));
+                    holder.buttonCallPD.setVisibility(View.GONE);
                     break;
             }
 
@@ -428,6 +451,7 @@ public class OrderStatusFragment extends Fragment {
 
         protected class OrderStatusDetailViewHolder {
             private ImageView imageViewPdFace;
+            private Button buttonCallPD;
             private ImageView imageViewStatusBar;
             private View lineBottom;
             public TextView textViewPDName;

@@ -770,7 +770,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
                              int totalItemCount);
     }
 
-
     /**
      * parameter 2 is contain in parameter 1.
      *

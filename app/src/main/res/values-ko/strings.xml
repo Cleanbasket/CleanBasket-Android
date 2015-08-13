@@ -326,12 +326,13 @@
     <string name="today_not_available">오늘 주문 시간 가능한 시간이 없습니다</string>
     <string name="order_list_confirm">가격 확인</string>
     <string name="mileage_message">마일리지가 적립되었습니다</string>
-
     <string name="regex_address_dong">[ㄱ-ㅎ가-힣0-9]+시\\s[ㄱ-ㅎ가-힣0-9]+구\\s[ㄱ-ㅎ가-힣0-9]+동</string>
     <string name="regex_address_ro">[ㄱ-ㅎ가-힣0-9]+시\\s[ㄱ-ㅎ가-힣0-9]+구\\s[ㄱ-ㅎ가-힣0-9]+로</string>
+    <string name="pd_call">PD에게 전화하기</string>
 
     <!--  -->
     <string name="holder">설정</string>
+    <string name="customer_service">07075521385</string>
 
     <!-- Add Payment -->
     <string name="nice_info">NICEPAY에서 제공하는 결제 서비스입니다.</string>

@@ -324,9 +324,11 @@
     <string name="mileage_message">mileage accumulated</string>
     <string name="regex_address_dong">[a-zA-Z0-9]+-dong,\s[a-zA-Z0-9]+-gu,</string>
     <string name="regex_address_ro">[a-zA-Z0-9]+-ro,\s[a-zA-Z0-9]+-gu,</string>
+    <string name="pd_call">Call to the PD</string>
 
     <!--  -->
     <string name="holder">Settings</string>
+    <string name="customer_service">07075521385</string>
 
     <!-- Add Payment -->
     <string name="nice_info">The payment service provided by NICEPAY</string>

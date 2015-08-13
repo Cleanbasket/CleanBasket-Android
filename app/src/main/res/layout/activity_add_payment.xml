@@ -1,0 +1,262 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@color/order_info_background"
+    tools:context="com.bridge4biz.laundry.ui.AddPaymentActivity">
+
+    <RelativeLayout
+        android:id="@+id/nice_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageview_nice"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_nice" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/nice_info"
+            android:layout_toRightOf="@+id/imageview_nice"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_card_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nice_info"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="@dimen/payment_add_textview"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/card_number"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="20dp" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_card_number1"
+            android:layout_width="@dimen/dimen_textview"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            android:maxLength="4"
+            android:inputType="phone"
+            android:maxLines="1" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_card_number2"
+            android:layout_width="@dimen/dimen_textview"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            android:maxLength="4"
+            android:inputType="phone"
+            android:maxLines="1" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_card_number3"
+            android:layout_width="@dimen/dimen_textview"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            android:maxLength="4"
+            android:inputType="numberPassword"
+            android:maxLines="1" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_card_number4"
+            android:layout_width="@dimen/dimen_textview"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            android:maxLength="4"
+            android:inputType="phone"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/layout_card_number"
+        android:layout_alignBottom="@+id/layout_card_number"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/capture_card"
+            android:textSize="9dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_expiration_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_card_number"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="@dimen/payment_add_textview"
+            android:layout_height="wrap_content"
+            android:text="@string/expiration_date"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="20dp" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_month"
+            android:layout_width="@dimen/two_digit"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:maxLength="2"
+            android:inputType="phone"
+            android:hint="@string/expiration_month"
+            android:maxLines="1" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_year"
+            android:layout_width="@dimen/two_digit"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:maxLength="2"
+            android:inputType="phone"
+            android:hint="@string/expiration_year"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_birthday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_expiration_date"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="@dimen/payment_add_textview"
+            android:layout_height="wrap_content"
+            android:text="@string/birthday"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="20dp" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_birthday"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:maxLength="6"
+            android:inputType="numberPassword"
+            android:hint="@string/birthday_hint"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_birthday"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="@dimen/payment_add_textview"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="20dp" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_password"
+            android:layout_width="@dimen/two_digit"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:maxLength="2"
+            android:inputType="numberPassword"
+            android:maxLines="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="**" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_password"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="@dimen/payment_add_textview"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="@string/card_name"
+            android:textStyle="bold"
+            android:gravity="center_horizontal" />
+
+        <EditText
+            style="@style/Grey.EditText.CleanBasket"
+            android:id="@+id/edittext_nickname"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:hint="@string/option"
+            android:maxLength="6"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <CheckBox
+        android:layout_below="@+id/layout_nickname"
+        android:id="@+id/checkbox_agree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/agreement"
+        android:textSize="13dp" />
+
+    <Button
+        android:id="@+id/card_register_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/checkbox_agree"
+        android:text="@string/button_add"
+        android:textStyle="bold"
+        android:background="@drawable/round_point_button_background" />
+
+    <!-- Login progress -->
+    <ProgressBar android:id="@+id/loading_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+</RelativeLayout>

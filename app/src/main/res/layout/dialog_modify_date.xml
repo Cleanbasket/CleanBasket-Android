@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1"
     tools:context=".ModifyDateTimeDialog">
 
     <!-- Login progress -->
-    <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
+    <ProgressBar android:id="@+id/login_progress"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <LinearLayout android:id="@+id/modify_datetime_form" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:orientation="vertical">
+    <LinearLayout android:id="@+id/modify_datetime_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/layout_pickup_container"
@@ -135,12 +136,11 @@
             android:layout_marginTop="12dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/cancel_modify_datetime_button"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_width="match_parent" android:layout_height="25dp"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -153,11 +153,12 @@
     <Button
         style="@style/Black.Button.CleanBasket"
         android:id="@+id/finish_order"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/label_confirm"
-        android:layout_marginTop="12dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/modify_datetime_form"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:textStyle="bold" />
-</LinearLayout>
+        android:layout_marginRight="5dp" />
+</RelativeLayout>

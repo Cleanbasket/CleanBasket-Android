@@ -16,7 +16,6 @@ public class SessionManager {
     private static final String SPRING_SECURITY = "SPRING_SECURITY_REMEMBER_ME_COOKIE";
     private static final String COOKIE_KEY = "Cookie";
     private static Context mContext;
-
     private static SessionManager mInstance;
 
     public static SessionManager get(Context context) {

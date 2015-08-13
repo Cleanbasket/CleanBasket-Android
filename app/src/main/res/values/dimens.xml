@@ -59,4 +59,5 @@
 
     <!-- Payment Add -->
     <dimen name="payment_add_textview">70dp</dimen>
+    <dimen name="button_height">22dp</dimen>
 </resources>
