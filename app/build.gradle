@@ -45,4 +45,5 @@ dependencies {
     compile files('libs/libGoogleAnalyticsServices.jar')
     compile files('libs/nicepay-lite-0.9.19.jar')
     compile files('libs/commons-httpclient-3.0.jar')
+    compile files('libs/khandroid-httpclient-4.2.3.jar')
 }

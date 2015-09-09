@@ -5,7 +5,7 @@ public class Config {
     public final static String DAUM_MAP_API = "ed518de9a2cb643cc334a8f3fa8008fb";
     public final static String DAUM_MAP_LOCAL_API = "ed518de9a2cb643cc334a8f3fa8008fb";
 
-//    public final static String SERVER_ADDRESS = "http://www.cleanbasket.co.kr/";
+//    public final static String SERVER_ADDRESS = "https://www.cleanbasket.co.kr/";
 //    public final static String SERVER_ADDRESS = "http://192.168.11.4:8080/wash/";
     public final static String SERVER_ADDRESS = "http://211.110.140.180:8080/";
 //    public final static String SERVER_ADDRESS = "http://10.7.22.67:8080/wash/";

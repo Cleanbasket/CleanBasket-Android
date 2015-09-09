@@ -94,6 +94,20 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
         getPreferenceScreen().addPreference(header);
         addPreferencesFromResource(R.xml.pref_notification);
 
+        SwitchPreference eventPref = (SwitchPreference) findPreference("notification_switch_event");
+        SwitchPreference orderPref = (SwitchPreference) findPreference("notification_switch_order");
+
+//        eventPref.setWidgetLayoutResource(R.layout.switch_thumb_event);
+//        orderPref.setWidgetLayoutResource(R.layout.switch_thumb_order);
+
+//        eventPref.setChecked(getNotificationPreferences().getBoolean(eventPref.getKey() + "_stored", true));
+//        orderPref.setChecked(getNotificationPreferences().getBoolean(orderPref.getKey() + "_stored", true));
+
+        eventPref.setOnPreferenceClickListener(this);
+        eventPref.setOnPreferenceChangeListener(this);
+        orderPref.setOnPreferenceClickListener(this);
+        orderPref.setOnPreferenceChangeListener(this);
+
         // Add 'data and sync' preferences, and a corresponding header.
         header = new PreferenceCategory(this);
         header.setTitle(R.string.pref_header_version);
@@ -111,6 +125,8 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
 
         bindPreferenceSummaryToValue(findPreference("change_password"));
         bindPreferenceSummaryToValue(findPreference("logout"));
+//        bindPreferenceSummaryToValue(findPreference("notification_switch_event"));
+//        bindPreferenceSummaryToValue(findPreference("notification_switch_order"));
         bindPreferenceSummaryToValue(findPreference("current_version"));
         bindPreferenceSummaryToValue(findPreference("latest_version"));
         bindPreferenceSummaryToValue(findPreference("update"));
@@ -118,6 +134,8 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
+        Log.i("KANG", preference.getKey());
+
         if (preference instanceof Preference) {
             if (preference.getKey().equals("change_password")) {
                 PasswordDialog pd = PasswordDialog.newInstance();
@@ -167,6 +185,8 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
+        Log.i("KANG", preference.getKey());
+
         if (preference instanceof SwitchPreference) {
             SwitchPreference switchPreference = (SwitchPreference) preference;
 
@@ -187,6 +207,11 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(this);
         preference.setOnPreferenceClickListener(this);
+
+//        this.onPreferenceChange(preference,
+//                PreferenceManager
+//                        .getDefaultSharedPreferences(preference.getContext())
+//                        .getString(preference.getKey(), ""));
 
         this.onPreferenceChange(preference,
                 PreferenceManager

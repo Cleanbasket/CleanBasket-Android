@@ -166,7 +166,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         getRequest.setListener(new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JsonData jsonData = null;
+                JsonData jsonData;
 
                 try {
                     jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
@@ -384,7 +384,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         PostRequest postRequest = new PostRequest(getActivity());
         postRequest.setUrl(AddressManager.AUTH_REGISTER);
 
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
 
         try {
             jsonObject = new JSONObject(body);
@@ -398,7 +398,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         postRequest.setListener(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                JsonData jsonData = null;
+                JsonData jsonData;
 
                 try {
                     jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
@@ -438,7 +438,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                 try {
                     getActivity().unregisterReceiver(smsBroadCastReceiver);
                 } catch (IllegalArgumentException e) {
-
+                    e.printStackTrace();
                 }
 
                 CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
@@ -468,7 +468,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         postRequest.setListener(new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                JsonData jsonData = null;
+                JsonData jsonData;
 
                 try {
                     jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response.toString(), JsonData.class);
@@ -479,6 +479,14 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                 switch (jsonData.constant) {
                     case Constants.SUCCESS:
                         CleanBasketApplication.getInstance().showToast(getString(R.string.authorization_code_sent));
+                        break;
+
+                    case Constants.ERROR:
+                        mButtonRequestCode.setEnabled(true);
+                        mButtonRequestCode.setBackgroundResource(R.drawable.button_green);
+                        mButtonRequestCode.setTextColor(getResources().getColor(R.color.text_white));
+
+                        CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
                         break;
                 }
             }

@@ -386,21 +386,20 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                     return;
                 }
 
-                switch (jsonData.constant) {
-                    case Constants.SUCCESS:
-                        setAddPayMethodButton("", "");
-                        CleanBasketApplication.getInstance().storePayment(getActivity(), "", "");
-                        break;
-                }
+            switch (jsonData.constant) {
+                case Constants.SUCCESS:
+                    setAddPayMethodButton("", "");
+                    CleanBasketApplication.getInstance().storePayment(getActivity(), "", "");
+                    break;
             }
-        }, new Response.ErrorListener() {
-            @Override
+        }
+    }, new Response.ErrorListener() {
+        @Override
             public void onErrorResponse(VolleyError error) {
 
             }
         });
         RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());
-
     }
 
     private void popConfirmAlert() {
@@ -457,7 +456,6 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
     private void makeOrderInfo() {
         mOrder = new Order();
         mOrder.coupon = new ArrayList<Coupon>();
-
         mOrder.phone = mEditTextContact.getText().toString();
         mOrder.address = mEditTextAddress.getText().toString();
         mOrder.addr_building = mEditTextDetailAddress.getText().toString();
@@ -614,7 +612,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
 
     /**
      * 시간 설정 콜백 함수
-     * @param timePickerDialog
+     * @param timePickerDialog self
      * @param hour 선택된 시간
      * @param minute 선택된 분
      * @param mode pick, drop 구분
@@ -759,7 +757,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
 
     /**
      * 날짜 설정 콜백 함수
-     * @param dialog
+     * @param dialog self
      * @param date 선택된 날짜
      * @param mode pick, drop 구분
      */
@@ -858,7 +856,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
 
     /**
      * 해당 날짜가 오늘인지 확인합니다
-     * @param date
+     * @param date 날짜
      * @return boolean
      */
     private boolean isToday(Date date) {
@@ -877,7 +875,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
 
     /**
      * 해당 날짜가 배달 가능한 가장 빠른 날인지 확인합니다
-     * @param date
+     * @param date 날짜
      * @return boolean
      */
     private boolean isFastestDay(Date date) {
@@ -1026,12 +1024,12 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
             case PAYMENT_RESULT:
                 Bundle args = data.getExtras();
 
-                String cardName = "";
-                String authDate = "";
+                String cardName;
+                String authDate;
 
                 try {
-                    cardName = (String) args.getString(CleanBasketApplication.PAYMENT_CARD_NAME);
-                    authDate = (String) args.getString(CleanBasketApplication.PAYMENT_AUTH_DATE);
+                    cardName = args.getString(CleanBasketApplication.PAYMENT_CARD_NAME);
+                    authDate = args.getString(CleanBasketApplication.PAYMENT_AUTH_DATE);
                 } catch (Exception e) {
                     Log.i("Err", e.toString());
                     return;
@@ -1096,6 +1094,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
             cardRegistered = true;
             mTextViewButtonPaymentCard.setText(cardName + " (" + authDate + ")");
             mImageViewExtractButton.setVisibility(View.VISIBLE);
+            mPaymentMethod = 3;
         }
     }
 
@@ -1127,7 +1126,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
 
     @Override
     public void onSuccess(GeocodeResponse geocodeResponse) {
-        String address = "";
+        String address;
 
         if (geocodeResponse.getStatus().equals(MapActivity.OVER_QUERY_LIMIT)) {
             MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(mLastLocation.getLatitude(), mLastLocation.getLongitude());

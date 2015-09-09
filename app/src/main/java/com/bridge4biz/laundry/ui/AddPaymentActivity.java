@@ -86,7 +86,7 @@ public class AddPaymentActivity extends Activity implements View.OnClickListener
         editTextNickName = (EditText) findViewById(R.id.edittext_nickname);
         checkBoxAgree = (CheckBox) findViewById(R.id.checkbox_agree);
         Button button = (Button) findViewById(R.id.card_register_button);
-        mProgressView = (View) findViewById(R.id.loading_progress);
+        mProgressView = findViewById(R.id.loading_progress);
 
         button.setOnClickListener(this);
 
@@ -237,7 +237,7 @@ public class AddPaymentActivity extends Activity implements View.OnClickListener
 
         buttonScan.setOnClickListener(this);
 
-        StringBuffer html = new StringBuffer();
+        StringBuilder html = new StringBuilder();
 
         if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr")) {
             html.append("NICEPAY ");
@@ -363,9 +363,11 @@ public class AddPaymentActivity extends Activity implements View.OnClickListener
         postRequest.setListener(this, this);
         RequestQueue.getInstance(this).addToRequestQueue(postRequest.doRequest().setRetryPolicy(
                 new DefaultRetryPolicy(
-                        (int) TimeUnit.SECONDS.toMillis(10),
+                        (int) TimeUnit.SECONDS.toMillis(60),
                         Config.DEFAULT_MAX_RETRIES,
                         Config.DEFAULT_BACKOFF_MULT)));
+
+        CleanBasketApplication.getInstance().showToast(getString(R.string.card_register));
     }
 
     private boolean checkValid() {
