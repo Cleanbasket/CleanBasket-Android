@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.SmsMessage;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,7 +116,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         mCheckBoxService = (CheckBox) mHeaderView.findViewById(R.id.checkbox_service);
         mCheckBoxProtection = (CheckBox) mHeaderView.findViewById(R.id.checkbox_protection);
         mEditTextEmail.setText(UserEmailFetcher.getEmail(getActivity()));
-        mEditTextPhone.setText(getPhoneNumber());
+        mEditTextPhone.setText(((MainActivity) getActivity()).getPhoneNumber());
 
         mUserInfoView = mHeaderView.findViewById(R.id.view_user_info);
         mImageViewUserClass = (ImageView) mHeaderView.findViewById(R.id.imageview_user_class);
@@ -144,6 +143,7 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
         menuItems.add(new MenuItem(getString(R.string.coupon), "coupon_info"));
         menuItems.add(new MenuItem(getString(R.string.notification), "notification"));
+        menuItems.add(new MenuItem(getString(R.string.alarm), "alarm"));
         menuItems.add(new MenuItem(getString(R.string.setting), "setting"));
         menuItems.add(new MenuItem(getString(R.string.service_info), "service_info"));
 
@@ -203,7 +203,12 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
     private void showUserInfoHeader(AuthUser authUser) {
         // UserInfoView
         mImageViewUserClass.setImageResource(getDrawableByClass(authUser.user_class));
-        mUserName.setText(authUser.email);
+
+        // 이메일이 아니면 숨깁니다
+        if(authUser.email.contains("@"))
+            mUserName.setText(authUser.email);
+        else
+            mUserName.setVisibility(View.INVISIBLE);
         mUserClass.setText(getClassName(authUser.user_class));
         mUserClassInfo.setText(getClassDetail(authUser.user_class));
         mButtonClassInfo.setOnClickListener(this);
@@ -525,11 +530,16 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
                 break;
 
             case 3:
+                intent.setAction("com.bridge4biz.laundry.ui.NotificationActivity");
+                startActivity(intent);
+                break;
+
+            case 4:
                 intent.setAction("com.bridge4biz.laundry.ui.SettingActivity");
                 startActivityForResult(intent, SETTING);
                 break;
 
-            case 4:
+            case 5:
                 intent.setAction("com.bridge4biz.laundry.ui.WebViewActivity");
                 intent.putExtra("type", WebViewActivity.SERVICE_INFO);
                 startActivity(intent);
@@ -596,23 +606,6 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             public ImageView imageViewMenu;
             public TextView textViewMenu;
         }
-    }
-
-    /* 스마트폰 번호를 가져옵니다 */
-    private String getPhoneNumber() {
-        TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(getActivity().TELEPHONY_SERVICE);
-        String mPhoneNumber;
-        mPhoneNumber = tMgr.getLine1Number();
-
-        if (mPhoneNumber != null) {
-            mPhoneNumber = mPhoneNumber.replace("+82", "0");
-
-            if(mPhoneNumber.length() != 11) {
-                return "";
-            }
-        }
-
-        return mPhoneNumber;
     }
 
     /**

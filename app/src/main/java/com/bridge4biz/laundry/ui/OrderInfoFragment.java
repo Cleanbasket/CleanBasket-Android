@@ -41,6 +41,7 @@ import com.bridge4biz.laundry.io.model.Coupon;
 import com.bridge4biz.laundry.io.model.JsonData;
 import com.bridge4biz.laundry.io.model.Order;
 import com.bridge4biz.laundry.io.model.OrderItem;
+import com.bridge4biz.laundry.io.model.Payment;
 import com.bridge4biz.laundry.io.model.map.GeocodeResponse;
 import com.bridge4biz.laundry.io.request.GetRequest;
 import com.bridge4biz.laundry.io.request.PostRequest;
@@ -63,6 +64,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapReverseGeoCoder;
@@ -372,9 +374,46 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         }
     }
 
-    private void removeCard() {
+    private void getCard() {
         GetRequest getRequest = new GetRequest(getActivity());
         getRequest.setUrl(AddressManager.ADD_PAYMENT);
+        getRequest.setListener(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonData jsonData;
+                Payment payment;
+
+                try {
+                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
+                    payment = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, new TypeToken<Payment>(){}.getType());
+                } catch (JsonSyntaxException e) {
+                    return;
+                }
+
+                switch (jsonData.constant) {
+                    case Constants.SUCCESS:
+                        Log.i(TAG, payment.cardName);
+
+                        if (payment != null)
+                            setAddPayMethodButton(payment.cardName, payment.authDate);
+                        else
+                            setAddPayMethodButton("", "");
+
+                        break;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        RequestQueue.getInstance(getActivity()).addToRequestQueue(getRequest.doRequest());
+    }
+
+    private void removeCard() {
+        GetRequest getRequest = new GetRequest(getActivity());
+        getRequest.setUrl(AddressManager.REMOVE_PAYMENT);
         getRequest.setListener(new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -389,7 +428,6 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
             switch (jsonData.constant) {
                 case Constants.SUCCESS:
                     setAddPayMethodButton("", "");
-                    CleanBasketApplication.getInstance().storePayment(getActivity(), "", "");
                     break;
             }
         }
@@ -534,6 +572,14 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
 
             case Constants.SESSION_EXPIRED:
                 CleanBasketApplication.getInstance().showToast(getString(R.string.session_invalid));
+                break;
+
+            case Constants.TOO_EARLY_TIME:
+                CleanBasketApplication.getInstance().showToast(getString(R.string.too_early_time));
+                break;
+
+            case Constants.TOO_LATE_TIME:
+                CleanBasketApplication.getInstance().showToast(getString(R.string.too_late_time));
                 break;
 
             case Constants.SUCCESS:
@@ -1035,7 +1081,6 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                     return;
                 }
 
-                CleanBasketApplication.getInstance().storePayment(getActivity(), cardName, authDate);
                 setAddPayMethodButton(cardName, authDate);
                 break;
         }
@@ -1078,10 +1123,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         mCalculationInfoAdapter.mAuthUser = ((MainActivity) getActivity()).mAuthUser;
         mCalculationInfoAdapter.notifyDataSetChanged();
 
-        String cardName = CleanBasketApplication.getInstance().getPaymentPreferences().getString(CleanBasketApplication.PAYMENT_CARD_NAME, "");
-        String authDate = CleanBasketApplication.getInstance().getPaymentPreferences().getString(CleanBasketApplication.PAYMENT_AUTH_DATE, "");
-
-        setAddPayMethodButton(cardName, authDate);
+        getCard();
     }
 
     private void setAddPayMethodButton(String cardName, String authDate) {

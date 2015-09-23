@@ -518,7 +518,6 @@ public class ModifyDateTimeDialog extends DialogFragment implements TimePickerDi
 
         return monthOfYear == pickUpDay.get(Calendar.MONTH) &&
                 dayOfMonth == pickUpDay.get(Calendar.DAY_OF_WEEK);
-
     }
 
     /**
@@ -651,13 +650,26 @@ public class ModifyDateTimeDialog extends DialogFragment implements TimePickerDi
 
         switch (jsonData.constant) {
             case Constants.ERROR:
-                Toast.makeText(getActivity(), R.string.general_error, Toast.LENGTH_SHORT).show();
+
+                CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
+
+                this.mOnDialogDismissListener.onDialogDismiss();
+                break;
+
+            case Constants.TOO_EARLY_TIME:
+                CleanBasketApplication.getInstance().showToast(getString(R.string.too_early_time));
+
+                this.mOnDialogDismissListener.onDialogDismiss();
+                break;
+
+            case Constants.TOO_LATE_TIME:
+                CleanBasketApplication.getInstance().showToast(getString(R.string.too_late_time));
 
                 this.mOnDialogDismissListener.onDialogDismiss();
                 break;
 
             case Constants.SUCCESS:
-                Toast.makeText(getActivity(), R.string.order_modify_success, Toast.LENGTH_SHORT).show();
+                CleanBasketApplication.getInstance().showToast(getString(R.string.order_modify_success));
 
                 Order order = new Order(
                         mOid,

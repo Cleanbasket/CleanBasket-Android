@@ -17,6 +17,7 @@ public class WebViewActivity extends BaseActivity {
     public static final int TERM_OF_USE = 0;
     public static final int PRIVACY = 1;
     public static final int SERVICE_INFO = 2;
+    public static final int PAYMENT_INFO = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +42,6 @@ public class WebViewActivity extends BaseActivity {
         WebView webView = (WebView) findViewById(R.id.webview);
 
         switch (type) {
-            case TERM_OF_USE:
-                getActionBar().setTitle(R.string.info_service);
-                webView.loadUrl(Config.SERVER_ADDRESS + "term-of-use");
-                break;
-            case PRIVACY:
-                getActionBar().setTitle(R.string.info_protection);
-                webView.loadUrl(Config.SERVER_ADDRESS + "privacy");
-                break;
             case SERVICE_INFO:
                 getActionBar().setTitle(R.string.service_info);
                 webView.loadUrl(Config.SERVER_ADDRESS + "service-info");

@@ -251,9 +251,9 @@ public class OrderFragment extends Fragment implements AdapterView.OnItemClickLi
                             insertCategory(categories);
                             insertOrderItem(orderItems);
                         } catch (JsonSyntaxException e) {
-
+                            e.printStackTrace();
                         } catch (NullPointerException e) {
-
+                            e.printStackTrace();
                         }
 
                         break;
@@ -561,8 +561,9 @@ public class OrderFragment extends Fragment implements AdapterView.OnItemClickLi
                         if (localAppInfo == null || appInfo.district_ver > localAppInfo.district_ver)
                             getDistricts();
 
-                        if (localAppInfo != null && checkAndroidLatest(appInfo.android_app_ver, localAppInfo.android_app_ver))
+                        if (localAppInfo != null && checkAndroidLatest(appInfo.android_app_ver, CleanBasketApplication.getAppVersionName(getActivity())))
                             showUpdateAlert();
+
 
                         getDBHelper().getAppInfoDao().createOrUpdate(appInfo);
 

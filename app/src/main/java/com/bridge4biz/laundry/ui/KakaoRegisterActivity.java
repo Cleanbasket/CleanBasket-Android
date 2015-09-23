@@ -18,12 +18,12 @@ import com.bridge4biz.laundry.util.AddressManager;
 import com.bridge4biz.laundry.util.Constants;
 import com.bridge4biz.laundry.util.HashGenerator;
 import com.google.gson.JsonSyntaxException;
-import com.kakao.APIErrorResult;
-import com.kakao.LogoutResponseCallback;
-import com.kakao.MeResponseCallback;
-import com.kakao.SignupResponseCallback;
-import com.kakao.UserManagement;
-import com.kakao.UserProfile;
+import com.kakao.auth.APIErrorResult;
+import com.kakao.usermgmt.LogoutResponseCallback;
+import com.kakao.usermgmt.MeResponseCallback;
+import com.kakao.usermgmt.SignupResponseCallback;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.UserProfile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,17 +56,17 @@ public class KakaoRegisterActivity extends BaseActivity {
     private void signUp() {
         UserManagement.requestSignup(new SignupResponseCallback() {
             @Override
-            protected void onSuccess(final long userId) {
+            public void onSuccess(final long userId) {
                 signUpServer(userId);
             }
 
             @Override
-            protected void onSessionClosedFailure(final APIErrorResult errorResult) {
+            public void onSessionClosedFailure(final APIErrorResult errorResult) {
                 redirectLoginActivity();
             }
 
             @Override
-            protected void onFailure(final APIErrorResult errorResult) {
+            public void onFailure(final APIErrorResult errorResult) {
                 String message = "failed to sign up. msg=" + errorResult;
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                 redirectLoginActivity();
@@ -179,12 +179,12 @@ public class KakaoRegisterActivity extends BaseActivity {
     private void logout() {
         UserManagement.requestLogout(new LogoutResponseCallback() {
             @Override
-            protected void onSuccess(final long userId) {
+            public void onSuccess(final long userId) {
                 redirectLoginActivity();
             }
 
             @Override
-            protected void onFailure(final APIErrorResult apiErrorResult) {
+            public void onFailure(final APIErrorResult apiErrorResult) {
                 redirectLoginActivity();
             }
         });
@@ -193,13 +193,13 @@ public class KakaoRegisterActivity extends BaseActivity {
     private void logoutKakao() {
         UserManagement.requestLogout(new LogoutResponseCallback() {
             @Override
-            protected void onSuccess(final long userId) {
+            public void onSuccess(final long userId) {
                 redirectMainActivity();
                 finish();
             }
 
             @Override
-            protected void onFailure(final APIErrorResult apiErrorResult) {
+            public void onFailure(final APIErrorResult apiErrorResult) {
                 redirectLoginActivity();
             }
         });
@@ -212,22 +212,22 @@ public class KakaoRegisterActivity extends BaseActivity {
         try {
             UserManagement.requestMe(new MeResponseCallback() {
                 @Override
-                protected void onSuccess(final UserProfile userProfile) {
+                public void onSuccess(final UserProfile userProfile) {
                     login(userProfile.getId());
                 }
 
                 @Override
-                protected void onNotSignedUp() {
+                public void onNotSignedUp() {
                     signUp();
                 }
 
                 @Override
-                protected void onSessionClosedFailure(final APIErrorResult errorResult) {
+                public void onSessionClosedFailure(final APIErrorResult errorResult) {
                     redirectLoginActivity();
                 }
 
                 @Override
-                protected void onFailure(final APIErrorResult errorResult) {
+                public void onFailure(final APIErrorResult errorResult) {
                     redirectLoginActivity();
                 }
             });

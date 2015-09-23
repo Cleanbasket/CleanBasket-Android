@@ -37,8 +37,20 @@ public class WebViewAgreementActivity extends BaseActivity {
 
         WebView webView = (WebView) findViewById(R.id.webview);
 
-        if(type.equals("privacy")) {
+        if(type.equals("nice_privacy")) {
             webView.loadUrl(Config.SERVER_ADDRESS + "payment-term-of-use");
+        }
+        else if(type.equals("privacy")) {
+            getActionBar().setTitle(R.string.info_protection);
+            webView.loadUrl(Config.SERVER_ADDRESS + "privacy");
+        }
+        else if(type.equals("term-of-use")) {
+            getActionBar().setTitle(R.string.info_service);
+            webView.loadUrl(Config.SERVER_ADDRESS + "term-of-use");
+        }
+        else if(type.equals("service_info")) {
+            getActionBar().setTitle(R.string.service_info);
+            webView.loadUrl(Config.SERVER_ADDRESS + "service-info");
         }
     }
 }

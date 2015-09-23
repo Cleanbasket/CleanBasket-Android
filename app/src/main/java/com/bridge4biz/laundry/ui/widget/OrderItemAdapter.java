@@ -31,6 +31,7 @@ import java.util.HashMap;
 public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGridHeadersSimpleAdapter, View.OnTouchListener {
     private static final String TAG = OrderItemAdapter.class.getSimpleName();
 
+    private Context mContext;
     private LayoutInflater mLayoutInflater;
     private HashMap<Integer, OrderCategory> mOrderCategoryMap;
     private ArrayList<OrderItem> mFixedOrderItem;
@@ -44,6 +45,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
     public OrderItemAdapter(Context context, int resource) {
         super(context, resource);
 
+        this.mContext = context;
         this.mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mOrderCategoryMap = new HashMap<Integer, OrderCategory>();
 
@@ -125,7 +127,11 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
         if (getItem(position).discount_rate > 0)
             holder.textViewDiscountInfo.setText(getItem(position).discount_rate * 100 + "%");
-        holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
+        String name = CleanBasketApplication.getInstance().getStringByString(getItem(position).descr);
+        if (!name.equals(mContext.getString(R.string.default_name)))
+            holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
+        else
+            holder.textViewOrderItem.setText(getItem(position).name);
         holder.textViewOrderItemPrice.setText(mFormatKRW.format((double) getItem(position).price) + getContext().getString(R.string.monetary_unit));
 
         return convertView;

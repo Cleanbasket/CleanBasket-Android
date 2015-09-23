@@ -1,24 +1,56 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlarmFragment">
+    android:id="@+id/chat_fragment_container"
+    android:background="@android:color/white">
 
-    <ListView
-        android:id="@+id/listview_notification"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/listview_background"
-        android:overScrollMode="never"
-        android:drawSelectorOnTop="true" />
+    <ImageView
+        android:id="@+id/imageview_qna"
+        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_above="@+id/button_start_chat"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_qna" />
 
-    <TextView
-        style="@style/Light.TextView.CleanBasket"
-        android:id="@+id/textview_no_item"
+    <Button
+        android:id="@+id/button_start_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/no_notification"
-        android:visibility="gone" />
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/qna"
+        android:textColor="@color/text_black"
+        android:background="@drawable/round_button_background"/>
+
+    <TextView
+        android:id="@+id/textview_qna_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_start_chat"
+        android:layout_centerHorizontal="true"
+        android:text="@string/qna_header"
+        android:textSize="20dp"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textview_qna_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_qna_header"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:text="@string/qna_detail"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textview_call_customer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_qna_detail"
+        android:layout_centerHorizontal="true"
+        android:text="@string/call_customer_center"
+        android:textStyle="bold"
+        android:gravity="center" />
 </RelativeLayout>

@@ -24,6 +24,8 @@ public final class Constants {
     public static final int AUTH_CODE_INVALID = 20;
     public static final int AUTH_CODE_TIME = 21;
     public static final int DUPLICATION_FEEDBACK = 22;
+    public static final int TOO_EARLY_TIME = 23;
+    public static final int TOO_LATE_TIME = 24;
 
     public static final int DUPLICATION = 207;
     public static final int INVALID = 208;

@@ -1,7 +1,9 @@
 package com.bridge4biz.laundry.ui;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -18,6 +20,9 @@ import com.google.gson.JsonSyntaxException;
 
 public class SplashActivity extends BaseActivity implements Response.Listener<String>, Response.ErrorListener {
     private static final String TAG = SplashActivity.class.getSimpleName();
+
+    public static final String UID = "uid";
+    public static final String USER_ID = "user_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,7 @@ public class SplashActivity extends BaseActivity implements Response.Listener<St
 
         switch (jsonData.constant) {
             case Constants.SESSION_VALID:
+                storeUid(getBaseContext(), Integer.parseInt(jsonData.data));
                 redirectToMainActivity();
                 break;
 
@@ -81,5 +87,17 @@ public class SplashActivity extends BaseActivity implements Response.Listener<St
         startActivity(intent);
 
         super.finish();
+    }
+
+    private void storeUid(Context context, Integer uid) {
+        final SharedPreferences prefs = getUidPreferences();
+        Log.i(TAG, "Saving UID " + uid);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(USER_ID, uid);
+        editor.commit();
+    }
+
+    private SharedPreferences getUidPreferences() {
+        return getSharedPreferences(UID, Context.MODE_PRIVATE);
     }
 }

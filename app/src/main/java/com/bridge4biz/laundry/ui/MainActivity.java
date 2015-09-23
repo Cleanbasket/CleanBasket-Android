@@ -8,11 +8,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bridge4biz.laundry.CleanBasketApplication;
+import com.bridge4biz.laundry.Config;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.RequestQueue;
 import com.bridge4biz.laundry.io.model.AuthUser;
@@ -24,6 +26,8 @@ import com.bridge4biz.laundry.util.BackPressCloseHandler;
 import com.bridge4biz.laundry.util.Constants;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonSyntaxException;
+import com.zopim.android.sdk.api.ZopimChat;
+import com.zopim.android.sdk.model.VisitorInfo;
 
 import org.json.JSONObject;
 
@@ -48,10 +52,7 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
     public AuthUser mAuthUser;
 
     // Related to GCM
-    public static final String GCM = "gcm";
-    public static final String UID = "uid";
     public static final String PROPERTY_REG_ID = "registration_id";
-    public static final String USER_ID = "user_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
 
     private BackPressCloseHandler backPressCloseHandler;
@@ -96,8 +97,41 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
 
         mContext = this;
 
-        getUidFromServer();
         getUserInfo();
+    }
+
+    private VisitorInfo initZopimChatFragment() {
+        VisitorInfo visitorInfo = new VisitorInfo.Builder()
+                .email(mAuthUser.email)
+                .phoneNumber(mAuthUser.phone)
+                .build();
+
+        return visitorInfo;
+    }
+
+    private VisitorInfo initZopimChatFragmentWithoutAuthUser() {
+        VisitorInfo visitorInfo = new VisitorInfo.Builder()
+                .phoneNumber(getPhoneNumber())
+                .build();
+
+        return visitorInfo;
+    }
+
+    /* 스마트폰 번호를 가져옵니다 */
+    public String getPhoneNumber() {
+        TelephonyManager tMgr = (TelephonyManager) this.getSystemService(this.TELEPHONY_SERVICE);
+        String mPhoneNumber;
+        mPhoneNumber = tMgr.getLine1Number();
+
+        if (mPhoneNumber != null) {
+            mPhoneNumber = mPhoneNumber.replace("+82", "0");
+
+            if(mPhoneNumber.length() != 11) {
+                return "";
+            }
+        }
+
+        return mPhoneNumber;
     }
 
     private String getRegistrationId(Context context) {
@@ -228,54 +262,6 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         Log.i(TAG, "Back Pressed");
     }
 
-    public void getUidFromServer() {
-        GetRequest getRequest = new GetRequest(this);
-        getRequest.setUrl(AddressManager.GET_MEMBER_INFO);
-        getRequest.setListener(new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonData jsonData;
-
-                try {
-                    jsonData = CleanBasketApplication.getInstance().getGson().fromJson(response, JsonData.class);
-                } catch (JsonSyntaxException e) {
-                    return;
-                }
-
-                switch (jsonData.constant) {
-                    case Constants.SUCCESS:
-                        storeUid(getBaseContext(), Integer.parseInt(jsonData.data));
-                        break;
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        RequestQueue.getInstance(this).addToRequestQueue(getRequest.doRequest());
-    }
-
-    private void storeUid(Context context, Integer uid) {
-        final SharedPreferences prefs = getUidPreferences();
-        Log.i(TAG, "Saving UID " + uid);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(USER_ID, uid);
-        editor.commit();
-    }
-
-    public int getUid() {
-        final SharedPreferences prefs = getUidPreferences();
-        int uid = prefs.getInt(USER_ID, 0);
-
-        return uid;
-    }
-
-    private SharedPreferences getUidPreferences() {
-        return getSharedPreferences(UID, Context.MODE_PRIVATE);
-    }
-
     public void getUserInfo() {
         GetRequest getRequest = new GetRequest(this);
         getRequest.setUrl(AddressManager.GET_AUTH_MEMBER_INFO);
@@ -292,11 +278,16 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
 
                 switch (jsonData.constant) {
                     case Constants.SUCCESS:
-                        if (jsonData.data.equals("null"))
+                        if (jsonData.data.equals("null")) {
                             mAuthUser = null;
+                            ZopimChat.setVisitorInfo(initZopimChatFragmentWithoutAuthUser());
+                        }
                         else {
                             mAuthUser = CleanBasketApplication.getInstance().getGson().fromJson(jsonData.data, AuthUser.class);
+                            ZopimChat.setVisitorInfo(initZopimChatFragment());
                         }
+
+                        ZopimChat.init(Config.ZOPIM_API).build();
                         break;
                 }
             }
@@ -306,6 +297,7 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
 
             }
         });
+
         RequestQueue.getInstance(this).addToRequestQueue(getRequest.doRequest());
     }
 }

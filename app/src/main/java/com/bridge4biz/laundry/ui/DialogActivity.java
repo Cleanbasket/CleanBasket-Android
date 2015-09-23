@@ -1,6 +1,7 @@
 package com.bridge4biz.laundry.ui;
 
 
+import android.app.NotificationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -28,6 +29,8 @@ public class DialogActivity extends FragmentActivity implements MessageDialog.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        cancelNotification();
 
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("tag")) {
             String tag = getIntent().getExtras().getString("tag");
@@ -72,6 +75,12 @@ public class DialogActivity extends FragmentActivity implements MessageDialog.On
                 }
             }
         }
+    }
+
+    public void cancelNotification() {
+        String ns = this.NOTIFICATION_SERVICE;
+        NotificationManager nMgr = (NotificationManager) this.getSystemService(ns);
+        nMgr.cancelAll();
     }
 
     private void sendConfirm(int oid) {

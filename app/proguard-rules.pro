@@ -29,8 +29,7 @@
   public static <fields>;
   public *;
 }
--dontwarn android.support.v4.**,com.ning.http.client.**,org.jboss.netty.**, org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**
--dontwarn com.squareup.okhttp.**
+-dontwarn android.support.v4.**, com.ning.http.client.**, org.jboss.netty.**, org.slf4j.**, com.google.android.gms.**
 -dontwarn com.kakao.**
 -keep class uk.co.chrisjenx.** { *; }
 -keep class com.bridge4biz.laundry.gcm.** { *; }
@@ -49,3 +48,17 @@
 -keepclassmembers class io.card.** {
     *;
 }
+# We only want obfuscation
+-keepattributes InnerClasses, Signature, Annotation, EnclosingMethod
+# Chat sdk
+-keep public interface com.zopim.android.sdk.** { *; }
+-keep public class com.zopim.android.sdk.** { *; }
+# OKHttp
+-dontwarn com.squareup.okhttp.**
+# Jackson
+-keep public interface com.fasterxml.jackson.** { *; }
+-keep public class com.fasterxml.jackson.** { *; }
+-dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
+# Appcompat and support
+-keep interface android.support.v7.** { *; }
+-keep class android.support.v7.** { *; }

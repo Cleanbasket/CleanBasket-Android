@@ -116,4 +116,8 @@
         <item name="android:dividerPadding">4dp</item>
         <item name="android:thumb">@null</item>
     </style>
+
+    <style name="zopim_toolbar">
+        <item name="android:theme">@style/Theme.AppCompat.NoActionBar</item>
+    </style>
 </resources>

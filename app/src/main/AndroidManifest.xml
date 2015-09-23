@@ -111,6 +111,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.bridge4biz.laundry.ui.NotificationActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.bridge4biz.laundry.ui.NotificationActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="com.bridge4biz.laundry.ui.SettingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >

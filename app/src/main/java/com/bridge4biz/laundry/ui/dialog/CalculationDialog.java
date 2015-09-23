@@ -136,9 +136,9 @@ public class CalculationDialog extends DialogFragment implements View.OnClickLis
         }
     }
 
-    private void updateOrder(Order mOrder) {
+    private void updateOrder(Order order) {
         PostRequest postRequest = new PostRequest(getActivity());
-        String body = CleanBasketApplication.getInstance().getGson().toJson(mOrder);
+        String body = CleanBasketApplication.getInstance().getGson().toJson(order);
 
         try {
             JSONObject jsonObject = new JSONObject(body);

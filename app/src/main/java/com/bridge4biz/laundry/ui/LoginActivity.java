@@ -8,10 +8,10 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 import com.bridge4biz.laundry.R;
-import com.kakao.AuthType;
-import com.kakao.Session;
-import com.kakao.SessionCallback;
-import com.kakao.exception.KakaoException;
+import com.kakao.auth.AuthType;
+import com.kakao.auth.Session;
+import com.kakao.auth.SessionCallback;
+import com.kakao.util.exception.KakaoException;
 import com.viewpagerindicator.CirclePageIndicator;
 
 public class LoginActivity extends BaseActivity {
@@ -46,7 +46,6 @@ public class LoginActivity extends BaseActivity {
 
         CirclePageIndicator circlePageIndicator = (CirclePageIndicator) findViewById(R.id.page_indicator);
         circlePageIndicator.setViewPager(mViewPager);
-
 
         // 세션 콜백 추가
         Session.initialize(this, AuthType.KAKAO_TALK);

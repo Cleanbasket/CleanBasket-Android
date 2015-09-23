@@ -31,9 +31,8 @@
             android:id="@+id/edittext_email" android:layout_width="match_parent"
             android:layout_height="32dp" android:hint="@string/prompt_email"
             android:inputType="textEmailAddress" android:maxLines="1"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="@dimen/register_dimen"
+            android:layout_marginRight="@dimen/register_dimen"
             android:singleLine="true" />
 
         <EditText
@@ -42,8 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="@dimen/register_dimen"
+            android:layout_marginRight="@dimen/register_dimen"
             android:inputType="phone"
             android:hint="@string/prompt_phone" />
 
@@ -51,8 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="@dimen/register_dimen"
+            android:layout_marginRight="@dimen/register_dimen"
             android:orientation="horizontal">
 
             <EditText
@@ -79,8 +78,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/checkedtextview_agree_all"
@@ -106,7 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:visibility="gone">
 
         <TextView
                 android:id="@+id/checkedtextview_service"
@@ -132,9 +133,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:visibility="gone">
 
-        <TextView
+            <TextView
                 android:id="@+id/checkedtextview_protection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -159,7 +161,10 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="@string/action_sign_up"
             android:textStyle="bold"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/register_dimen"
+            android:layout_marginRight="@dimen/register_dimen"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/round_point_button_background" />
     </LinearLayout>
 

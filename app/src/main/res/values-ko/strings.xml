@@ -79,6 +79,8 @@
     <string name="date_unavailable_error">죄송합니다. 해당 지역에서 해당 수거배달일에 서비스가 휴무입니다</string>
     <string name="general_error">에러가 발생했습니다</string>
     <string name="order_success">주문이 성공했습니다</string>
+    <string name="too_early_time">최소 1시간 45분 후에 주문이 가능합니다</string>
+    <string name="too_late_time">23시 30분 이후 시간은 불가능합니다</string>
 
     <!-- related to time info -->
     <string name="time_picker_inform">시간을 선택해주세요</string>
@@ -133,6 +135,7 @@
     <!-- user info -->
     <string name="coupon_info">쿠폰 보기</string>
     <string name="notification">공지사항</string>
+    <string name="alarm">알람</string>
     <string name="setting">설정</string>
     <string name="service_info">서비스 정보</string>
 
@@ -218,8 +221,28 @@
     <string name="bedclothes_queen">이불(퀸)</string>
     <string name="bedclothes_cover">이불 커버</string>
     <string name="mustang">인조무스탕</string>
+    <string name="laundry">물빨래</string>
+    <string name="tent">텐트</string>
+    <string name="curtain">커텐</string>
+    <string name="carpet">카펫</string>
+    <string name="backpack">책가방</string>
+    <string name="luxurybag">명품 가방(가죽)</string>
+    <string name="ecobag">명품 가방(천)</string>
+    <string name="shoes">운동화</string>
+    <string name="boots">등산화</string>
+    <string name="leather_shoes">구두</string>
+    <string name="leather_shoes_man">구두(남)</string>
+    <string name="uggboots">어그 부츠</string>
+    <string name="golfshoes">골프화</string>
+    <string name="luxuryshoes">명품 운동화</string>
+    <string name="why1">세탁세제</string>
+    <string name="why2">섬유유연제</string>
+    <string name="why3">바디샤워</string>
+    <string name="why4">샴푸</string>
 
     <!-- related to order category -->
+    <string name="footwear">신발</string>
+    <string name="bag">가방</string>
     <string name="offers">추천</string>
     <string name="business">비즈니스</string>
     <string name="top">상의</string>
@@ -326,6 +349,8 @@
     <string name="today_not_available">오늘 주문 시간 가능한 시간이 없습니다</string>
     <string name="order_list_confirm">가격 확인</string>
     <string name="mileage_message">마일리지가 적립되었습니다</string>
+    <string name="payment_message">원이 신용카드로 결제되었습니다</string>
+    <string name="payment_cancel_message">원 신용카드 결제가 취소되었습니다</string>
     <string name="regex_address_dong">[ㄱ-ㅎ가-힣0-9]+시\\s[ㄱ-ㅎ가-힣0-9]+구\\s[ㄱ-ㅎ가-힣0-9]+동</string>
     <string name="regex_address_ro">[ㄱ-ㅎ가-힣0-9]+시\\s[ㄱ-ㅎ가-힣0-9]+구\\s[ㄱ-ㅎ가-힣0-9]+로</string>
     <string name="pd_call">PD에게 전화하기</string>
@@ -356,4 +381,17 @@
     <string name="delete_card_title">카드 삭제</string>
     <string name="delete_card">카드를 삭제하시겠습니까?</string>
     <string name="card_register">잠시만 기다려주세요</string>
+
+    <string name="qna">실시간 상담</string>
+    <string name="qna_header">무엇이든 물어보세요</string>
+    <string name="qna_detail">고객센터와 실시간 채팅이 가능합니다\n(운영시간 : 오전 10시 ~ 오후 6시)</string>
+
+    <string name="login_agreement_a">로그인에 있어</string>
+    <string name="login_agreement_b">개인정보 수집 및 이용에 대한 안내</string>
+    <string name="login_agreement_c">및</string>
+    <string name="login_agreement_d">서비스 이용약관</string>
+    <string name="login_agreement_e">에 동의합니다.</string>
+
+    <string name="call_customer_center"><u>고객센터 연결하기</u>\n070-7552-1385</string>
+    <string name="number_customer_center">07075521385</string>
 </resources>

@@ -107,4 +107,14 @@
             android:textSize="15dp"
             android:textColor="@color/dialog_color" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textview_agreement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:textSize="9dp" />
 </RelativeLayout>

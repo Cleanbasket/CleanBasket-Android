@@ -8,12 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.bridge4biz.laundry.CleanBasketApplication;
+import com.bridge4biz.laundry.Config;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.model.Notification;
 import com.bridge4biz.laundry.ui.DialogActivity;
@@ -95,6 +97,14 @@ public class GCMIntentService extends IntentService {
             case Notification.MILEAGE_ALARM:
                 notification.title = notification.value + " " + getString(R.string.mileage_message);
                 break;
+
+            case Notification.PAYMENT_ALARM:
+                notification.title = notification.value + getString(R.string.payment_message);
+                break;
+
+            case Notification.PAYMENT_CANCEL_ALARM:
+                notification.title = notification.value + getString(R.string.payment_cancel_message);
+                break;
         }
 
         Log.i(TAG, notification.oid + " 저장 / " + notification.title + " / " + notification.uid);
@@ -161,6 +171,11 @@ public class GCMIntentService extends IntentService {
 
             case Notification.MODIFY_ALARM:
                 sendModifyNotification(notification);
+                break;
+
+            case Notification.PAYMENT_ALARM:
+            case Notification.PAYMENT_CANCEL_ALARM:
+                sendPaymentNotification(notification);
                 break;
         }
 
@@ -335,6 +350,24 @@ public class GCMIntentService extends IntentService {
 
         PendingIntent contentPIntent = PendingIntent.getActivity(this, notification.oid + Notification.MODIFY_ALARM,
                 intent, PendingIntent.FLAG_ONE_SHOT);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(notification.title)
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(notification.title))
+                        .setContentText(notification.title);
+
+        mBuilder.setAutoCancel(true);
+        mBuilder.setContentIntent(contentPIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+    private void sendPaymentNotification(Notification notification) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Config.NICE_PAYMENT_ADDRESS + notification.message + Config.NICE_PAYMENT_ADDRESS_SUFFIX));
+
+        PendingIntent contentPIntent = PendingIntent.getActivity(this, notification.oid + Notification.MODIFY_ALARM, intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

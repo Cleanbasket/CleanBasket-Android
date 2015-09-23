@@ -4,18 +4,23 @@ package com.bridge4biz.laundry.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.bridge4biz.laundry.Config;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.RequestQueue;
 import com.bridge4biz.laundry.ui.dialog.EmailDialog;
-import com.kakao.AuthType;
+import com.kakao.auth.AuthType;
+
+import java.util.Locale;
 
 public class LoginFragment extends Fragment {
     public static final String ARG_OBJECT = LoginFragment.class.getSimpleName();
@@ -52,6 +57,7 @@ public class LoginFragment extends Fragment {
 
                 RelativeLayout mKakaoLogin = (RelativeLayout) rootView.findViewById(R.id.layout_button_kakao);
                 RelativeLayout mEmailLogin = (RelativeLayout) rootView.findViewById(R.id.layout_button_email);
+                TextView mTextView = (TextView) rootView.findViewById(R.id.textview_agreement);
 
                 mKakaoLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -73,6 +79,35 @@ public class LoginFragment extends Fragment {
                     }
                 });
 
+                // 동의 텍스트 생성
+                StringBuilder html = new StringBuilder();
+
+                if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr")) {
+                    html.append(getString(R.string.login_agreement_a));
+                    html.append(" <a href='com.bridge4biz.laundry.ui.WebViewAgreementActivity://privacy'>");
+                    html.append(getString(R.string.login_agreement_b));
+                    html.append("</a> ");
+                    html.append(getString(R.string.login_agreement_c));
+                    html.append(" <a href='com.bridge4biz.laundry.ui.WebViewAgreementActivity://term-of-use'>");
+                    html.append(getString(R.string.login_agreement_d));
+                    html.append("</a>");
+                    html.append(getString(R.string.login_agreement_e));
+                }
+                else {
+                    html.append(getString(R.string.login_agreement_a));
+                    html.append(" <a href='com.bridge4biz.laundry.ui.WebViewAgreementActivity://privacy'>");
+                    html.append(getString(R.string.login_agreement_b));
+                    html.append("</a> ");
+                    html.append(getString(R.string.login_agreement_c));
+                    html.append(" <a href='com.bridge4biz.laundry.ui.WebViewAgreementActivity://term-of-use'>");
+                    html.append(getString(R.string.login_agreement_d));
+                    html.append("</a> ");
+                    html.append(getString(R.string.login_agreement_e));
+                }
+
+                mTextView.setClickable(false);
+                mTextView.setText(Html.fromHtml(html.toString()));
+                mTextView.setMovementMethod(LinkMovementMethod.getInstance());
                 break;
         }
 

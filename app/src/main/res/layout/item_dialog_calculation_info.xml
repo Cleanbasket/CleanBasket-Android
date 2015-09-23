@@ -10,7 +10,7 @@
         android:id="@+id/line_top"
         android:layout_width="fill_parent"
         android:layout_height="5dp"
-        android:background="@color/total_line_color" />
+        android:background="@color/point_color" />
 
     <ImageView
         android:id="@+id/imageview_calculation_info"

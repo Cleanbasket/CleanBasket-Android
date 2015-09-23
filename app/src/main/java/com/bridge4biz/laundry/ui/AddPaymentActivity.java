@@ -241,14 +241,14 @@ public class AddPaymentActivity extends Activity implements View.OnClickListener
 
         if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr")) {
             html.append("NICEPAY ");
-            html.append("<a href='com.bridge4biz.laundry.ui.WebViewAgreementActivity://privacy'>");
+            html.append("<a href='com.bridge4biz.laundry.ui.WebViewAgreementActivity://nice_privacy'>");
             html.append(getString(R.string.service));
             html.append("</a> ");
             html.append(getString(R.string.agreement));
         }
         else {
             html.append(getString(R.string.agreement) + " ");
-            html.append("<a href='com.bridge4biz.laundry.ui.WebViewAgreementActivity://privacy'>");
+            html.append("<a href='com.bridge4biz.laundry.ui.WebViewAgreementActivity://nice_privacy'>");
             html.append(getString(R.string.service));
             html.append("</a>");
         }

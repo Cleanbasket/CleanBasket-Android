@@ -297,12 +297,13 @@ public class OrderStatusFragment extends Fragment {
             int state = getGroup(position).state;
 
             holder.buttonFeedback.setVisibility(View.GONE);
+            holder.textViewPDName.setText(getString(R.string.pd_name_default));
+            holder.imageViewPdFace.setImageResource(R.drawable.ic_launcher);
             // holder.lineBottom.setVisibility(View.INVISIBLE);
 
             // state에 따라 컴포넌트를 출력합니다
             switch (state) {
                 case PICK_UP_WAIT:
-                    holder.imageViewPdFace.setImageResource(R.drawable.ic_launcher);
                     holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline1);
                     holder.buttonModifyOrder.setVisibility(View.VISIBLE);
                     holder.lineBottom.setVisibility(View.VISIBLE);
@@ -314,6 +315,7 @@ public class OrderStatusFragment extends Fragment {
                     holder.buttonModifyOrder.setVisibility(View.VISIBLE);
                     holder.lineBottom.setVisibility(View.VISIBLE);
                     if (getGroup(position).pickupInfo != null) {
+                        holder.imageViewPdFace.setImageResource(0);
                         setPDFaceImage(holder.imageViewPdFace, getGroup(position).pickupInfo.img);
                         holder.textViewPDName.setText(getGroup(position).pickupInfo.name);
                         holder.buttonCallPD.setVisibility(View.VISIBLE);
@@ -331,6 +333,7 @@ public class OrderStatusFragment extends Fragment {
                 case DELIVERY_MAN_SELECTED:
                     holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline3);
                     if (getGroup(position).dropoffInfo != null) {
+                        holder.imageViewPdFace.setImageResource(0);
                         setPDFaceImage(holder.imageViewPdFace, getGroup(position).dropoffInfo.img);
                         holder.textViewPDName.setText(getGroup(position).dropoffInfo.name);
                         holder.buttonCallPD.setVisibility(View.VISIBLE);
@@ -351,8 +354,6 @@ public class OrderStatusFragment extends Fragment {
 
                 default:
                     holder.imageViewStatusBar.setImageResource(R.drawable.ic_order_status_timeline2);
-                    holder.imageViewPdFace.setImageResource(R.drawable.ic_launcher);
-                    holder.textViewPDName.setText(getString(R.string.pd_name_default));
                     holder.buttonCallPD.setVisibility(View.GONE);
                     break;
             }
@@ -372,9 +373,13 @@ public class OrderStatusFragment extends Fragment {
             holder.buttonOrderItem.setTag(getGroup(position));
 
             /* 총계를 구해 버튼에 새깁니다 */
+//            holder.buttonTotalGross.setText(
+//                    getString(R.string.label_total) + " " +
+//                            mFormatKRW.format(getTotalFromOrder(position) + getGroup(position).dropoff_price - getGroup(position).mileage - getCouponTotal(getGroup(position))) +
+//                            getString(R.string.monetary_unit));
             holder.buttonTotalGross.setText(
                     getString(R.string.label_total) + " " +
-                            mFormatKRW.format(getTotalFromOrder(position) + getGroup(position).dropoff_price - getGroup(position).mileage - getCouponTotal(getGroup(position))) +
+                            mFormatKRW.format(getGroup(position).price) +
                             getString(R.string.monetary_unit));
             holder.buttonTotalGross.setTag(getGroup(position));
             holder.buttonModifyOrder.setTag(getGroup(position));

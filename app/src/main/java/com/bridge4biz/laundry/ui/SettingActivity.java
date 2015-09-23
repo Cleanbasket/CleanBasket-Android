@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -114,7 +112,7 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
         getPreferenceScreen().addPreference(header);
         addPreferencesFromResource(R.xml.pref_version);
 
-        findPreference("current_version").setSummary(getString(R.string.current_version) + " " + getAppVersion(this));
+        findPreference("current_version").setSummary(getString(R.string.current_version) + " " + CleanBasketApplication.getAppVersionName(this));
 
         try {
             AppInfo appInfo = getDBHelper().getAppInfoDao().queryBuilder().queryForFirst();
@@ -228,16 +226,6 @@ public class SettingActivity extends PreferenceActivity implements Preference.On
 
     private SharedPreferences getNotificationPreferences() {
         return getSharedPreferences(NOTIFICATION, Context.MODE_PRIVATE);
-    }
-
-    private static String getAppVersion(Context context) {
-        try {
-            PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("Could not get package name: " + e);
-        }
     }
 
     public DBHelper getDBHelper() {

@@ -4,14 +4,18 @@ package com.bridge4biz.laundry;
 public class Config {
     public final static String DAUM_MAP_API = "ed518de9a2cb643cc334a8f3fa8008fb";
     public final static String DAUM_MAP_LOCAL_API = "ed518de9a2cb643cc334a8f3fa8008fb";
+    public final static String ZOPIM_API = "3IvIR4PxJLUypCdpgbBmJLBjYby32CVD";
 
-//    public final static String SERVER_ADDRESS = "https://www.cleanbasket.co.kr/";
+    public final static String SERVER_ADDRESS = "https://www.cleanbasket.co.kr/";
 //    public final static String SERVER_ADDRESS = "http://192.168.11.4:8080/wash/";
-    public final static String SERVER_ADDRESS = "http://211.110.140.180:8080/";
+//    public final static String SERVER_ADDRESS = "http://211.110.140.180:8080/";
 //    public final static String SERVER_ADDRESS = "http://10.7.22.67:8080/wash/";
+//    public final static String SERVER_ADDRESS = "http://localhost:8080/wash/";
 
     public final static String SEOUL_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/seoul.png";
     public final static String INCHEON_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/incheon.png";
+    public final static String NICE_PAYMENT_ADDRESS = "https://pg.nicepay.co.kr/issue/IssueLoader.jsp?TID=";
+    public final static String NICE_PAYMENT_ADDRESS_SUFFIX = "&type=0";
 
     public final static String PLAY_STORE_URL = "market://details?id=com.bridge4biz.laundry";
 

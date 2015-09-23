@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bridge4biz.laundry.db.DBHelper;
-import com.bridge4biz.laundry.ui.MainActivity;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.urqa.clientinterface.URQAController;
@@ -29,11 +28,12 @@ public class CleanBasketApplication extends Application {
 
     // Related to GCM
     public static final String GCM = "gcm";
-    public static final String PAYMENT = "payment";
     public static final String PAYMENT_CARD_NAME = "cardName";
     public static final String PAYMENT_AUTH_DATE = "authDate";
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_APP_VERSION = "appVersion";
+    public static final String UID = "uid";
+    public static final String USER_ID = "user_id";
 
     private DBHelper dbHelper;
 
@@ -80,23 +80,21 @@ public class CleanBasketApplication extends Application {
         editor.commit();
     }
 
-    public SharedPreferences getPaymentPreferences() {
-        return getSharedPreferences(PAYMENT, Context.MODE_PRIVATE);
-    }
-
-    public void storePayment(Context context, String cardName, String authDate) {
-        final SharedPreferences prefs = getPaymentPreferences();
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PAYMENT_CARD_NAME, cardName);
-        editor.putString(PAYMENT_AUTH_DATE, authDate);
-        editor.commit();
-    }
-
     public static int getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
+    public static String getAppVersionName(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException("Could not get package name: " + e);
         }
@@ -124,7 +122,15 @@ public class CleanBasketApplication extends Application {
 
     /* 이름으로 아이콘을 가져옵니다 */
     public int getDrawableByCategoryString(String name) {
-        return this.getResources().getIdentifier("ic_category_" + name, "drawable", this.getPackageName());
+        int resource;
+
+        resource = this.getResources().getIdentifier("ic_category_" + name, "drawable", this.getPackageName());
+
+        if (resource == 0) {
+            resource =  this.getResources().getIdentifier("ic_category_etc", "drawable", this.getPackageName());
+        }
+
+        return resource;
     }
 
     public void showToast(String message) {
@@ -149,12 +155,12 @@ public class CleanBasketApplication extends Application {
 
     public int getUid() {
         final SharedPreferences prefs = getUidPreferences();
-        int uid = prefs.getInt(MainActivity.USER_ID, 0);
+        int uid = prefs.getInt(USER_ID, 0);
 
         return uid;
     }
 
     private SharedPreferences getUidPreferences() {
-        return getSharedPreferences(MainActivity.UID, Context.MODE_PRIVATE);
+        return getSharedPreferences(UID, Context.MODE_PRIVATE);
     }
 }
