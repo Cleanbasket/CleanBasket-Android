@@ -2,6 +2,7 @@ package com.bridge4biz.laundry.ui.widget;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -89,6 +90,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.orderImageView = (ImageView) convertView.findViewById(R.id.imageview_orderitem);
             holder.orderItemContainer = (RelativeLayout) convertView.findViewById(R.id.orderitem_container);
             holder.extractImageView = (RelativeLayout) convertView.findViewById(R.id.imageview_extractitem);
+            holder.infoImageView = (RelativeLayout) convertView.findViewById(R.id.imageview_info);
             holder.textViewDiscountInfo = (TextView) convertView.findViewById(R.id.textview_discount_info);
             holder.textViewOrderItem = (TextView) convertView.findViewById(R.id.textview_orderitem);
             holder.textViewOrderItemPrice = (TextView) convertView.findViewById(R.id.textview_orderitem_price);
@@ -102,6 +104,9 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         } else
             holder = (OrderItemViewHolder) convertView.getTag();
 
+        holder.infoImageView.setOnTouchListener(this);
+        holder.infoImageView.setTag(getItem(position));
+
         // 아이템이 1개 이상 선택되었을 경우
         if (getItem(position).count > 0) {
             holder.badgeView.setText(String.valueOf(getItem(position).count));
@@ -109,6 +114,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.outlineImageView.setVisibility(View.INVISIBLE);
             holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img + "_select"));
             holder.extractImageView.setVisibility(View.VISIBLE);
+            holder.infoImageView.setVisibility(View.INVISIBLE);
             holder.extractImageView.setOnTouchListener(this);
             holder.extractImageView.setTag(getItem(position));
         }
@@ -117,6 +123,10 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.outlineImageView.setVisibility(View.VISIBLE);
             holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
             holder.extractImageView.setVisibility(View.INVISIBLE);
+            if (getItem(position).getInfo() > 0)
+                holder.infoImageView.setVisibility(View.VISIBLE);
+            else
+                holder.infoImageView.setVisibility(View.INVISIBLE);
             holder.extractImageView.setOnClickListener(null);
         }
 
@@ -125,8 +135,12 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         holder.orderItemContainer.setTag(getItem(position));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
-        if (getItem(position).discount_rate > 0)
+
+        if (getItem(position).getDiscount_rate() > 0)
             holder.textViewDiscountInfo.setText(getItem(position).discount_rate * 100 + "%");
+        else
+            holder.textViewDiscountInfo.setVisibility(View.GONE);
+
         String name = CleanBasketApplication.getInstance().getStringByString(getItem(position).descr);
         if (!name.equals(mContext.getString(R.string.default_name)))
             holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
@@ -143,6 +157,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         public ImageView orderImageView;
         public RelativeLayout orderItemContainer;
         public RelativeLayout extractImageView;
+        public RelativeLayout infoImageView;
         public TextView textViewDiscountInfo;
         public TextView textViewOrderItem;
         public TextView textViewOrderItemPrice;
@@ -239,6 +254,10 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             case R.id.imageview_extractitem:
                 extractOrderItem((OrderItem) v.getTag());
                 break;
+
+            case R.id.imageview_info:
+                popInfo(((OrderItem) v.getTag()).getInfo());
+                break;
         }
 
         notifyDataSetChanged();
@@ -276,6 +295,15 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             if(getItem(i).item_code == orderItem.item_code)
                 getItem(i).count--;
         }
+    }
+
+    private void popInfo(int popId) {
+        Intent intent = new Intent();
+        intent.setAction("com.bridge4biz.laundry.ui.InfoActivity");
+
+        intent.putExtra("popId", popId);
+
+        mContext.startActivity(intent);
     }
 
     protected class SpringListener extends SimpleSpringListener {
