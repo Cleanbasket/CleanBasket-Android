@@ -19,12 +19,15 @@ public class AddressManager {
     public final static String GET_AUTH_MEMBER_INFO = "member/user";
     public final static String GET_COUPON = "member/coupon";
     public final static String GET_NOTICE = "notice";
+    public final static String GET_ITEM_INFO = "member/item/";
     public final static String SET_ADDRESS = "member/address/update";
     public final static String SET_PHONE_NUMBER = "member/phone/update";
     public final static String ADD_ORDER = "member/order/add/new";
     public final static String MODIFY_ORDER_ITEM = "member/order/modify";
 
     public final static String GET_ORDER = "member/order";
+    public final static String GET_ALL_ORDER = "member/order/all";
+    public final static String GET_RECENT_ORDER = "member/order/recent";
     public final static String GET_DISTRICT = "district";
     public final static String DEL_ORDER = "member/order/del/new";
     public final static String CONFIRM_ORDER = "member/order/confirm";
@@ -40,7 +43,8 @@ public class AddressManager {
 	public final static String COUPON_SHARE = "recommendation";
 
 	public final static String ADD_PAYMENT = "member/payment";
-	public final static String REMOVE_PAYMENT = "member/payment/remove";
+    public final static String GET_PAYMENT_RESULT = "member/payment/result";
+    public final static String REMOVE_PAYMENT = "member/payment/remove";
 }
  
   

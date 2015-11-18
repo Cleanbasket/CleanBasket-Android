@@ -25,7 +25,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DBHelper.class.getSimpleName();
 
     static final String DATABASE_NAME = "cleanbasket.db";
-    static final int DATABASE_VERSION = 1;
+    static final int DATABASE_VERSION = 3;
 
     private RuntimeExceptionDao<AppInfo, Integer> appInfoDao = null;
     private RuntimeExceptionDao<OrderItem, Integer> orderItemDao = null;
@@ -115,6 +115,17 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int oldVersion, int currentVersion) {
+        String sql;
 
+        switch (oldVersion) {
+            case 1:
+                sql = "ALTER TABLE orderitem ADD COLUMN info INTEGER DEFAULT 0;";
+                sqLiteDatabase.execSQL(sql);
+
+            case 2:
+                sql = "ALTER TABLE orderitem ADD COLUMN scope INTEGER DEFAULT 0;";
+                sqLiteDatabase.execSQL(sql);
+                break;
+        }
     }
 }

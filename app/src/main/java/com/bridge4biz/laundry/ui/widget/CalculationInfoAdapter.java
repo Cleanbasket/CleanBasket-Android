@@ -9,12 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bridge4biz.laundry.CleanBasketApplication;
 import com.bridge4biz.laundry.Config;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.model.AuthUser;
 import com.bridge4biz.laundry.ui.UserFragment;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 
@@ -25,8 +25,6 @@ public class CalculationInfoAdapter extends ArrayAdapter<CalculationInfo> {
     public AuthUser mAuthUser;
     public int mTotal;
     public int mResource;
-
-    private DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
 
     public CalculationInfoAdapter(Context context, int resource, List<CalculationInfo> objects) {
         super(context, resource, objects);
@@ -62,7 +60,6 @@ public class CalculationInfoAdapter extends ArrayAdapter<CalculationInfo> {
                     convertView.setBackgroundColor(mContext.getResources().getColor(R.color.order_info_background));
                 holder.line.setVisibility(View.VISIBLE);
                 holder.imageViewCalculationInfo.setImageResource(0);
-                holder.textViewCalculation.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContext.getResources().getDimension(R.dimen.textview_big_dimen));
                 holder.textViewCalculation.setVisibility(View.VISIBLE);
                 holder.textViewCalculationInfoDetail.setVisibility(View.GONE);
                 holder.buttonUse.setVisibility(View.GONE);
@@ -74,7 +71,6 @@ public class CalculationInfoAdapter extends ArrayAdapter<CalculationInfo> {
             case CalculationInfo.SALE:
                 if (mResource == R.layout.item_calculation_info)
                     convertView.setBackgroundColor(mContext.getResources().getColor(R.color.caculation_item_backgound_color));
-                holder.textViewCalculation.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContext.getResources().getDimension(R.dimen.textview_small_dimen));
                 holder.textViewCalculation.setVisibility(View.VISIBLE);
                 holder.textViewCalculationInfoDetail.setVisibility(View.GONE);
                 holder.buttonUse.setVisibility(View.GONE);
@@ -83,17 +79,18 @@ public class CalculationInfoAdapter extends ArrayAdapter<CalculationInfo> {
             case CalculationInfo.MILEAGE:
                 if (mResource == R.layout.item_calculation_info) {
                     if (mAuthUser != null)
-                        holder.textViewCalculationInfoDetail.setText(mContext.getString(R.string.mileage_accumulation) + " " + (int) (mTotal * getAccumulationRate(mAuthUser.user_class)));
+                        holder.textViewCalculationInfoDetail.setText(mContext.getString(R.string.mileage_accumulation) + " " + CleanBasketApplication.mFormatKRW.format(mTotal * getAccumulationRate(mAuthUser.user_class)));
                     else
                         holder.textViewCalculationInfoDetail.setText(mContext.getString(R.string.join_recommendation));
                 }
                 holder.textViewCalculationInfoDetail.setVisibility(View.VISIBLE);
             case CalculationInfo.COUPON:
+                convertView.setBackgroundColor(mContext.getResources().getColor(R.color.caculation_item_backgound_color));
                 holder.textViewCalculation.setVisibility(View.GONE);
                 holder.buttonUse.setVisibility(View.VISIBLE);
                 holder.buttonUse.setTag(getItem(position).type);
                 if (getItem(position).price > 0)
-                    holder.buttonUse.setText(mFormatKRW.format(getItem(position).price) + mContext.getString(R.string.monetary_unit));
+                    holder.buttonUse.setText(CleanBasketApplication.mFormatKRW.format(getItem(position).price) + mContext.getString(R.string.monetary_unit));
                 else
                     holder.buttonUse.setText(mContext.getString(R.string.button_label_use));
                 break;
@@ -101,8 +98,10 @@ public class CalculationInfoAdapter extends ArrayAdapter<CalculationInfo> {
 
         if (getItem(position).image != null)
             holder.imageViewCalculationInfo.setImageResource(getDrawableByString(getItem(position).image));
+
         holder.textViewCalculationInfo.setText(getItem(position).name);
-        holder.textViewCalculation.setText(mFormatKRW.format(getItem(position).price) + mContext.getString(R.string.monetary_unit));
+        holder.textViewCalculation.setText(getItem(position).getPriceTag());
+        holder.textViewCalculation.setTextSize(TypedValue.COMPLEX_UNIT_PX, getItem(position).getTextSize());
 
         return convertView;
     }

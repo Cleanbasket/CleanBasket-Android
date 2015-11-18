@@ -2,255 +2,289 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:id="@+id/layout_order_state_fragment"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/background_stacked_color">
 
     <LinearLayout
-        android:id="@+id/info_form"
-        android:layout_width="match_parent"
+        android:id="@+id/layout_info"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/imageview_pd_face"
-            android:layout_width="112dp"
-            android:layout_height="112dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="23dp"
-            android:layout_marginBottom="23dp" />
 
         <TextView
             style="@style/Light.TextView.CleanBasket"
-            android:id="@+id/textview_pd_name"
+            android:id="@+id/textview_no_item"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/button_height"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/pd_name_default"
-            android:textSize="14dp" />
+            android:layout_height="wrap_content"
+            android:text="@string/no_order"
+            android:layout_gravity="center_horizontal"/>
 
         <Button
-            android:id="@+id/button_call_pd"
-            style="@style/Black.Small.Button.CleanBasket"
-            android:layout_width="wrap_content"
-            android:layout_height="16dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:text="@string/pd_call"
+            android:id="@+id/button_order_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
             android:background="@drawable/round_point_button_background"
-            android:layout_gravity="center_horizontal" />
-
-        <ImageView
-            android:layout_marginTop="18dp"
-            android:id="@+id/imageview_status_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textview_pick_up_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10dp"
-                android:text="@string/pick_up_label" />
-
-            <TextView
-                android:id="@+id/textview_laundry_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_status_bar"
-                android:textSize="10dp"
-                android:text="@string/laundry_label" />
-
-            <TextView
-                android:id="@+id/textview_drop_off_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_status_bar"
-                android:textSize="10dp"
-                android:text="@string/drop_off_label" />
-
-            <TextView
-                android:id="@+id/textview_finish_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_status_bar"
-                android:textSize="10dp"
-                android:text="@string/finish_label" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:id="@+id/line_top"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/slim_line"
-        android:layout_below="@+id/info_form"
-        android:layout_marginTop="14dp"
-        android:background="@color/grey_line_color" />
-
-    <LinearLayout
-        android:id="@+id/time_form"
-        android:layout_width="match_parent"
-        android:layout_height="77dp"
-        android:layout_below="@+id/line_top"
-        android:weightSum="1">
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:layout_gravity="center_vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_order_pick_up_time_label" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="11dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pick_up_time_label"
-                        android:textSize="14dp" android:textStyle="bold" />
-
-                    <TextView
-                        style="@style/Light.TextView.CleanBasket"
-                        android:id="@+id/textview_pick_up_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="10dp"
-                        android:layout_marginTop="6dp" />
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:layout_gravity="center_vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_order_drop_off_time_label" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="14dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/drop_off_time_label"
-                        android:textSize="14dp" android:textStyle="bold" />
-
-                    <TextView
-                        style="@style/Light.TextView.CleanBasket"
-                        android:id="@+id/textview_drop_off_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="10dp"
-                        android:layout_marginTop="6dp" />
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/order_status_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/time_form"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/slim_line"
-            android:background="@color/grey_line_color" />
-
-        <Button
-            android:id="@+id/button_order_item_child"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:textStyle="bold"
-            android:background="?attr/selectableItemBackgroundCompat" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/slim_line"
-            android:background="@color/grey_line_color" />
-
-        <Button
-            android:id="@+id/button_total"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:textStyle="bold"
-            android:background="?attr/selectableItemBackgroundCompat" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/slim_line"
-            android:background="@color/grey_line_color" />
-
-        <Button
-            android:id="@+id/button_modify_order"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/order_modify" android:textStyle="bold"
-            android:background="?attr/selectableItemBackgroundCompat" />
-
-        <View
-            android:id="@+id/line_bottom"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/slim_line"
-            android:background="@color/grey_line_color" />
-
-        <Button
-            android:id="@+id/button_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/feedback_label" android:textStyle="bold"
-            android:background="?attr/selectableItemBackgroundCompat" />
+            android:text="@string/label_order_history"
+            android:textColor="@color/text_white" />
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_below="@+id/order_status_menu">
+        android:id="@+id/layout_order_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/info_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageview_pd_face"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="23dp"
+                android:layout_marginBottom="23dp" />
+
+            <TextView
+                style="@style/Light.TextView.CleanBasket"
+                android:id="@+id/textview_pd_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/pd_name_default"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/button_call_pd"
+                style="@style/Black.Small.Button.CleanBasket"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/pd_call"
+                android:background="@drawable/round_point_button_background"
+                android:layout_gravity="center_horizontal" />
+
+            <ImageView
+                android:layout_marginTop="18dp"
+                android:id="@+id/imageview_status_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textview_pick_up_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10dp"
+                    android:text="@string/pick_up_label" />
+
+                <TextView
+                    android:id="@+id/textview_laundry_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_status_bar"
+                    android:textSize="10dp"
+                    android:text="@string/laundry_label" />
+
+                <TextView
+                    android:id="@+id/textview_drop_off_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_status_bar"
+                    android:textSize="10dp"
+                    android:text="@string/drop_off_label" />
+
+                <TextView
+                    android:id="@+id/textview_finish_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_status_bar"
+                    android:textSize="10dp"
+                    android:text="@string/finish_label" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/line_top"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slim_line"
+            android:layout_below="@+id/info_form"
+            android:layout_marginTop="14dp"
+            android:background="@color/grey_line_color" />
+
+        <LinearLayout
+            android:id="@+id/time_form"
+            android:layout_width="match_parent"
+            android:layout_height="77dp"
+            android:layout_below="@+id/line_top"
+            android:weightSum="1">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_order_pick_up_time_label" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="11dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pick_up_time_label"
+                            android:textSize="14dp" android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/Light.TextView.CleanBasket"
+                            android:id="@+id/textview_pick_up_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10dp"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_order_drop_off_time_label" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="14dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/drop_off_time_label"
+                            android:textSize="14dp" android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/Light.TextView.CleanBasket"
+                            android:id="@+id/textview_drop_off_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10dp"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/order_status_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/time_form"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/slim_line"
+                android:background="@color/grey_line_color" />
+
+            <Button
+                android:id="@+id/button_order_item_child"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:background="?attr/selectableItemBackgroundCompat" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/slim_line"
+                android:background="@color/grey_line_color" />
+
+            <Button
+                android:id="@+id/button_total"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:background="?attr/selectableItemBackgroundCompat" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/slim_line"
+                android:background="@color/grey_line_color" />
+
+            <Button
+                android:id="@+id/button_modify_order"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/order_modify" android:textStyle="bold"
+                android:background="?attr/selectableItemBackgroundCompat" />
+
+            <View
+                android:id="@+id/line_bottom"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/slim_line"
+                android:background="@color/grey_line_color" />
+
+            <Button
+                android:id="@+id/button_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/feedback_label" android:textStyle="bold"
+                android:background="?attr/selectableItemBackgroundCompat" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_below="@+id/order_status_menu">
+        </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

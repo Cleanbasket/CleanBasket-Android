@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bridge4biz.laundry.ui.InfoActivity">
+
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="400dp"
+        android:background="@drawable/rounded_corner"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/imageview_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/textview_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageview_product"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textSize="16dp"/>
+
+        <View
+            android:id="@+id/line_bottom"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slim_line"
+            android:layout_below="@+id/textview_header"
+            android:layout_marginTop="10dp"
+            android:background="@color/point_color" />
+
+        <TextView
+            android:id="@+id/textview_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line_bottom"
+            android:layout_margin="10dp"
+            android:textSize="@dimen/small_text" />
+
+        <Button
+            android:id="@+id/button_okay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/round_point_button_background"
+            android:text="@string/label_confirm"
+            android:textColor="@color/text_white" />
+    </RelativeLayout>
+</RelativeLayout>

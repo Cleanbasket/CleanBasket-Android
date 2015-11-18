@@ -7,6 +7,12 @@
         <item name="selectableItemBackgroundCompat">?android:attr/selectableItemBackground</item>
     </style>
 
+    <style name="Theme.CleanBasket.Transparent" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
     <style name="ActionBarStyle.CleanBasket" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
         <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyle.CleanBasket</item>
         <item name="android:background">@android:color/white</item>

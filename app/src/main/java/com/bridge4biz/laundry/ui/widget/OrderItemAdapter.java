@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bridge4biz.laundry.CleanBasketApplication;
+import com.bridge4biz.laundry.Config;
 import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.model.OrderCategory;
 import com.bridge4biz.laundry.io.model.OrderItem;
@@ -23,9 +24,9 @@ import com.facebook.rebound.Spring;
 import com.facebook.rebound.SpringSystem;
 import com.facebook.rebound.SpringUtil;
 import com.readystatesoftware.viewbadger.BadgeView;
+import com.squareup.picasso.Picasso;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleAdapter;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,7 +37,6 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
     private LayoutInflater mLayoutInflater;
     private HashMap<Integer, OrderCategory> mOrderCategoryMap;
     private ArrayList<OrderItem> mFixedOrderItem;
-    private DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
     private final SpringListener mSpringListener = new SpringListener();
     private View v;
 
@@ -112,7 +112,10 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.badgeView.setText(String.valueOf(getItem(position).count));
             holder.badgeView.show();
             holder.outlineImageView.setVisibility(View.INVISIBLE);
-            holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img + "_select"));
+            if (CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img + "_select") != 0)
+                holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img + "_select"));
+            else
+                Picasso.with(mContext).load(Config.IMAGE_SERVER_ITEM + getItem(position).img + "_select.png").into(holder.orderImageView);
             holder.extractImageView.setVisibility(View.VISIBLE);
             holder.infoImageView.setVisibility(View.INVISIBLE);
             holder.extractImageView.setOnTouchListener(this);
@@ -121,7 +124,10 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         else {
             holder.badgeView.hide();
             holder.outlineImageView.setVisibility(View.VISIBLE);
-            holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
+            if (CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img) != 0)
+                holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
+            else
+                Picasso.with(mContext).load(Config.IMAGE_SERVER_ITEM + getItem(position).img + ".png").into(holder.orderImageView);
             holder.extractImageView.setVisibility(View.INVISIBLE);
             if (getItem(position).getInfo() > 0)
                 holder.infoImageView.setVisibility(View.VISIBLE);
@@ -130,9 +136,9 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
             holder.extractImageView.setOnClickListener(null);
         }
 
-//        holder.linearLayoutOrderItem.setOnClickListener(this);
         holder.orderItemContainer.setOnTouchListener(this);
         holder.orderItemContainer.setTag(getItem(position));
+//        holder.linearLayoutOrderItem.setOnClickListener(this);
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
 //        holder.orderImageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByString(getItem(position).img));
 
@@ -141,12 +147,9 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         else
             holder.textViewDiscountInfo.setVisibility(View.GONE);
 
-        String name = CleanBasketApplication.getInstance().getStringByString(getItem(position).descr);
-        if (!name.equals(mContext.getString(R.string.default_name)))
-            holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
-        else
-            holder.textViewOrderItem.setText(getItem(position).name);
-        holder.textViewOrderItemPrice.setText(mFormatKRW.format((double) getItem(position).price) + getContext().getString(R.string.monetary_unit));
+        holder.textViewOrderItem.setText(getItem(position).getNameTag());
+
+        holder.textViewOrderItemPrice.setText(getItem(position).getPriceTag());
 
         return convertView;
     }
@@ -182,7 +185,6 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
 
         try {
             orderCategory = mOrderCategoryMap.get(getItem(position).category);
-
             holder.imageView.setImageResource(CleanBasketApplication.getInstance().getDrawableByCategoryString(orderCategory.img));
             holder.textView.setText(CleanBasketApplication.getInstance().getStringByString(orderCategory.name));
         } catch (NullPointerException e) {
@@ -301,6 +303,7 @@ public class OrderItemAdapter extends OrderItemAdapterHelper implements StickyGr
         Intent intent = new Intent();
         intent.setAction("com.bridge4biz.laundry.ui.InfoActivity");
 
+        intent.putExtra("type", "item");
         intent.putExtra("popId", popId);
 
         mContext.startActivity(intent);

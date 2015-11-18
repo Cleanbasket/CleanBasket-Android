@@ -1,5 +1,5 @@
 #
-# generated on 2015/05/08 03:53:06
+# generated on 2015/11/16 04:03:07
 #
 # --table-start--
 dataClass=com.bridge4biz.laundry.io.model.AppInfo
@@ -62,10 +62,16 @@ fieldName=descr
 fieldName=price
 # --field-end--
 # --field-start--
+fieldName=scope
+# --field-end--
+# --field-start--
 fieldName=count
 # --field-end--
 # --field-start--
 fieldName=img
+# --field-end--
+# --field-start--
+fieldName=info
 # --field-end--
 # --field-start--
 fieldName=discount_rate

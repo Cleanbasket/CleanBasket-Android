@@ -128,6 +128,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
     private EditText mEditTextContact;
     private EditText mEditTextMemo;
     private ImageView mImageViewCurrentLocation;
+    private ImageView mImageViewInfoButton;
     private ImageView mImageViewExtractButton;
     private RadioButton mButtonCard;
     private RadioButton mButtonCash;
@@ -180,12 +181,14 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         mButtonEtc = (Button) mHeader.findViewById(R.id.imageview_datetime_etc);
         mButtonPaymentCard = (RelativeLayout) mHeader.findViewById(R.id.button_offsite_payment_card);
         mTextViewButtonPaymentCard = (TextView) mHeader.findViewById(R.id.textview_button_add);
+        mImageViewInfoButton = (ImageView) mHeader.findViewById(R.id.imageview_card_info);
         mImageViewExtractButton = (ImageView) mHeader.findViewById(R.id.imageview_card_extract);
 
         mEditTextAddress.setOnEditorActionListener(this);
         mEditTextDetailAddress.setOnEditorActionListener(this);
         mEditTextContact.setOnEditorActionListener(this);
         mEditTextMemo.setOnEditorActionListener(this);
+        mImageViewInfoButton.setOnClickListener(this);
         mImageViewExtractButton.setOnClickListener(this);
 
         mCalculationInfoListView = (ListView) rootView.findViewById(R.id.listview_calculation);
@@ -337,11 +340,6 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                     popTimePickerView(FASTEST_HOUR, FASTEST_MINUTE, DROP_OFF_TIME);
                 break;
 
-//            case R.id.button_gross_total:
-//                ArrayList<OrderItem> mOrderItems = getOrderFragment().getOrderItemAdapter().getSelectedItems();
-//                popItemListDialog(mOrderItems);
-//               break;
-
             case R.id.button_order_finish:
                 if (checkFormFilled()) {
                     popOrderConfirmDialog();
@@ -366,6 +364,15 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                 paymentCardIntent.setAction("com.bridge4biz.laundry.ui.AddPaymentActivity");
 
                 startActivityForResult(paymentCardIntent, PAYMENT_REQUEST);
+                break;
+
+            case R.id.imageview_card_info:
+                intent = new Intent();
+                intent.setAction("com.bridge4biz.laundry.ui.InfoActivity");
+
+                intent.putExtra("type", "card");
+
+                startActivity(intent);
                 break;
 
             case R.id.imageview_card_extract:
@@ -521,7 +528,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                 makeOrderInfo();
                 transferOrder();
             }
-        }, getOrderFragment().getOrderItemAdapter().getItemNumber(), mCalculationInfoAdapter.getPriceByType(CalculationInfo.TOTAL));
+        }, getOrderFragment().getOrderItemAdapter().getItemNumber(), mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL));
 
         confirmDialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
@@ -1130,11 +1137,13 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         if (cardName.equals("") && authDate.equals("")) {
             cardRegistered = false;
             mTextViewButtonPaymentCard.setText(getString(R.string.offsite_payment_card));
+            mImageViewInfoButton.setVisibility(View.VISIBLE);
             mImageViewExtractButton.setVisibility(View.GONE);
         }
         else {
             cardRegistered = true;
             mTextViewButtonPaymentCard.setText(cardName + " (" + authDate + ")");
+            mImageViewInfoButton.setVisibility(View.GONE);
             mImageViewExtractButton.setVisibility(View.VISIBLE);
             mPaymentMethod = 3;
         }
@@ -1209,25 +1218,19 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
 
     public void setCalculationInfo() {
         mTotal = getOrderFragment().getOrderItemAdapter().getItemTotal();
+        int scope = getOrderFragment().getOrderItemAdapter().getScope();
         mCalculationInfoAdapter.mTotal = mTotal;
         int totalItemNumber = getOrderFragment().getOrderItemAdapter().getItemNumber();
-
-//        mButtonGrossTotal.setOnClickListener(this);
-//        mButtonGrossTotal.setText(
-//                totalItemNumber +
-//                        getString(R.string.item_unit) +
-//                        " / " +
-//                        mTotal +
-//                        getString(R.string.monetary_unit));
 
         /* 선택 아이템 총계 계산 */
         CalculationInfo calculationPreTotalInfo = mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.PRE_TOTAL);
 
         if(calculationPreTotalInfo == null)
-            mCalculationInfoAdapter.add(new CalculationInfo(null, getString(R.string.label_item) + " " + totalItemNumber + getString(R.string.item_unit), mTotal, CalculationInfo.PRE_TOTAL));
+            mCalculationInfoAdapter.add(new CalculationInfo(null, getString(R.string.label_item) + " " + totalItemNumber + getString(R.string.item_unit), mTotal, scope, CalculationInfo.PRE_TOTAL));
         else {
             calculationPreTotalInfo.name = getString(R.string.label_item) + " " + totalItemNumber + getString(R.string.item_unit);
-            calculationPreTotalInfo.price = mTotal;
+            calculationPreTotalInfo.price = getOrderFragment().getOrderItemAdapter().getItemTotal();
+            calculationPreTotalInfo.scope = scope;
         }
 
         /* 수거배달비 계산 */
@@ -1242,9 +1245,11 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
         CalculationInfo calculationTotalInfo = mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL);
 
         if (calculationTotalInfo == null)
-            mCalculationInfoAdapter.add(new CalculationInfo(null, getString(R.string.label_total), mTotal + mCalculationInfoAdapter.getTotal(), CalculationInfo.TOTAL));
-        else
+            mCalculationInfoAdapter.add(new CalculationInfo(null, getString(R.string.label_total), mTotal + mCalculationInfoAdapter.getTotal(), scope, CalculationInfo.TOTAL));
+        else {
             mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL).price = mTotal + mCalculationInfoAdapter.getTotal();
+            mCalculationInfoAdapter.getCalculationInfoByType(CalculationInfo.TOTAL).scope = scope;
+        }
 
         /* Type 순으로 정렬 */
         mCalculationInfoAdapter.sort(new Comparator<CalculationInfo>() {

@@ -24,7 +24,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true">
-
+                
+                <TextView
+                    android:id="@+id/textview_discount_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/point_color"
+                    android:text="@string/sale_percent"
+                    android:textColor="@color/text_white" />
+                
                 <ImageView
                     android:id="@+id/imageview_orderitem"
                     android:layout_width="wrap_content"
@@ -51,6 +59,22 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="12dp"
                     android:src="@drawable/ic_extract" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/imageview_info"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="12dp"
+                    android:src="@drawable/ic_info" />
             </RelativeLayout>
         </RelativeLayout>
 

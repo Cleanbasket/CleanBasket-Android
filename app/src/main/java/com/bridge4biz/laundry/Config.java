@@ -6,11 +6,14 @@ public class Config {
     public final static String DAUM_MAP_LOCAL_API = "ed518de9a2cb643cc334a8f3fa8008fb";
     public final static String ZOPIM_API = "3IvIR4PxJLUypCdpgbBmJLBjYby32CVD";
 
-    public final static String SERVER_ADDRESS = "https://www.cleanbasket.co.kr/";
+    public final static String IMAGE_SERVER = "https://www.cleanbasket.co.kr/";
+    public final static String IMAGE_SERVER_ITEM = "https://www.cleanbasket.co.kr/images/item/ic_item_";
+
+//    public final static String SERVER_ADDRESS = "https://www.cleanbasket.co.kr/";
 //    public final static String SERVER_ADDRESS = "http://192.168.11.4:8080/wash/";
 //    public final static String SERVER_ADDRESS = "http://211.110.140.180:8080/";
 //    public final static String SERVER_ADDRESS = "http://10.7.22.67:8080/wash/";
-//    public final static String SERVER_ADDRESS = "http://localhost:8080/wash/";
+    public final static String SERVER_ADDRESS = "http://192.168.58.1:8080/wash/";
 
     public final static String SEOUL_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/seoul.png";
     public final static String INCHEON_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/incheon.png";

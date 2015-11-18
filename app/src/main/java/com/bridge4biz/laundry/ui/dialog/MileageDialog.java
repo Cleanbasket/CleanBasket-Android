@@ -98,7 +98,7 @@ public class MileageDialog extends DialogFragment {
             }
         });
 
-        mTextViewInfo.setText(getString(R.string.mileage_available) + " " + mAvailableMileage + getString(R.string.point_unit));
+        mTextViewInfo.setText(getString(R.string.mileage_available) + " " + CleanBasketApplication.mFormatKRW.format(mAvailableMileage) + getString(R.string.point_unit));
 
         mMileageFormView = rootView.findViewById(R.id.mileage_form);
         mProgressView = rootView.findViewById(R.id.login_progress);
@@ -237,6 +237,6 @@ public class MileageDialog extends DialogFragment {
 
     private void updateMileage(int mileage) {
         mAvailableMileage = mileage;
-        mTextViewInfo.setText(getString(R.string.mileage_available) + " " + mAvailableMileage);
+        mTextViewInfo.setText(getString(R.string.mileage_available) + " " + CleanBasketApplication.mFormatKRW.format(mAvailableMileage));
     }
 }

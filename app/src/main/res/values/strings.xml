@@ -45,6 +45,7 @@
     <string name="check_sex">Sex</string>
     <string name="check_environment">Pls Select</string>
     <string name="monetary_unit">KRW</string>
+    <string name="range_monetary_unit">KRW ~</string>
     <string name="item_unit">Unit</string>
     <string name="point_unit">Won</string>
     <string name="label_item">Item</string>
@@ -64,6 +65,9 @@
     <string name="payment_card">Credit Card</string>
     <string name="offsite_payment_card">Add Payment</string>
     <string name="payment_cash">Cash</string>
+    <string name="payment_transfer">Transfer</string>
+    <string name="payment_in_app_finish">In App Card</string>
+    <string name="payment_in_app">In App Unpaid</string>
     <string name="pick_up_cost">Delivery Charge</string>
     <string name="sale_label">Special Offer</string>
     <string name="mileage">Mileage</string>
@@ -115,6 +119,7 @@
 
     <!-- general -->
     <string name="label_confirm">Confirm</string>
+    <string name="label_order_history">Order history</string>
     <string name="label_modify">Change</string>
     <string name="label_order_modify">Change Order</string>
     <string name="label_back">Back</string>
@@ -227,6 +232,8 @@
     <string name="backpack">Backpack</string>
     <string name="luxurybag">Designer Bag</string>
     <string name="ecobag">Eco Bag</string>
+    <string name="luxurybag_common">Fabrics Bag</string>
+    <string name="ecobag_common">Leather Bag</string>
     <string name="shoes">Shoes</string>
     <string name="boots">Boots</string>
     <string name="leather_shoes">Leather Shoes</string>
@@ -238,6 +245,15 @@
     <string name="why2">Fabric Conditioner</string>
     <string name="why3">Shower Cleaner</string>
     <string name="why4">Shampoo</string>
+
+    <string name="doll">Doll</string>
+    <string name="duck">Down Duvet</string>
+    <string name="goose">Goose Down Duvet</string>
+    <string name="hat">Hat</string>
+    <string name="sweater_long">Long Sweater</string>
+    <string name="ski_top">Skiwear Top</string>
+    <string name="ski_bottom">Skiwear Bottom</string>
+    <string name="trenchcoat">Trench Coat</string>
 
     <!-- related to order category -->
     <string name="footwear">Footwear</string>
@@ -322,6 +338,7 @@
     <!--  -->
     <string name="order_list_title">Order List</string>
     <string name="no_order">No order in progress</string>
+    <string name="no_history">No order history</string>
     <string name="no_notification">Empty</string>
     <string name="finish_order">Already finished order</string>
     <string name="need_agree">You must agree with the terms and conditions</string>
@@ -329,7 +346,7 @@
     <string name="class_label">Class</string>
     <string name="class_benefit">Benefit</string>
     <string name="class_total">Used Total</string>
-    <string name="order_number">O Number</string>
+    <string name="order_number">Order No.</string>
     <string name="feedback_empty">Please rate</string>
     <string name="feedback_duplication">You already rated this order</string>
     <string name="time_confirmed">Order has been confirmed</string>
@@ -378,7 +395,6 @@
     <string name="delete_card">Are you sure you want to delete this card?</string>
     <string name="card_register">Please wait for a minute</string>
 
-    <!-- Add Payment -->
     <string name="qna">Chat with us!</string>
     <string name="qna_header">Ask us anything</string>
     <string name="qna_detail">We are ready for you\n(hours of operation : 10 am ~ 6 pm)</string>
@@ -391,4 +407,13 @@
 
     <string name="call_customer_center"><u>Call Customer Center</u>\n070-7552-1385</string>
     <string name="number_customer_center">07075521385</string>
+    <string name="payment_result_etc">Except in-app card payment, please call customer center</string>
+    <string name="payment_payment_unpaid">Unpaid</string>
+
+    <string name="sale_percent">% SALE</string>
+    <string name="price_has_scope">Price could rise slightly depending on the washing</string>
+
+    <!-- Add Payment -->
+    <string name="card_info_title">Card Registration Info</string>
+    <string name="card_info"><![CDATA[- If you add credit card once, you can enjoy Clean Basket more comfortable.<br/><br/>- <b>It is optional.</b> You can also pay with cash or credit card in person.<br/><br/>- Payment will be triggered after delivery finished.<br/><br/>- We do not save credit card information. Enjoy Clean Basket comfortable.]]></string>
 </resources>

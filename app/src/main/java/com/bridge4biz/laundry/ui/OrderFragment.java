@@ -493,7 +493,6 @@ public class OrderFragment extends Fragment implements AdapterView.OnItemClickLi
     private void makeCategoryIndex() {
         mCategoryIndex = new ArrayList<Integer>();
         mCategoryIndexForMoving = new Integer[mCategoryItemAdapter.getCount()];
-
         mCategoryIndexForMoving[0] = 0;
 
         for (int i = 1; i < mCategoryItemAdapter.getCount() + 1; i++) {
@@ -564,7 +563,6 @@ public class OrderFragment extends Fragment implements AdapterView.OnItemClickLi
                         if (localAppInfo != null && checkAndroidLatest(appInfo.android_app_ver, CleanBasketApplication.getAppVersionName(getActivity())))
                             showUpdateAlert();
 
-
                         getDBHelper().getAppInfoDao().createOrUpdate(appInfo);
 
                         Log.i(TAG, "Downloaded app info successfully");
@@ -626,8 +624,7 @@ public class OrderFragment extends Fragment implements AdapterView.OnItemClickLi
     }
 
     private void showSoftKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 

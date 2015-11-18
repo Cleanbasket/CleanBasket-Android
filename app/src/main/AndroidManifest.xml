@@ -14,7 +14,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <uses-feature
@@ -32,13 +31,13 @@
         android:value="@integer/google_play_services_version" />
 
     <application
-        android:name="com.bridge4biz.laundry.CleanBasketApplication"
+        android:name=".CleanBasketApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.bridge4biz.laundry.ui.SplashActivity"
+            android:name=".ui.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
@@ -49,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.LoginActivity"
+            android:name=".ui.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" >
@@ -60,7 +59,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.RegisterActivity"
+            android:name=".ui.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -70,7 +69,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.PhoneActivity"
+            android:name=".ui.PhoneActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -80,7 +79,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
@@ -91,7 +90,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.MapActivity"
+            android:name=".ui.MapActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -101,7 +100,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.NoticeActivity"
+            android:name=".ui.NoticeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -111,7 +110,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.NotificationActivity"
+            android:name=".ui.NotificationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -121,7 +120,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.SettingActivity"
+            android:name=".ui.SettingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -131,7 +130,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.WebViewActivity"
+            android:name=".ui.WebViewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -141,17 +140,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.WebViewAgreementActivity"
+            android:name=".ui.WebViewAgreementActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <data android:scheme="com.bridge4biz.laundry.ui.WebViewAgreementActivity" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.DialogActivity"
+            android:name=".ui.DialogActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -161,7 +162,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.FeedbackActivity"
+            android:name=".ui.FeedbackActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -171,7 +172,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.KakaoRegisterActivity"
+            android:name=".ui.KakaoRegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -182,7 +183,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bridge4biz.laundry.ui.AddPaymentActivity"
+            android:name=".ui.AddPaymentActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -191,15 +192,39 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="io.card.payment.CardIOActivity" android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name=".ui.InfoActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.CleanBasket.Transparent" >
+            <intent-filter>
+                <action android:name="com.bridge4biz.laundry.ui.InfoActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.OrderHistoryActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.bridge4biz.laundry.ui.OrderHistoryActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation" />
         <activity android:name="io.card.payment.DataEntryActivity" />
-        <receiver android:name="com.bridge4biz.laundry.gcm.AlarmReceiver" >
+
+        <receiver android:name=".gcm.AlarmReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.bridge4biz.laundry.gcm.GCMBroadcastReceiver"
+            android:name=".gcm.GCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -208,7 +233,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.bridge4biz.laundry.gcm.GCMIntentService" />
+        <service android:name=".gcm.GCMIntentService" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -220,5 +245,4 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
     </application>
-
 </manifest>

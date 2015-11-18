@@ -22,8 +22,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class CleanBasketApplication extends Application {
     private static final String TAG = CleanBasketApplication.class.getSimpleName();
 
-    public static DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
-
     public static CleanBasketApplication mInstance;
 
     // Related to GCM
@@ -38,6 +36,7 @@ public class CleanBasketApplication extends Application {
     private DBHelper dbHelper;
 
     public Gson mGson;
+    public static DecimalFormat mFormatKRW = new DecimalFormat("###,###,###");
 
     @Override
     public void onCreate() {
@@ -109,7 +108,7 @@ public class CleanBasketApplication extends Application {
         try {
             result = this.getString(resourceId);
         } catch (Exception e) {
-            return this.getString(R.string.default_name);
+            return null;
         }
 
         return result;
@@ -126,9 +125,8 @@ public class CleanBasketApplication extends Application {
 
         resource = this.getResources().getIdentifier("ic_category_" + name, "drawable", this.getPackageName());
 
-        if (resource == 0) {
+        if (resource == 0)
             resource =  this.getResources().getIdentifier("ic_category_etc", "drawable", this.getPackageName());
-        }
 
         return resource;
     }

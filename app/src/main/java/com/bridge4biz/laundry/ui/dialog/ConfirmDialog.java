@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bridge4biz.laundry.R;
+import com.bridge4biz.laundry.ui.widget.CalculationInfo;
 import com.bridge4biz.laundry.util.DateTimeFactory;
 
 import java.text.DecimalFormat;
@@ -25,7 +26,7 @@ public class ConfirmDialog extends DialogFragment implements View.OnClickListene
 
     // UI references.
     private int unit;
-    private int total;
+    private CalculationInfo calculationInfo;
 
     private TextView mTextViewInfo;
     private Button mButtonOrder;
@@ -37,17 +38,17 @@ public class ConfirmDialog extends DialogFragment implements View.OnClickListene
         void onConfirm(ConfirmDialog dialog);
     }
 
-    public static ConfirmDialog newInstance(OnConfirmListener onConfirmListener, int unit, int total) {
+    public static ConfirmDialog newInstance(OnConfirmListener onConfirmListener, int unit, CalculationInfo calculationInfo) {
         ConfirmDialog md = new ConfirmDialog();
-        md.initialize(onConfirmListener, unit, total);
+        md.initialize(onConfirmListener, unit, calculationInfo);
 
         return md;
     }
 
-    public void initialize(OnConfirmListener onConfirmListener, int unit, int total) {
-        this.mOnConfirmListener = onConfirmListener;
+    public void initialize(OnConfirmListener onConfirmListener, int unit, CalculationInfo calculationInfo) {
         this.unit = unit;
-        this.total = total;
+        this.mOnConfirmListener = onConfirmListener;
+        this.calculationInfo = calculationInfo;
     }
 
     @Override
@@ -66,8 +67,13 @@ public class ConfirmDialog extends DialogFragment implements View.OnClickListene
         mButtonOrder.setOnClickListener(this);
         mButtonCancel.setOnClickListener(this);
 
-        mTextViewInfo.setText(getString(R.string.label_item) + " " + unit + getString(R.string.item_unit) + DateTimeFactory.getInstance().getNewLine() +
-                getString(R.string.label_total) + " " + mFormatKRW.format(total) + getString(R.string.monetary_unit));
+        if (calculationInfo.scope > 0)
+            mTextViewInfo.setText(getString(R.string.label_item) + " " + unit + getString(R.string.item_unit) + DateTimeFactory.getInstance().getNewLine() +
+                    calculationInfo.getPriceTag() + DateTimeFactory.getInstance().getNewLine() +
+                    getString(R.string.price_has_scope));
+        else
+            mTextViewInfo.setText(getString(R.string.label_item) + " " + unit + getString(R.string.item_unit) + DateTimeFactory.getInstance().getNewLine() +
+                    calculationInfo.getPriceTag());
 
         return rootView;
     }

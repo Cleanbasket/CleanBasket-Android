@@ -4,6 +4,8 @@ package com.bridge4biz.laundry.ui.widget;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
+import com.bridge4biz.laundry.CleanBasketApplication;
+import com.bridge4biz.laundry.R;
 import com.bridge4biz.laundry.io.model.OrderItem;
 
 import java.util.List;
@@ -41,5 +43,29 @@ public class OrderItemAdapterHelper extends ArrayAdapter<OrderItem> {
         }
 
         return total;
+    }
+
+    public String getMonetaryUnit() {
+        int scope = 0;
+
+        for (int i = 0; i < getCount(); i++) {
+            scope += getItem(i).scope;
+        }
+
+        if (scope > 0)
+            return CleanBasketApplication.getInstance().getString(R.string.range_monetary_unit);
+        else
+            return CleanBasketApplication.getInstance().getString(R.string.monetary_unit);
+    }
+
+    public int getScope() {
+        int scope = 0;
+
+        for (int i = 0; i < getCount(); i++) {
+            if (getItem(i).count > 0)
+                scope += getItem(i).scope;
+        }
+
+        return scope;
     }
 }

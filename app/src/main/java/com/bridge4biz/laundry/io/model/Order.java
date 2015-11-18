@@ -33,4 +33,39 @@ public class Order implements Serializable {
         this.pickup_date = pickup_date;
         this.dropoff_date = dropoff_date;
     }
+
+	public int getTotalFromOrder() {
+		int total = 0;
+
+		for (OrderItem item : this.item) {
+			total = total + item.price * item.count;
+		}
+
+		return total;
+	}
+
+	public int getCouponTotal() {
+		int total = 0;
+
+		for (Coupon coupon : this.coupon) {
+			total = total + coupon.value;
+		}
+
+		return total;
+	}
+
+
+	public int getTotalNumberFromOrder() {
+		int total = 0;
+
+		for (OrderItem item : this.item) {
+			total = total + item.count;
+		}
+
+		return total;
+	}
+
+	public int getTotal() {
+		return getTotalFromOrder() + dropoff_price - mileage - getCouponTotal();
+	}
 }

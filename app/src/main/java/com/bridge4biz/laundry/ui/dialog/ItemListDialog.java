@@ -99,7 +99,7 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
                     getString(R.string.label_total) +
                     " " +
                     CleanBasketApplication.mFormatKRW.format((double) mItemListAdapter.getItemTotal()) +
-                    getString(R.string.monetary_unit));
+                    mItemListAdapter.getMonetaryUnit());
         }
 
         if (getTag().equals(OrderFragment.ITEM_LIST_DIALOG_TAG) || getTag().equals(OrderFragment.MODIFY_ITEM_LIST_DIALOG_TAG)) {
@@ -235,7 +235,7 @@ public class ItemListDialog extends DialogFragment implements View.OnClickListen
                 holder = (OrderItemListViewHolder) convertView.getTag();
 
             holder.textViewOrderItem.setText(CleanBasketApplication.getInstance().getStringByString(getItem(position).descr));
-            holder.textViewOrderItemPrice.setText(String.valueOf(CleanBasketApplication.mFormatKRW.format((double) getItem(position).price)) + getContext().getString(R.string.monetary_unit));
+            holder.textViewOrderItemPrice.setText(getItem(position).getPriceTag());
             holder.textViewOrderItemCount.setText(getItem(position).count + "");
 //            holder.textViewOrderItemTotalPrice.setText(String.valueOf(getItem(position).price * getItem(position).count) + getContext().getString(R.string.monetary_unit));
 

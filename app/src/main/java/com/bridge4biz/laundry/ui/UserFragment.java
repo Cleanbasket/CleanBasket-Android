@@ -214,7 +214,8 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
         mButtonClassInfo.setOnClickListener(this);
 
         if (mUserClassMileage != null) {
-            mUserClassMileage.setText(getString(R.string.mileage_available) + " " + authUser.mileage);
+            mUserClassMileage.setText(getString(R.string.mileage_available) + " " +
+                    CleanBasketApplication.mFormatKRW.format(authUser.mileage));
             mImageViewUserClass.setImageResource(getDrawableByClass(authUser.user_class));
             mUserName.setText(authUser.email);
             mUserClass.setText(getClassName(authUser.user_class));
@@ -359,10 +360,10 @@ public class UserFragment extends Fragment implements ListView.OnItemClickListen
             cancel = true;
         }
 
-        if (!mCheckBoxService.isChecked() || !mCheckBoxProtection.isChecked()) {
-            CleanBasketApplication.getInstance().showToast(getString(R.string.need_agree));
-            cancel = true;
-        }
+//        if (!mCheckBoxService.isChecked() || !mCheckBoxProtection.isChecked()) {
+//            CleanBasketApplication.getInstance().showToast(getString(R.string.need_agree));
+//            cancel = true;
+//        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first

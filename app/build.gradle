@@ -8,8 +8,8 @@ android {
         applicationId "com.bridge4biz.laundry"
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 23
-        versionName "1.6.0"
+        versionCode 24
+        versionName "1.6.1"
     }
 
     packagingOptions {

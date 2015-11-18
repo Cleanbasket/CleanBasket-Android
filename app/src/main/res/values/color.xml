@@ -35,6 +35,7 @@
     <color name="point_color">#83dbd1</color>
     <color name="dialog_color">#FFFFFF</color>
     <color name="badge_color">#000000</color>
+    <color name="transparent_color">#00000000</color>
     <color name="actionbar_color">#000000</color>
     <color name="textview_background">#DDDDDD</color>
 
