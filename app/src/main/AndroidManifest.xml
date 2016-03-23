@@ -234,7 +234,10 @@
         </receiver>
 
         <service android:name=".gcm.GCMIntentService" />
-
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="43e88b789b9958cdf24efdd2dbb6f2bbba5796fe"
+            />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCZKFOKZSYxzTMqwbtwE32hu0mMXaKgv5s" />
