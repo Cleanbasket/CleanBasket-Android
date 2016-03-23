@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bridge4biz.laundry.db.DBHelper;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -18,6 +19,7 @@ import com.urqa.clientinterface.URQAController;
 
 import java.text.DecimalFormat;
 
+import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class CleanBasketApplication extends MultiDexApplication {
@@ -43,9 +45,9 @@ public class CleanBasketApplication extends MultiDexApplication {
     public void onCreate() {
         mInstance = this;
 
-        URQAController.InitializeAndStartSession(getApplicationContext(), Config.URQA_API_Key);
-
         super.onCreate();
+
+        Fabric.with(this, new Crashlytics());
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/NanumBarunGothic.otf")
