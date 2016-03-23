@@ -9,10 +9,10 @@ public class Config {
     public final static String IMAGE_SERVER = "https://www.cleanbasket.co.kr/";
     public final static String IMAGE_SERVER_ITEM = "https://www.cleanbasket.co.kr/images/item/ic_item_";
 
-//    public final static String SERVER_ADDRESS = "https://www.cleanbasket.co.kr/";
+    public final static String SERVER_ADDRESS = "https://www.cleanbasket.co.kr/";
 //    public final static String SERVER_ADDRESS = "http://192.168.11.4:8080/wash/";
 //    public final static String SERVER_ADDRESS = "http://211.110.140.180:8080/";
-    public final static String SERVER_ADDRESS = "http://52.79.39.100:8080/";
+//    public final static String SERVER_ADDRESS = "http://52.79.39.100:8080/";
 //    public final static String SERVER_ADDRESS = "http://192.168.58.1:8080/wash/";
 
     public final static String SEOUL_IMAGE_ADDRESS = "http://www.cleanbasket.co.kr/images/seoul.png";
