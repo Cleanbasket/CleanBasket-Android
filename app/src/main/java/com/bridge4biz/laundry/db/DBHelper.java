@@ -126,6 +126,14 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
                 sql = "ALTER TABLE orderitem ADD COLUMN scope INTEGER DEFAULT 0;";
                 sqLiteDatabase.execSQL(sql);
                 break;
+
+            case 3:
+                sql = "ALTER TABLE notice ADD COLUMN img VARCHAR DEFAULT '';";
+                sqLiteDatabase.execSQL(sql);
+
+                sql = "ALTER TABLE notice ADD COLUMN read BOOLEAN DEFAULT '';";
+                sqLiteDatabase.execSQL(sql);
+                break;
         }
     }
 }

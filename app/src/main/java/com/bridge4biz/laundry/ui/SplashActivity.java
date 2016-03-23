@@ -1,6 +1,7 @@
 package com.bridge4biz.laundry.ui;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +19,7 @@ import com.bridge4biz.laundry.util.AddressManager;
 import com.bridge4biz.laundry.util.Constants;
 import com.google.gson.JsonSyntaxException;
 
-public class SplashActivity extends BaseActivity implements Response.Listener<String>, Response.ErrorListener {
+public class SplashActivity extends Activity implements Response.Listener<String>, Response.ErrorListener {
     private static final String TAG = SplashActivity.class.getSimpleName();
 
     public static final String UID = "uid";

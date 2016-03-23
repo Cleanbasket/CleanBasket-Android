@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.bridge4biz.laundry.db.DBHelper;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -30,6 +31,20 @@ public abstract class BaseActivity extends FragmentActivity {
         }
 
         return arguments;
+    }
+
+    @Override
+    protected void onResume() {
+        AppEventsLogger.activateApp(this);
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        AppEventsLogger.deactivateApp(this);
+
+        super.onPause();
     }
 
     public DBHelper getDBHelper() {

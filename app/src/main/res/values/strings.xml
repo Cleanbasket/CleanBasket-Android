@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="facebook_app_id">717896151629214</string>
     <string name="app_name">Clean Basket</string>
     <string name="app_description">Premium Dry Cleaning &amp; Laundry Delivery</string>
 

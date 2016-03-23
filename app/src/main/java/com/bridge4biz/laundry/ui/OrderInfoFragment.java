@@ -574,6 +574,8 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
                 break;
 
             case Constants.ERROR:
+                Log.i(TAG, jsonData.message + " / " + jsonData.constant);
+
                 CleanBasketApplication.getInstance().showToast(getString(R.string.general_error));
                 break;
 
@@ -610,6 +612,8 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
 
     @Override
     public void onErrorResponse(VolleyError volleyError) {
+        Log.d(TAG, volleyError.getMessage());
+
         showProgress(false);
 
         mOrderFlag = false;
@@ -868,7 +872,7 @@ public class OrderInfoFragment extends Fragment implements TimePickerDialog.OnTi
     }
 
     /**
-     * 수거 시간이 설정되면 이를 화면에 적용합니다
+     * 수거 시간이 설정되면 이를 화면에e 적용합니다
      * @param date 최종 선택된 수거 시간
      */
     private void pickUpTimeSelected(Date date) {

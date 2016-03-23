@@ -9,7 +9,9 @@ public class Notice {
     @DatabaseField(id = true) public int noid;
     @DatabaseField public String title;
     @DatabaseField public String content;
+    @DatabaseField public String img;
     @DatabaseField public String rdate;
+    @DatabaseField public boolean read;
 
     public Notice() {
     }

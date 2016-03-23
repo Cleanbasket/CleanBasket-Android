@@ -1,16 +1,17 @@
 package com.bridge4biz.laundry;
 
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.bridge4biz.laundry.db.DBHelper;
+import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.urqa.clientinterface.URQAController;
@@ -19,7 +20,7 @@ import java.text.DecimalFormat;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class CleanBasketApplication extends Application {
+public class CleanBasketApplication extends MultiDexApplication {
     private static final String TAG = CleanBasketApplication.class.getSimpleName();
 
     public static CleanBasketApplication mInstance;
@@ -51,6 +52,8 @@ public class CleanBasketApplication extends Application {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     public static synchronized CleanBasketApplication getInstance() {
