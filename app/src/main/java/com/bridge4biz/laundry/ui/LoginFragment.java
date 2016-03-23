@@ -37,19 +37,19 @@ public class LoginFragment extends Fragment {
 
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_service_map, container, false);
-
-                ImageView mSeoulMap = (ImageView) rootView.findViewById(R.id.imageview_seoul_map);
-                ImageView mIncheonMap = (ImageView) rootView.findViewById(R.id.imageview_incheon_map);
-
-                ImageLoader imageLoader = RequestQueue.getInstance(getActivity()).getImageLoader();
-                imageLoader.get(Config.SEOUL_IMAGE_ADDRESS,
-                        ImageLoader.getImageListener(
-                                mSeoulMap, R.drawable.ic_login_seoul_map, R.drawable.ic_login_seoul_map
-                        ));
-                imageLoader.get(Config.INCHEON_IMAGE_ADDRESS,
-                        ImageLoader.getImageListener(
-                                mIncheonMap, R.drawable.ic_login_incheon_map, R.drawable.ic_login_incheon_map
-                        ));
+//
+//                ImageView mSeoulMap = (ImageView) rootView.findViewById(R.id.imageview_seoul_map);
+//                ImageView mIncheonMap = (ImageView) rootView.findViewById(R.id.imageview_incheon_map);
+//
+//                ImageLoader imageLoader = RequestQueue.getInstance(getActivity()).getImageLoader();
+//                imageLoader.get(Config.SEOUL_IMAGE_ADDRESS,
+//                        ImageLoader.getImageListener(
+//                                mSeoulMap, R.drawable.ic_login_seoul_map, R.drawable.ic_login_seoul_map
+//                        ));
+//                imageLoader.get(Config.INCHEON_IMAGE_ADDRESS,
+//                        ImageLoader.getImageListener(
+//                                mIncheonMap, R.drawable.ic_login_incheon_map, R.drawable.ic_login_incheon_map
+//                        ));
                 break;
 
             case 3:

@@ -45,7 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="188dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/imageview_seoul_title" />
+        android:layout_below="@+id/imageview_seoul_title"
+        android:src="@drawable/ic_login_seoul_map"/>
 
     <ImageView
         android:id="@+id/imageview_incheon_title"
@@ -54,7 +55,7 @@
         android:layout_marginTop="26dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageview_seoul_map"
-        android:src="@drawable/ic_login_incheon" />
+        android:src="@drawable/ic_login_seongnam" />
 
     <ImageView
         android:id="@+id/imageview_incheon_map"
@@ -62,7 +63,8 @@
         android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageview_incheon_title"
-        android:layout_marginTop="12dp" />
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_login_seongnam_map"/>
     
     <RelativeLayout
         android:layout_width="253dp"
