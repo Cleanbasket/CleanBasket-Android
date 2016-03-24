@@ -201,8 +201,8 @@
     <string name="skirt">스커트</string>
     <string name="blouse">블라우스</string>
     <string name="one_piece">원피스</string>
-    <string name="coat">코트</string>
-    <string name="long_coat">롱코트</string>
+    <string name="coat">반코트</string>
+    <string name="long_coat">코트 일반</string>
     <string name="jumper">점퍼</string>
     <string name="jacket">자켓</string>
     <string name="sweater">스웨터</string>
