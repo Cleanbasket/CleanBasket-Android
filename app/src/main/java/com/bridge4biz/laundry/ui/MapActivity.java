@@ -230,6 +230,8 @@ public class MapActivity extends BaseActivity implements MapReverseGeoCoder.Reve
 
         if (AddressChecker.getInstance(this).isAddressValid(address)) {
             formattedAddress = AddressChecker.getInstance(this).getValidAddress(address);
+        }else {
+            return address;
         }
 
 //        if (Locale.getDefault().getLanguage().equals("ko") || Locale.getDefault().equals("kr")) {

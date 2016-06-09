@@ -67,7 +67,7 @@ dependencies {
         exclude(module: 'jackson-core')
         exclude(module: 'jackson-databind')
     }
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.facebook.android:facebook-android-sdk:4.8.0'
     compile 'io.card:android-sdk:5.0.1'
     compile 'uk.co.chrisjenx:calligraphy:2.0.2'
     compile 'com.facebook.rebound:rebound:0.3.7'
