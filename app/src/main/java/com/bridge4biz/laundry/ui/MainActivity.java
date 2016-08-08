@@ -3,6 +3,7 @@ package com.bridge4biz.laundry.ui;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -98,6 +99,13 @@ public class MainActivity extends BaseActivity implements Response.Listener<JSON
         mContext = this;
 
         getUserInfo();
+
+        showMarketingPopUp();
+    }
+
+    private void showMarketingPopUp() {
+        Intent intent = new Intent(this, MarketingPopupActivity.class);
+        startActivity(intent);
     }
 
     private VisitorInfo initZopimChatFragment() {
